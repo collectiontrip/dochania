@@ -10,22 +10,23 @@ import ResetPassword from "./component/auth/ResetPassword";
 import ForgotPassword from "./component/auth/ForgotPassword";
 import PrivateChat from "./component/chat/PrivateChat";
 import Users from "./component/Users";
+import Live from "./component/Live";
 
 import "./App.css";
 
 const Layout = () => {
-
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     setIsAuthenticated(!!token);
-  }, [location.pathname]);   // 🔥 yahi main fix
+  }, [location.pathname]);
 
   return (
     <div className="app-root">
 
+      {/* 🔥 HEADER */}
       <header className="app-header">
         <div className="logo">MediaApp</div>
 
@@ -42,6 +43,13 @@ const Layout = () => {
           <NavLink to="/users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
             Users
           </NavLink>
+
+          {/* 🔴 LIVE (only logged-in users) */}
+          {isAuthenticated && (
+            <NavLink to="/live" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+              🔴 Live
+            </NavLink>
+          )}
 
           {!isAuthenticated && (
             <>
@@ -64,25 +72,37 @@ const Layout = () => {
         </nav>
       </header>
 
+      {/* 🔥 MAIN CONTENT */}
       <main className="app-container">
         <Routes>
 
+          {/* Default redirect */}
           <Route path="/" element={<Navigate to="/home" replace />} />
 
+          {/* Main Pages */}
           <Route path="/home" element={<Home />} />
           <Route path="/media" element={<MediaAccess />} />
           <Route path="/users" element={<Users />} />
           <Route path="/chat/:userId" element={<PrivateChat />} />
 
+          {/* 🔴 LIVE ROUTE */}
+          <Route 
+            path="/live" 
+            element={isAuthenticated ? <Live /> : <Navigate to="/login" />} 
+          />
+
+          {/* Auth Pages */}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
           <Route 
             path="/password/reset/confirm/:uid/:token" 
             element={<ResetPassword />} 
           />
 
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/home" replace />} />
 
         </Routes>

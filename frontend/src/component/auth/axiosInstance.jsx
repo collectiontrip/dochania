@@ -18,7 +18,6 @@ AxiosInstance.interceptors.request.use(
 
     const noAuthEndpoints = [
       "/auth/jwt/create/",
-      "/auth/users/",
       "/auth/users/reset_password/",
       "/auth/users/reset_password_confirm/",
     ];

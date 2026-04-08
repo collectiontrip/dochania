@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AxiosInstance from "./axiosInstance";
 import { getUserId } from "../../services/authService";
+import DeviceDetector from "device-detector-js";
 import "./Login.css";
 
 const Login = () => {
@@ -12,6 +13,61 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+
+  const getDeviceName = () => {
+    const detector = new DeviceDetector();
+    const device = detector.parse(navigator.userAgent);
+    
+    const ua = navigator.userAgent;
+
+    console.log("🧠 Full Device Data:", device);
+
+    // ✅ 1. Agar model mil gaya (best case)
+    if (device.device?.model) {
+      return `${device.device.brand || ""} ${device.device.model}`.trim();
+    }
+
+    if (device.device?.type) {
+      return device.device.type.toUpperCase();
+    }
+
+    // ✅ 2. Android fallback (IMPORTANT FIX 🔥)
+    if (/android/i.test(ua)) {
+      return "Android Device";
+    }
+
+    // ✅ 3. iPhone
+    if (/iPhone/i.test(ua)) {
+      return "iPhone";
+    }
+
+    // ✅ 4. Windows
+    if (/Windows/i.test(ua)) {
+      return "Windows PC";
+    }
+
+    // ✅ 5. Mac
+    if (/Mac/i.test(ua)) {
+      return "MacBook";
+    }
+    if (/Linux/i.test(ua)) {
+      return "Linux Laptop";
+    }
+
+    // ❌ Last fallback
+    return "Unknown Device";
+  };
+
+  const getDeviceInfo = () => {
+    const userAgent = navigator.userAgent;
+
+    return {
+      user_agent: userAgent,
+      platform: navigator.platform,
+      language: navigator.language,
+      device_name: getDeviceName(),
+    };
+  };
 
   // ------------------------------
   // Generate RSA Key Pair
@@ -88,10 +144,27 @@ const Login = () => {
       // Save public key to backend
       await AxiosInstance.post("/users/save-public-key/", {
         public_key: publicKey,
+        
       });
+
+      
 
       console.log("📤 Public Key sent to server:", publicKey);
       console.log("🔐 Private Key stored locally");
+      const deviceInfo = getDeviceInfo();
+      console.log("📱 Device Info:", deviceInfo);
+
+      console.log("🔥 DEVICE NAME CHECK:", deviceInfo.device_name);
+      await AxiosInstance.post("/users/save-device/", {
+        device_info: deviceInfo,
+      })
+      .then((res) => {
+        console.log("📱 Device info saved:", res.data);
+      })
+      .catch((err) => {
+        console.error("❌ Device save failed:", err.response?.data || err.message);
+      });
+      
 
       alert("Login successful");
 
