@@ -15,7 +15,7 @@ from .views import (
 urlpatterns = [
     path("start/", StartLiveSessionView.as_view()),
     path("end/<int:session_id>/", EndLiveSessionView.as_view()),
-    path("live/", LiveSessionListView.as_view()),
+    path("streams/", LiveSessionListView.as_view()),
 
     path("join/<int:session_id>/", JoinLiveSessionView.as_view()),
     path("leave/<int:session_id>/", LeaveLiveSessionView.as_view()),

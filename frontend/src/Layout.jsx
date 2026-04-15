@@ -10,7 +10,9 @@ import ResetPassword from "./component/auth/ResetPassword";
 import ForgotPassword from "./component/auth/ForgotPassword";
 import PrivateChat from "./component/chat/PrivateChat";
 import Users from "./component/Users";
+
 import Live from "./component/Live";
+import Viewer from "./component/Viewer";
 
 import "./App.css";
 
@@ -18,6 +20,7 @@ const Layout = () => {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // 🔐 auth check
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     setIsAuthenticated(!!token);
@@ -44,13 +47,20 @@ const Layout = () => {
             Users
           </NavLink>
 
-          {/* 🔴 LIVE (only logged-in users) */}
+          {/* 🔴 LIVE LINKS */}
           {isAuthenticated && (
-            <NavLink to="/live" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-              🔴 Live
-            </NavLink>
+            <>
+              <NavLink to="/live" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+                🔴 Go Live
+              </NavLink>
+
+              <NavLink to="/watch" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+                👀 Watch Live
+              </NavLink>
+            </>
           )}
 
+          {/* AUTH LINKS */}
           {!isAuthenticated && (
             <>
               <NavLink to="/signup" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
@@ -76,33 +86,43 @@ const Layout = () => {
       <main className="app-container">
         <Routes>
 
-          {/* Default redirect */}
+          {/* 🔹 DEFAULT */}
           <Route path="/" element={<Navigate to="/home" replace />} />
 
-          {/* Main Pages */}
+          {/* 🔹 MAIN */}
           <Route path="/home" element={<Home />} />
           <Route path="/media" element={<MediaAccess />} />
           <Route path="/users" element={<Users />} />
           <Route path="/chat/:userId" element={<PrivateChat />} />
 
-          {/* 🔴 LIVE ROUTE */}
-          <Route 
-            path="/live" 
-            element={isAuthenticated ? <Live /> : <Navigate to="/login" />} 
+          {/* 🔴 LIVE (ONLY STREAMER) */}
+          <Route
+            path="/live"
+            element={
+              isAuthenticated ? <Live /> : <Navigate to="/login" />
+            }
           />
 
-          {/* Auth Pages */}
+          {/* 👀 VIEWER (ONLY WATCHING) */}
+          <Route
+            path="/watch"
+            element={
+              isAuthenticated ? <Viewer /> : <Navigate to="/login" />
+            }
+          />
+
+          {/* 🔐 AUTH */}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          <Route 
-            path="/password/reset/confirm/:uid/:token" 
-            element={<ResetPassword />} 
+          <Route
+            path="/password/reset/confirm/:uid/:token"
+            element={<ResetPassword />}
           />
 
-          {/* Fallback */}
+          {/* ❌ FALLBACK */}
           <Route path="*" element={<Navigate to="/home" replace />} />
 
         </Routes>
