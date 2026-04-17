@@ -21,17 +21,31 @@ class StartLiveSessionView(APIView):
         user = request.user
         title = request.data.get("title", "")
 
-        if LiveSession.objects.filter(streamer=user, is_live=True).exists():
-            return Response({"error": "Already live"}, status=400)
+        # 🔥 CHECK existing live
+        existing_session = LiveSession.objects.filter(
+            streamer=user,
+            is_live=True
+        ).first()
 
+        if existing_session:
+            # ✅ RECONNECT CASE
+            return Response({
+                "message": "Already live - reconnect",
+                "already_live": True,
+                "session_id": existing_session.id,
+                "title": existing_session.title
+            }, status=200)
+
+        # ✅ NEW LIVE
         session = LiveSession.objects.create(
             streamer=user,
             title=title
         )
-        return Response(
-            LiveSessionSerializer(session).data,
-            status=201
-        )
+
+        return Response({
+            **LiveSessionSerializer(session).data,
+            "already_live": False
+        }, status=201)
 
 
 class EndLiveSessionView(APIView):

@@ -22,8 +22,6 @@ class LiveConsumer(AsyncWebsocketConsumer):
         self.user = None
         self.session_id = self.scope["url_route"]["kwargs"]["session_id"]
         self.room_group_name = f"live_{self.session_id}"
-
-        # 🔥 UNIQUE CONNECTION ID
         self.connection_id = str(uuid.uuid4())
 
         # 🔐 AUTH
@@ -43,7 +41,6 @@ class LiveConsumer(AsyncWebsocketConsumer):
         except TokenError:
             await self.close()
             return
-
         except Exception as e:
             logger.error(f"Auth error: {e}")
             await self.close()
@@ -62,21 +59,36 @@ class LiveConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-        # 👀 ADD VIEWER
+        # 🔥 REFRESH SAFE JOIN
+        await self.remove_viewer(self.session_id, self.user.id)
         await self.add_viewer(self.session_id, self.user.id)
 
-        # 🔥 NEW VIEWER EVENT
+        # 🔥 SEND STREAMER INFO (NEW 🔥)
+        streamer = await self.get_streamer(self.session_id)
+        await self.send(text_data=json.dumps({
+            "type": "streamer_info",
+            "streamer": streamer
+        }))
+
+        # 📦 SNAPSHOT
+        await self.broadcast_viewer_snapshot()
+
+        # 🔥 FORCE STREAM RECONNECT
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                "type": "new_viewer",
+                "type": "force_offer",
                 "connection_id": self.connection_id,
-                "user_id": self.user.id
+                "user_id": self.user.id,
+                "username": self.user.username
             }
         )
 
         await self.send_viewer_count()
 
+    # =========================
+    # ❌ DISCONNECT
+    # =========================
     async def disconnect(self, close_code):
         try:
             await self.channel_layer.group_discard(
@@ -86,6 +98,17 @@ class LiveConsumer(AsyncWebsocketConsumer):
 
             if self.user:
                 await self.remove_viewer(self.session_id, self.user.id)
+
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        "type": "viewer_left",
+                        "user_id": self.user.id,
+                        "username": self.user.username
+                    }
+                )
+
+                await self.broadcast_viewer_snapshot()
                 await self.send_viewer_count()
 
         except Exception as e:
@@ -98,7 +121,7 @@ class LiveConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         action = data.get("action")
 
-        # 💬 MESSAGE
+        # 💬 CHAT
         if action == "message":
             message = data.get("message")
             if not message:
@@ -121,7 +144,7 @@ class LiveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-        # 🎥 WEBRTC SIGNALING
+        # 🎥 WEBRTC
         elif action in ["offer", "answer", "ice_candidate"]:
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -140,9 +163,7 @@ class LiveConsumer(AsyncWebsocketConsumer):
 
                 await self.channel_layer.group_send(
                     self.room_group_name,
-                    {
-                        "type": "stream_ended"
-                    }
+                    {"type": "stream_ended"}
                 )
 
     # =========================
@@ -155,11 +176,11 @@ class LiveConsumer(AsyncWebsocketConsumer):
             **event
         }))
 
-    async def new_viewer(self, event):
+    async def viewer_left(self, event):
         await self.send(text_data=json.dumps({
-            "type": "new_viewer",
-            "connection_id": event["connection_id"],
-            "user_id": event["user_id"]
+            "type": "viewer_left",
+            "user_id": event["user_id"],
+            "username": event.get("username")
         }))
 
     async def viewer_update(self, event):
@@ -168,13 +189,44 @@ class LiveConsumer(AsyncWebsocketConsumer):
             "count": event["count"]
         }))
 
+    async def force_offer(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "new_viewer",
+            "connection_id": event["connection_id"],
+            "user_id": event["user_id"],
+            "username": event["username"]
+        }))
+
     # =========================
-    # 🔥 RTC EVENTS (FINAL FIX)
+    # 📦 SNAPSHOT SYSTEM (UPDATED 🔥)
+    # =========================
+
+    async def broadcast_viewer_snapshot(self):
+        viewers = await self.get_all_viewers(self.session_id)
+        streamer = await self.get_streamer(self.session_id)
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "viewer_snapshot",
+                "viewers": viewers,
+                "streamer": streamer
+            }
+        )
+
+    async def viewer_snapshot(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "initial_viewers",
+            "viewers": event["viewers"],
+            "streamer": event.get("streamer")
+        }))
+
+    # =========================
+    # 🔥 RTC ROUTING
     # =========================
 
     async def rtc_offer(self, event):
-        # ✅ only correct viewer gets offer
-        if event.get("connection_id") != self.connection_id:
+        if event.get("sender_channel") == self.channel_name:
             return
 
         await self.send(text_data=json.dumps({
@@ -183,15 +235,16 @@ class LiveConsumer(AsyncWebsocketConsumer):
         }))
 
     async def rtc_answer(self, event):
-        # ✅ broadcaster receives answers
+        if event.get("sender_channel") == self.channel_name:
+            return
+
         await self.send(text_data=json.dumps({
             "type": "answer",
             **event["data"]
         }))
 
     async def rtc_ice_candidate(self, event):
-        # ✅ only correct peer gets ICE
-        if event.get("connection_id") != self.connection_id:
+        if event.get("sender_channel") == self.channel_name:
             return
 
         await self.send(text_data=json.dumps({
@@ -229,7 +282,7 @@ class LiveConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def add_viewer(self, session_id, user_id):
-        LiveViewer.objects.get_or_create(
+        LiveViewer.objects.update_or_create(
             session_id=session_id,
             user_id=user_id
         )
@@ -246,6 +299,33 @@ class LiveConsumer(AsyncWebsocketConsumer):
         return LiveViewer.objects.filter(
             session_id=session_id
         ).count()
+
+    @database_sync_to_async
+    def get_all_viewers(self, session_id):
+        viewers = LiveViewer.objects.filter(
+            session_id=session_id
+        ).select_related("user")
+
+        return [
+            {
+                "user_id": v.user.id,
+                "username": v.user.username
+            }
+            for v in viewers
+        ]
+
+    # 🔥 NEW HELPER
+    @database_sync_to_async
+    def get_streamer(self, session_id):
+        session = LiveSession.objects.select_related("streamer").filter(id=session_id).first()
+
+        if not session:
+            return None
+
+        return {
+            "user_id": session.streamer.id,
+            "username": session.streamer.username
+        }
 
     @database_sync_to_async
     def is_streamer(self, session_id, user_id):

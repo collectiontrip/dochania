@@ -1,25 +1,42 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import AxiosInstance from "./auth/axiosInstance";
-import {
-  getLiveSocket,
-  addLiveListener,
-  removeLiveListener,
-} from "../socket/liveSocketManager";
+import { getLiveSocket } from "../socket/liveSocketManager";
+
+import "./Live.css";
 
 const Live = () => {
   const [isLive, setIsLive] = useState(false);
   const [messages, setMessages] = useState([]);
   const [sessionId, setSessionId] = useState(null);
+  const [isMicOn, setIsMicOn] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const [stream, setStream] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [viewers, setViewers] = useState([]);
+  const [input, setInput] = useState("");
+  const [isCameraOn, setIsCameraOn] = useState(false);
 
-  // 🔥 IMPORTANT
   const peerConnections = useRef({});
   const viewersRef = useRef(new Set());
 
   const videoRef = useRef();
+  const chatEndRef = useRef();
+
+  // 🔥 RECONNECT ON REFRESH
+  useEffect(() => {
+    const existingSession = localStorage.getItem("live_session");
+
+    if (existingSession) {
+      const socketInstance = getLiveSocket(existingSession);
+
+      if (socketInstance) {
+        setSessionId(existingSession);
+        setSocket(socketInstance);
+        setIsLive(true);
+      }
+    }
+  }, []);
 
   // 🎥 Start Camera
   const startCamera = async () => {
@@ -30,15 +47,33 @@ const Live = () => {
       });
 
       setStream(mediaStream);
+      setIsCameraOn(true);
 
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
       }
-
-      console.log("🎥 Camera started");
     } catch (err) {
       console.error("Camera error:", err);
     }
+  };
+
+  // 🛑 Stop Camera
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach((t) => t.stop());
+    }
+    setStream(null);
+    setIsCameraOn(false);
+  };
+
+  const toggleMic = () => {
+    if (!stream) return;
+
+    stream.getAudioTracks().forEach((track) => {
+      track.enabled = !track.enabled;
+    });
+
+    setIsMicOn((prev) => !prev);
   };
 
   // 🔴 Go Live
@@ -51,17 +86,33 @@ const Live = () => {
       });
 
       const session_id = res.data.session_id || res.data.id;
-      setSessionId(session_id);
+
+      localStorage.setItem("live_session", session_id);
 
       const socketInstance = getLiveSocket(session_id);
 
       if (socketInstance) {
+        setSessionId(session_id);
         setSocket(socketInstance);
         setIsLive(true);
       }
     } catch (err) {
+      if (err.response?.data?.error === "Already live") {
+        const sessions = await AxiosInstance.get("/live/streams/");
+        const mySession = sessions.data.find(
+          (s) => s.streamer === "me"
+        );
+
+        if (mySession) {
+          localStorage.setItem("live_session", mySession.id);
+          const socketInstance = getLiveSocket(mySession.id);
+          setSessionId(mySession.id);
+          setSocket(socketInstance);
+          setIsLive(true);
+        }
+      }
+
       console.error("LIVE ERROR:", err.response?.data || err.message);
-      alert("Live start failed ❌");
     } finally {
       setLoading(false);
     }
@@ -70,6 +121,8 @@ const Live = () => {
   // 🛑 Stop Live
   const handleStopLive = useCallback(() => {
     setIsLive(false);
+
+    localStorage.removeItem("live_session");
 
     Object.values(peerConnections.current).forEach((pc) => {
       try {
@@ -90,7 +143,23 @@ const Live = () => {
 
     setStream(null);
     setMessages([]);
+    setViewers([]);
+    setIsCameraOn(false);
   }, [stream, socket]);
+
+  // 💬 Send Message
+  const sendMessage = () => {
+    if (!input.trim() || !socket) return;
+
+    socket.send(
+      JSON.stringify({
+        action: "message",
+        message: input,
+      })
+    );
+
+    setInput("");
+  };
 
   // 🔗 Create Peer
   const createPeerConnection = (connectionId) => {
@@ -116,27 +185,19 @@ const Live = () => {
       }
     };
 
-    pc.onconnectionstatechange = () => {
-      if (
-        ["disconnected", "failed", "closed"].includes(pc.connectionState)
-      ) {
-        try {
-          pc.close();
-        } catch {}
-        delete peerConnections.current[connectionId];
-      }
-    };
-
     return pc;
   };
 
-  // 👀 New Viewer / Offer Sender
+  // 👀 New Viewer
   const handleNewViewer = async (connectionId) => {
     if (!socket || !stream) return;
 
-    if (peerConnections.current[connectionId]) return;
-
-    console.log("🔥 Sending offer to:", connectionId);
+    if (peerConnections.current[connectionId]) {
+      try {
+        peerConnections.current[connectionId].close();
+      } catch {}
+      delete peerConnections.current[connectionId];
+    }
 
     const pc = createPeerConnection(connectionId);
     if (!pc) return;
@@ -146,139 +207,197 @@ const Live = () => {
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
 
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.send(
-        JSON.stringify({
-          action: "offer",
-          offer,
-          connection_id: connectionId,
-        })
-      );
-    }
+    socket.send(
+      JSON.stringify({
+        action: "offer",
+        offer,
+        connection_id: connectionId,
+      })
+    );
   };
 
-  // 🔥 FIX: camera late start → send offers to all viewers
   useEffect(() => {
     if (!stream || !socket) return;
-
-    console.log("🎯 Sending offers to all existing viewers...");
 
     viewersRef.current.forEach((connectionId) => {
       handleNewViewer(connectionId);
     });
   }, [stream]);
 
-  // 🔁 Socket Listener
+  // 🔥 SOCKET
   useEffect(() => {
     if (!socket) return;
 
-    const handleMessage = async (data) => {
-      // 💬 Chat
-      if (data.type === "message") {
+    socket.onmessage = async (event) => {
+      const data = JSON.parse(event.data);
+
+      // 💬 CHAT
+      if (data.type === "message" || data.type === "live_message") {
         setMessages((prev) => [...prev, data]);
       }
 
-      // 👀 New viewer
-      if (data.type === "new_viewer") {
-        console.log("👀 New viewer:", data.connection_id);
+      // 🔥 FULL SNAPSHOT (MAIN FIX)
+      if (data.type === "initial_viewers") {
+        setViewers(data.viewers);
 
+        // 🔥 sync connection ids clean
+        viewersRef.current = new Set();
+      }
+
+      // 🔥 NEW VIEWER
+      if (data.type === "new_viewer") {
         viewersRef.current.add(data.connection_id);
+
+        setViewers((prev) => {
+          if (prev.find((v) => v.user_id === data.user_id)) return prev;
+          return [...prev, { user_id: data.user_id, username: data.username }];
+        });
 
         handleNewViewer(data.connection_id);
       }
 
-      // 🔁 Answer
+      // 🔥 VIEWER LEFT (STRONG FIX)
+      if (data.type === "viewer_left") {
+        // remove from UI
+        setViewers((prev) =>
+          prev.filter((v) => v.user_id !== data.user_id)
+        );
+
+        // 🔥 remove peer connections
+        Object.keys(peerConnections.current).forEach((key) => {
+          try {
+            peerConnections.current[key]?.close();
+          } catch {}
+          delete peerConnections.current[key];
+        });
+
+        // 🔥 reset connection ids
+        viewersRef.current.clear();
+      }
+
+      // 🎥 RTC
       if (data.type === "answer") {
         const pc = peerConnections.current[data.connection_id];
-        if (pc) {
-          await pc.setRemoteDescription(
-            new RTCSessionDescription(data.answer)
-          );
-        }
+        await pc?.setRemoteDescription(
+          new RTCSessionDescription(data.answer)
+        );
       }
 
-      // ❄️ ICE
       if (data.type === "ice_candidate") {
         const pc = peerConnections.current[data.connection_id];
-        if (pc) {
-          try {
-            await pc.addIceCandidate(
-              new RTCIceCandidate(data.candidate)
-            );
-          } catch (err) {
-            console.error("ICE error:", err);
-          }
-        }
+        await pc?.addIceCandidate(
+          new RTCIceCandidate(data.candidate)
+        );
       }
 
-      // 🔴 End stream
+      // 🔴 END
       if (data.type === "stream_ended") {
-        if (socket) socket.close();
-
+        socket.close();
+        localStorage.removeItem("live_session");
         setSocket(null);
         setIsLive(false);
         setStream(null);
         setMessages([]);
+        setViewers([]);
       }
     };
-
-    addLiveListener(handleMessage);
-    return () => removeLiveListener(handleMessage);
   }, [socket, stream]);
 
-  // 🧹 Cleanup
+  // 🔽 Auto scroll
   useEffect(() => {
-    return () => {
-      Object.values(peerConnections.current).forEach((pc) => {
-        try {
-          pc.close();
-        } catch {}
-      });
-
-      if (stream) stream.getTracks().forEach((t) => t.stop());
-      if (socket) socket.close();
-    };
-  }, []);
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>🎥 Live Streaming</h2>
+    <div className="live-page">
+      <div className="live-header">
+        <h2 className="live-title">Live Streaming</h2>
 
-      {!isLive ? (
-        <button onClick={handleGoLive} disabled={loading}>
-          {loading ? "Starting..." : "🔴 Go Live"}
-        </button>
-      ) : (
-        <div>
-          <h3 style={{ color: "red" }}>🔴 LIVE</h3>
-          <p>Session ID: {sessionId}</p>
-
-          <button onClick={startCamera}>🎥 Start Camera</button>
-          <button onClick={handleStopLive}>🛑 Stop Live</button>
-        </div>
-      )}
+        {!isLive ? (
+          <button className="btn primary" onClick={handleGoLive} disabled={loading}>
+            {loading ? "Starting..." : "Go Live"}
+          </button>
+        ) : (
+          <button className="btn danger" onClick={handleStopLive}>
+            Stop Live
+          </button>
+        )}
+      </div>
 
       {isLive && (
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          style={{ width: "400px", borderRadius: "10px" }}
-        />
-      )}
+        <div className="live-container">
 
-      <h3>💬 Live Messages</h3>
+          <div className="video-section">
+            <div className="live-badge">LIVE</div>
 
-      <div>
-        {messages.length === 0 && <p>No messages yet...</p>}
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              className="live-video"
+            />
 
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <b>{msg.user}:</b> {msg.message}
+            {!isCameraOn ? (
+              <button className="btn secondary video-btn camera-btn" onClick={startCamera}>
+                Start Camera
+              </button>
+            ) : (
+              <button className="btn danger video-btn camera-btn" onClick={stopCamera}>
+                Stop Camera
+              </button>
+            )}
+
+            <button
+              className="btn secondary video-btn mic-btn"
+              onClick={toggleMic}
+              disabled={!stream}
+            >
+              {isMicOn ? "Mic On 🎤" : "Mic Off 🔇"}
+            </button>
           </div>
-        ))}
-      </div>
+
+          <div className="chat-section">
+            <div className="chat-messages">
+              {messages.map((msg, index) => (
+                <div key={index} className="chat-message">
+                  <span className="chat-user">{msg.user}</span>
+                  <span className="chat-text">{msg.message}</span>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+
+            <div className="chat-input-box">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type message..."
+                className="chat-input"
+                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              />
+              <button onClick={sendMessage} className="btn send">
+                Send
+              </button>
+            </div>
+          </div>
+
+          <div className="viewer-section">
+            <div className="viewer-header">
+              Viewers ({viewers.length})
+            </div>
+
+            <div className="viewer-list">
+              {viewers.map((v) => (
+                <div key={v.user_id} className="viewer-item">
+                  {v.username}
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      )}
     </div>
   );
 };
