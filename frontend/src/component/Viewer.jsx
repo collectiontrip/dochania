@@ -147,6 +147,7 @@ const Viewer = () => {
 
       // 🎥 OFFER (MAIN)
       if (data.type === "offer") {
+        if (!data.offer || !data.connection_id) return;
         const connId = data.connection_id;
 
         console.log("📩 Offer received from:", connId);

@@ -22,9 +22,9 @@ class LiveConsumer(AsyncWebsocketConsumer):
         self.user = None
         self.session_id = self.scope["url_route"]["kwargs"]["session_id"]
         self.room_group_name = f"live_{self.session_id}"
-
-        # 🔥 UNIQUE CONNECTION ID
         self.connection_id = str(uuid.uuid4())
+
+        print(f"\n🔌 CONNECT ATTEMPT → session: {self.session_id}")
 
         # 🔐 AUTH
         query_string = self.scope.get("query_string", b"").decode()
@@ -32,6 +32,7 @@ class LiveConsumer(AsyncWebsocketConsumer):
         token = query_params.get("token", [None])[0]
 
         if not token:
+            print("❌ No token → closing")
             await self.close()
             return
 
@@ -40,7 +41,10 @@ class LiveConsumer(AsyncWebsocketConsumer):
             user_id = access_token["user_id"]
             self.user = await database_sync_to_async(User.objects.get)(id=user_id)
 
+            print(f"✅ Auth success → user: {self.user.id}")
+
         except TokenError:
+            print("❌ Token error → closing")
             await self.close()
             return
 
@@ -50,7 +54,11 @@ class LiveConsumer(AsyncWebsocketConsumer):
             return
 
         # 🔴 SESSION CHECK
-        if not await self.check_session(self.session_id):
+        is_live = await self.check_session(self.session_id)
+        print(f"🧪 SESSION CHECK → is_live: {is_live}")
+
+        if not is_live:
+            print("❌ SESSION NOT LIVE → closing socket")
             await self.close()
             return
 
@@ -61,23 +69,33 @@ class LiveConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+        print(f"🟢 CONNECTED → {self.channel_name}")
 
-        # 👀 ADD VIEWER
-        await self.add_viewer(self.session_id, self.user.id)
+        # 🎯 CHECK ROLE
+        self.is_streamer_flag = await self.is_streamer(self.session_id, self.user.id)
 
-        # 🔥 NEW VIEWER EVENT
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "new_viewer",
-                "connection_id": self.connection_id,
-                "user_id": self.user.id
-            }
-        )
+        if not self.is_streamer_flag:
+            await self.add_viewer(self.session_id, self.user.id)
+            print(f"👀 Viewer added → {self.user.id}")
+        else:
+            print(f"🎥 Streamer connected → {self.user.id}")
+
+        # 🔥 IMPORTANT: ONLY SEND new_viewer IF NOT STREAMER
+        if not self.is_streamer_flag:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "new_viewer",
+                    "connection_id": self.connection_id,
+                    "user_id": self.user.id
+                }
+            )
 
         await self.send_viewer_count()
 
     async def disconnect(self, close_code):
+        print(f"🔌 DISCONNECT → {self.channel_name} code: {close_code}")
+
         try:
             await self.channel_layer.group_discard(
                 self.room_group_name,
@@ -85,7 +103,10 @@ class LiveConsumer(AsyncWebsocketConsumer):
             )
 
             if self.user:
-                await self.remove_viewer(self.session_id, self.user.id)
+                if not self.is_streamer_flag:
+                    await self.remove_viewer(self.session_id, self.user.id)
+                    print(f"👀 Viewer removed → {self.user.id}")
+
                 await self.send_viewer_count()
 
         except Exception as e:
@@ -123,6 +144,8 @@ class LiveConsumer(AsyncWebsocketConsumer):
 
         # 🎥 WEBRTC SIGNALING
         elif action in ["offer", "answer", "ice_candidate"]:
+            print(f"📡 {action.upper()} → from {self.channel_name}")
+
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -133,9 +156,15 @@ class LiveConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+        # ❤️ HEARTBEAT
+        elif action == "heartbeat":
+            return
+
         # 🔴 END STREAM
         elif action == "end_stream":
-            if await self.is_streamer(self.session_id, self.user.id):
+            if self.is_streamer_flag:
+                print("🛑 STREAM END TRIGGERED")
+
                 await self.end_stream(self.session_id)
 
                 await self.channel_layer.group_send(
@@ -169,13 +198,14 @@ class LiveConsumer(AsyncWebsocketConsumer):
         }))
 
     # =========================
-    # 🔥 RTC EVENTS (FINAL FIX)
+    # 🔥 RTC EVENTS
     # =========================
 
     async def rtc_offer(self, event):
-        # ✅ only correct viewer gets offer
         if event.get("connection_id") != self.connection_id:
             return
+
+        print(f"📩 OFFER → to {self.connection_id}")
 
         await self.send(text_data=json.dumps({
             "type": "offer",
@@ -183,23 +213,30 @@ class LiveConsumer(AsyncWebsocketConsumer):
         }))
 
     async def rtc_answer(self, event):
-        # ✅ broadcaster receives answers
-        await self.send(text_data=json.dumps({
-            "type": "answer",
-            **event["data"]
-        }))
+        # ✅ only broadcaster receives
+        if self.is_streamer_flag:
+            print("📩 ANSWER → broadcaster")
+
+            await self.send(text_data=json.dumps({
+                "type": "answer",
+                **event["data"]
+            }))
 
     async def rtc_ice_candidate(self, event):
-        # ✅ only correct peer gets ICE
-        if event.get("connection_id") != self.connection_id:
-            return
-
-        await self.send(text_data=json.dumps({
-            "type": "ice_candidate",
-            **event["data"]
-        }))
+        if event.get("connection_id") == self.connection_id:
+            await self.send(text_data=json.dumps({
+                "type": "ice_candidate",
+                **event["data"]
+            }))
+        elif self.is_streamer_flag:
+            await self.send(text_data=json.dumps({
+                "type": "ice_candidate",
+                **event["data"]
+            }))
 
     async def stream_ended(self, event):
+        print("🔴 STREAM ENDED → closing socket")
+
         await self.send(text_data=json.dumps({
             "type": "stream_ended"
         }))

@@ -1,0 +1,261 @@
+/* ===============================
+   🌍 PAGE
+================================ */
+.live-page {
+  background: #0f172a;
+  color: #fff;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* ===============================
+   📺 STREAM LIST
+================================ */
+.live-list {
+  max-width: 600px;
+  margin: auto;
+}
+
+.stream-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.stream-item button {
+  background: #22c55e;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ===============================
+   🔴 LIVE CONTAINER
+================================ */
+.live-container {
+  display: flex;
+  gap: 20px;
+  height: 80vh;
+}
+
+/* ===============================
+   🎥 VIDEO SECTION
+================================ */
+.video-section {
+  flex: 2;
+  position: relative;
+  background: black;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.live-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.live-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: red;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  z-index: 5;
+}
+
+/* ===============================
+   📱 MOBILE CONTROLS
+================================ */
+.mobile-controls {
+  position: absolute;
+  bottom: 60px; /* 🔥 leave button ke upar shift */
+  left: 10px;
+  display: flex;
+  gap: 10px;
+  z-index: 5;
+}
+
+.mobile-controls button {
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: white;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===============================
+   🚪 LEAVE BUTTON
+================================ */
+.leave-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 10; /* 🔥 always top */
+}
+
+/* ===============================
+   💬 CHAT
+================================ */
+.chat-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.chat-section.overlay {
+  position: absolute;
+  right: 10px;
+  bottom: 80px; /* 🔥 leave btn se overlap fix */
+  width: 320px;
+  height: 400px;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(10px);
+  z-index: 6;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.chat-message {
+  margin-bottom: 8px;
+}
+
+.chat-user {
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.chat-text {
+  color: #e2e8f0;
+}
+
+.chat-input-box {
+  display: flex;
+  padding: 10px;
+  background: #020617;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  margin-right: 6px;
+}
+
+.btn.send {
+  background: #3b82f6;
+  border: none;
+  padding: 8px 12px;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===============================
+   👀 VIEWERS
+================================ */
+.viewer-section {
+  flex: 1;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.viewer-section.overlay {
+  position: absolute;
+  left: 10px;
+  bottom: 80px; /* 🔥 leave btn se overlap fix */
+  width: 220px;
+  height: 300px;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(10px);
+  z-index: 6;
+}
+
+.viewer-header {
+  padding: 10px;
+  background: #020617;
+  font-weight: bold;
+}
+
+.viewer-list {
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.viewer-item {
+  padding: 6px 0;
+  border-bottom: 1px solid #334155;
+}
+
+/* ===============================
+   🔘 BUTTONS
+================================ */
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: #22c55e;
+  color: white;
+}
+
+.btn.danger {
+  background: #ef4444;
+  color: white;
+}
+
+/* ===============================
+   📱 RESPONSIVE (MAIN MAGIC)
+================================ */
+@media (max-width: 768px) {
+  .live-container {
+    flex-direction: column;
+  }
+
+  /* desktop sidebar hide */
+  .chat-section:not(.overlay),
+  .viewer-section:not(.overlay) {
+    display: none;
+  }
+
+  .video-section {
+    height: 80vh;
+  }
+
+  /* overlay adjustments */
+  .chat-section.overlay {
+    width: 90%;
+    height: 50%;
+    left: 5%;
+    right: 5%;
+    bottom: 90px;
+  }
+
+  .viewer-section.overlay {
+    width: 60%;
+    height: 40%;
+    bottom: 90px;
+  }
+}

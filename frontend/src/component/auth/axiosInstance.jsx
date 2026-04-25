@@ -1,4 +1,3 @@
-// axiosInstance.js
 import axios from "axios";
 
 const BASE_URL =
@@ -13,13 +12,16 @@ const AxiosInstance = axios.create({
   },
 });
 
+// -------------------------------
+// REQUEST INTERCEPTOR
+// -------------------------------
 AxiosInstance.interceptors.request.use(
   (config) => {
-
     const noAuthEndpoints = [
       "/auth/jwt/create/",
       "/auth/users/reset_password/",
       "/auth/users/reset_password_confirm/",
+      "/auth/jwt/refresh/",
     ];
 
     const requestUrl = config.url || "";
@@ -42,15 +44,55 @@ AxiosInstance.interceptors.request.use(
 );
 
 // -------------------------------
-// Auth helper (login)
+// RESPONSE INTERCEPTOR (AUTO REFRESH)
 // -------------------------------
-export const loginUser = async (username, password) => {
-  const res = await AxiosInstance.post("/auth/jwt/create/", {
-    username: username.trim(),
-    password: password.trim(),
-  });
+AxiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-  return res.data;
-};
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        if (!refreshToken) {
+          throw new Error("No refresh token");
+        }
+
+        // refresh access token
+        const res = await axios.post(
+          `${BASE_URL}/auth/jwt/refresh/`,
+          {
+            refresh: refreshToken,
+          }
+        );
+
+        const newAccessToken = res.data.access;
+
+        localStorage.setItem("accessToken", newAccessToken);
+
+        // update header
+        originalRequest.headers.Authorization = `JWT ${newAccessToken}`;
+
+        return AxiosInstance(originalRequest);
+      } catch (err) {
+        console.log("❌ Refresh failed, logging out");
+
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user_id");
+
+        window.location.href = "/login";
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default AxiosInstance;

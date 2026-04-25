@@ -50,6 +50,25 @@ class EndLiveSessionView(APIView):
         return Response({"message": "Live ended"})
 
 
+class LiveHeartbeatView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, session_id):
+        try:
+            session = LiveSession.objects.get(
+                id=session_id,
+                streamer=request.user,
+                is_live=True
+            )
+        except LiveSession.DoesNotExist:
+            return Response({"error": "Session not live"}, status=404)
+
+        session.last_heartbeat = timezone.now()
+        session.save()
+
+        return Response({"message": "heartbeat ok"})
+
+
 class LiveSessionListView(APIView):
     permission_classes = [IsAuthenticated]
 

@@ -10,6 +10,7 @@ class LiveSession(models.Model):
     is_live = models.BooleanField(default=True)
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(null=True, blank=True)
+    last_heartbeat = models.DateTimeField(null=True, blank=True)
 
 
     def __str__(self):

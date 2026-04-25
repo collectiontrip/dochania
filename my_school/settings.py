@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'core',
-    'live',
+    'live.apps.LiveConfig',
     'school',
 ]
 
@@ -146,8 +146,21 @@ DJOSER = {
 # ----------------------
 # 🔐 JWT
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME", 56))),
+    "AUTH_HEADER_TYPES": ("JWT",),
+
+    # 🔐 Access token (short life)
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME", 5))
+    ),
+
+    # 🔄 Refresh token (long life)
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        days=int(os.getenv("REFRESH_TOKEN_LIFETIME", 17))
+    ),
+
+    # ⚡ optional but recommended
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 # ----------------------
