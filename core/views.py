@@ -1,13 +1,22 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 from .models import UserDevice
+from .serializers import ProfileUpdateSerializer
 from rest_framework.views import APIView
 
 User = get_user_model()
+
+
+
+
+
+
 
 
 # =========================
@@ -95,3 +104,23 @@ class SaveDeviceView(APIView):
             "device_id": device.id,
             "device_name": device_name
         }, status=status.HTTP_201_CREATED)
+
+
+class ProfileUpdateView(RetrieveUpdateAPIView):
+
+    serializer_class = ProfileUpdateSerializer
+
+    permission_classes = [IsAuthenticated]
+
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get_object(self):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        print("PUT DATA:", request.data)
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        print("PATCH DATA:", request.data)
+        return self.partial_update(request, *args, **kwargs)

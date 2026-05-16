@@ -1,131 +1,308 @@
-import { Routes, Route, NavLink, Navigate, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  NavLink,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+
 import { useEffect, useState } from "react";
 
 import Home from "./component/home";
+
 import MediaAccess from "./component/Media/Media";
+
 import SignUp from "./component/auth/SignUp";
+
+import Activate from "./component/auth/Activate";
+
 import Login from "./component/auth/SignIn";
-import Logout from "./component/auth/Logout";
+
 import ResetPassword from "./component/auth/ResetPassword";
+
 import ForgotPassword from "./component/auth/ForgotPassword";
+
 import PrivateChat from "./component/chat/PrivateChat";
+
 import Users from "./component/Users";
 
 import Live from "./component/Live";
+
 import Viewer from "./component/Viewer";
+
+import Profile from "./component/Profile/Profile";
+
+import UpdateProfile from "./component/Profile/UpdateProfile";
 
 import "./App.css";
 
 const Layout = () => {
-  const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // 🔐 auth check
+  const location = useLocation();
+
+  const [isAuthenticated, setIsAuthenticated] =
+    useState(false);
+
+  // 🔐 AUTH CHECK
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+
+    const token =
+      localStorage.getItem("accessToken");
+
     setIsAuthenticated(!!token);
+
   }, [location.pathname]);
 
   return (
+
     <div className="app-root">
 
       {/* 🔥 HEADER */}
       <header className="app-header">
-        <div className="logo">MediaApp</div>
+
+        <div className="logo">
+          MediaApp
+        </div>
 
         <nav className="nav-bar">
 
-          <NavLink to="/home" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+          {/* HOME */}
+          <NavLink
+            to="/home"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
             Home
           </NavLink>
 
-          <NavLink to="/media" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+          {/* MEDIA */}
+          <NavLink
+            to="/media"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
             Media
           </NavLink>
 
-          <NavLink to="/users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+          {/* USERS */}
+          <NavLink
+            to="/users"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
             Users
           </NavLink>
 
-          {/* 🔴 LIVE LINKS */}
+          {/* 🔴 AUTHENTICATED LINKS */}
           {isAuthenticated && (
             <>
-              <NavLink to="/live" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+
+              {/* 🔴 GO LIVE */}
+              <NavLink
+                to="/live"
+                className={({ isActive }) =>
+                  isActive
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
                 🔴 Go Live
               </NavLink>
 
-              <NavLink to="/watch" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+              {/* 👀 WATCH LIVE */}
+              <NavLink
+                to="/watch"
+                className={({ isActive }) =>
+                  isActive
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
                 👀 Watch Live
               </NavLink>
+
+              {/* 👤 PROFILE */}
+              <NavLink
+                to="/profile"
+                className={({ isActive }) =>
+                  isActive
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
+                Profile
+              </NavLink>
+
             </>
           )}
 
-          {/* AUTH LINKS */}
+          {/* 🔐 GUEST LINKS */}
           {!isAuthenticated && (
             <>
-              <NavLink to="/signup" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+
+              {/* SIGNUP */}
+              <NavLink
+                to="/signup"
+                className={({ isActive }) =>
+                  isActive
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
                 SignUp
               </NavLink>
 
-              <NavLink to="/login" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+              {/* LOGIN */}
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  isActive
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
                 Login
               </NavLink>
+
             </>
           )}
 
-          {isAuthenticated && (
-            <NavLink to="/logout" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-              Logout
-            </NavLink>
-          )}
-
         </nav>
+
       </header>
 
       {/* 🔥 MAIN CONTENT */}
       <main className="app-container">
+
         <Routes>
 
           {/* 🔹 DEFAULT */}
-          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route
+            path="/"
+            element={
+              <Navigate
+                to="/home"
+                replace
+              />
+            }
+          />
 
-          {/* 🔹 MAIN */}
-          <Route path="/home" element={<Home />} />
-          <Route path="/media" element={<MediaAccess />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/chat/:userId" element={<PrivateChat />} />
+          {/* 🔹 HOME */}
+          <Route
+            path="/home"
+            element={<Home />}
+          />
 
-          {/* 🔴 LIVE (ONLY STREAMER) */}
+          {/* 🔹 MEDIA */}
+          <Route
+            path="/media"
+            element={<MediaAccess />}
+          />
+
+          {/* 🔹 USERS */}
+          <Route
+            path="/users"
+            element={<Users />}
+          />
+
+          {/* 🔹 PRIVATE CHAT */}
+          <Route
+            path="/chat/:userId"
+            element={<PrivateChat />}
+          />
+
+          {/* 👤 PROFILE */}
+          <Route
+            path="/profile"
+            element={
+              isAuthenticated
+                ? <Profile />
+                : <Navigate to="/login" />
+            }
+          />
+
+          {/* ✏️ UPDATE PROFILE */}
+          <Route
+            path="/edit-profile"
+            element={
+              isAuthenticated
+                ? <UpdateProfile />
+                : <Navigate to="/login" />
+            }
+          />
+
+          {/* 🔴 GO LIVE */}
           <Route
             path="/live"
             element={
-              isAuthenticated ? <Live /> : <Navigate to="/login" />
+              isAuthenticated
+                ? <Live />
+                : <Navigate to="/login" />
             }
           />
 
-          {/* 👀 VIEWER (ONLY WATCHING) */}
+          {/* 👀 WATCH LIVE */}
           <Route
             path="/watch"
             element={
-              isAuthenticated ? <Viewer /> : <Navigate to="/login" />
+              isAuthenticated
+                ? <Viewer />
+                : <Navigate to="/login" />
             }
           />
 
-          {/* 🔐 AUTH */}
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          {/* 🔐 SIGNUP */}
+          <Route
+            path="/signup"
+            element={<SignUp />}
+          />
 
+          {/* 🔐 LOGIN */}
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          {/* 🔐 FORGOT PASSWORD */}
+          <Route
+            path="/forgot-password"
+            element={<ForgotPassword />}
+          />
+
+          {/* 🔐 RESET PASSWORD */}
           <Route
             path="/password/reset/confirm/:uid/:token"
             element={<ResetPassword />}
           />
 
+          {/* 🔐 ACCOUNT ACTIVATION */}
+          <Route
+            path="/activate/:uid/:token"
+            element={<Activate />}
+          />
+
           {/* ❌ FALLBACK */}
-          <Route path="*" element={<Navigate to="/home" replace />} />
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to="/home"
+                replace
+              />
+            }
+          />
 
         </Routes>
+
       </main>
 
     </div>

@@ -28,7 +28,7 @@ export const getLiveSocket = (sessionId) => {
 
     currentSessionId = sessionId;
 
-    const wsUrl = `wss://${window.location.hostname}:8000/ws/live/${sessionId}/?token=${token}`;
+    const wsUrl = `wss://${window.location.hostname}:8001/ws/live/${sessionId}/?token=${token}`;
     console.log("Creating LIVE WebSocket:", wsUrl);
 
     liveSocket = new WebSocket(wsUrl);

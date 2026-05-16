@@ -2,8 +2,8 @@ import axios from "axios";
 
 const BASE_URL =
   window.location.hostname === "localhost"
-    ? "https://localhost:8000"
-    : "https://192.168.137.1:8000";
+    ? "https://localhost:8001"
+    : "https://192.168.1.7:8001";
 
 const AxiosInstance = axios.create({
   baseURL: BASE_URL,

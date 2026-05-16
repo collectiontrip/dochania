@@ -21,6 +21,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
+        user.is_active = False 
         user.save()
         return user
 
@@ -35,5 +36,22 @@ class UserSerializer(BaseUserSerializer):
             'first_name',
             'last_name',
             'is_online',
-            'last_seen'
+            'last_seen',
+            'bio',
+            'profile_picture',
+        ]
+
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'bio',
+            'profile_picture',
         ]

@@ -18,7 +18,7 @@ export const getRealtimeSocket = () => {
   const token = localStorage.getItem("accessToken");
   if (!token) return null;
 
-  const wsUrl = `wss://${window.location.hostname}:8000/ws/realtime/?token=${token}`;
+  const wsUrl = `wss://${window.location.hostname}:8001/ws/realtime/?token=${token}`;
 
   console.log("Creating REALTIME WebSocket:", wsUrl);
 
