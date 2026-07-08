@@ -3,16 +3,17 @@ import {
   Route,
   NavLink,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 
-import { useEffect, useState } from "react";
+import { useUser } from "./contexts/UserContext";
 
 import Home from "./component/home";
 
 import MediaAccess from "./component/Media/Media";
 
 import SignUp from "./component/auth/SignUp";
+
+import CreatePost from "./component/post/CreatePost";
 
 import Activate from "./component/auth/Activate";
 
@@ -26,32 +27,43 @@ import PrivateChat from "./component/chat/PrivateChat";
 
 import Users from "./component/Users";
 
+import UserFollowerList from "./component/relationships/UserFollowersList";
+import UserFollowingList from "./component/relationships/UserFollowingList";
+
 import Live from "./component/Live";
 
 import Viewer from "./component/Viewer";
 
 import Profile from "./component/Profile/Profile";
 
+import FollowerList from "./component/relationships/FollowersList";
+import FollowingList from "./component/relationships/FollowingList";
+
 import UpdateProfile from "./component/Profile/UpdateProfile";
+
+import UserProfile from "./component/Profile/UserProfile";
 
 import "./App.css";
 
 const Layout = () => {
 
-  const location = useLocation();
+  const {
+    user,
+    loading,
+  } = useUser();
 
-  const [isAuthenticated, setIsAuthenticated] =
-    useState(false);
+  const profileImage =
+    user?.profile_picture || "/default-avatar.png";
 
-  // 🔐 AUTH CHECK
-  useEffect(() => {
+  if (loading) {
+    return (
+      <h2 className="profile-loading">
+        Loading...
+      </h2>
+    );
+  }
 
-    const token =
-      localStorage.getItem("accessToken");
-
-    setIsAuthenticated(!!token);
-
-  }, [location.pathname]);
+  const isAuthenticated = !!user;
 
   return (
 
@@ -105,8 +117,6 @@ const Layout = () => {
           {/* 🔴 AUTHENTICATED LINKS */}
           {isAuthenticated && (
             <>
-
-              {/* 🔴 GO LIVE */}
               <NavLink
                 to="/live"
                 className={({ isActive }) =>
@@ -118,7 +128,6 @@ const Layout = () => {
                 🔴 Go Live
               </NavLink>
 
-              {/* 👀 WATCH LIVE */}
               <NavLink
                 to="/watch"
                 className={({ isActive }) =>
@@ -130,26 +139,43 @@ const Layout = () => {
                 👀 Watch Live
               </NavLink>
 
-              {/* 👤 PROFILE */}
               <NavLink
                 to="/profile"
                 className={({ isActive }) =>
                   isActive
-                    ? "nav-link active"
-                    : "nav-link"
+                    ? "nav-link profile-nav active"
+                    : "nav-link profile-nav"
                 }
               >
-                Profile
-              </NavLink>
+                <img
+                  src={profileImage}
+                  alt={user?.username || Profile}
+                  className="nav-profile-image"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/default-avatar.png";
+                  }}
+                />
 
+                <div className="nav-profile-info">
+
+                  <span className="nav-profile-name">
+                    {user?.username}
+                  </span>
+
+                  <span className="nav-profile-coins">
+                    🪙 {user?.coin_balance ?? 0}
+                  </span>
+
+                </div>
+
+              </NavLink>
             </>
           )}
 
           {/* 🔐 GUEST LINKS */}
           {!isAuthenticated && (
             <>
-
-              {/* SIGNUP */}
               <NavLink
                 to="/signup"
                 className={({ isActive }) =>
@@ -161,7 +187,6 @@ const Layout = () => {
                 SignUp
               </NavLink>
 
-              {/* LOGIN */}
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
@@ -172,7 +197,6 @@ const Layout = () => {
               >
                 Login
               </NavLink>
-
             </>
           )}
 
@@ -185,7 +209,6 @@ const Layout = () => {
 
         <Routes>
 
-          {/* 🔹 DEFAULT */}
           <Route
             path="/"
             element={
@@ -196,101 +219,145 @@ const Layout = () => {
             }
           />
 
-          {/* 🔹 HOME */}
           <Route
             path="/home"
             element={<Home />}
           />
 
-          {/* 🔹 MEDIA */}
           <Route
             path="/media"
             element={<MediaAccess />}
           />
 
-          {/* 🔹 USERS */}
           <Route
             path="/users"
             element={<Users />}
           />
 
-          {/* 🔹 PRIVATE CHAT */}
           <Route
-            path="/chat/:userId"
-            element={<PrivateChat />}
+            path="/users/:id"
+            element={
+              isAuthenticated
+                ? <UserProfile />
+                : <Navigate to="/login" replace />
+            }
           />
 
-          {/* 👤 PROFILE */}
+          <Route
+            path="/profile/followers"
+            element={
+              isAuthenticated
+                ? <FollowerList />
+                : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/profile/following"
+            element={
+              isAuthenticated
+                ? <FollowingList />
+                : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/profile/:userId/followers"
+            element={
+              isAuthenticated
+                ? <UserFollowerList />
+                : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/create-post"
+            element={
+              isAuthenticated
+                ? <CreatePost />
+                : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/profile/:userId/following"
+            element={
+              isAuthenticated
+                ? <UserFollowingList />
+                : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/chat/:userId"
+            element={
+              isAuthenticated
+                ? <PrivateChat />
+                : <Navigate to="/login" replace />
+            }
+          />
+
           <Route
             path="/profile"
             element={
               isAuthenticated
                 ? <Profile />
-                : <Navigate to="/login" />
+                : <Navigate to="/login" replace />
             }
           />
 
-          {/* ✏️ UPDATE PROFILE */}
           <Route
             path="/edit-profile"
             element={
               isAuthenticated
                 ? <UpdateProfile />
-                : <Navigate to="/login" />
+                : <Navigate to="/login" replace />
             }
           />
 
-          {/* 🔴 GO LIVE */}
           <Route
             path="/live"
             element={
               isAuthenticated
                 ? <Live />
-                : <Navigate to="/login" />
+                : <Navigate to="/login" replace />
             }
           />
 
-          {/* 👀 WATCH LIVE */}
           <Route
             path="/watch"
             element={
               isAuthenticated
                 ? <Viewer />
-                : <Navigate to="/login" />
+                : <Navigate to="/login" replace />
             }
           />
 
-          {/* 🔐 SIGNUP */}
           <Route
             path="/signup"
             element={<SignUp />}
           />
 
-          {/* 🔐 LOGIN */}
           <Route
             path="/login"
             element={<Login />}
           />
 
-          {/* 🔐 FORGOT PASSWORD */}
           <Route
             path="/forgot-password"
             element={<ForgotPassword />}
           />
 
-          {/* 🔐 RESET PASSWORD */}
           <Route
             path="/password/reset/confirm/:uid/:token"
             element={<ResetPassword />}
           />
 
-          {/* 🔐 ACCOUNT ACTIVATION */}
           <Route
             path="/activate/:uid/:token"
             element={<Activate />}
           />
 
-          {/* ❌ FALLBACK */}
           <Route
             path="*"
             element={

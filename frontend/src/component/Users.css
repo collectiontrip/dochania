@@ -1,52 +1,429 @@
-.users-page{
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 10px;
+/* =========================
+   USERS PAGE
+========================= */
+
+.users-page {
+  min-height: 100vh;
+
+  padding: 32px 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #111827,
+      #1e1b4b
+    );
+
+  color: #ffffff;
 }
 
-.users-page h2{
-    text-align: center;
-    margin-bottom: 25px;
+/* =========================
+   HEADER
+========================= */
+
+.users-header {
+  text-align: center;
+
+  margin-bottom: 40px;
 }
 
-.users-list{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.users-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+
+  color: #ffffff;
+
+  margin-bottom: 10px;
+
+  letter-spacing: 0.5px;
 }
 
-.user-card{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 16px;
-    border-radius: 10px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+.users-subtitle {
+  font-size: 1rem;
+
+  color: #cbd5e1;
 }
 
-.user-info{
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+/* =========================
+   USERS GRID
+========================= */
+
+.users-grid {
+  width: 100%;
+  max-width: 1350px;
+
+  margin: auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(290px, 1fr)
+  );
+
+  gap: 26px;
 }
 
-.username{
-    font-size: 16px;
-    font-weight: 600;
-    color: #222;
+/* =========================
+   USER CARD
+========================= */
+
+.user-card {
+  position: relative;
+
+  padding: 24px;
+
+  border-radius: 26px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.12);
+
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border 0.28s ease;
+
+  overflow: hidden;
 }
 
-.email{
-    font-size: 13px;
-    color: #666;
+/* TOP GLOW */
+.user-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: -70px;
+  right: -70px;
+
+  width: 160px;
+  height: 160px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(99, 102, 241, 0.22),
+      transparent 70%
+    );
+
+  pointer-events: none;
 }
 
-.chat-btn{
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
+/* HOVER */
+.user-card:hover {
+  transform:
+    translateY(-6px)
+    scale(1.01);
+
+  border:
+    1px solid rgba(99, 102, 241, 0.28);
+
+  box-shadow:
+    0 24px 55px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================
+   USER TOP
+========================= */
+
+.user-top {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  margin-bottom: 22px;
+}
+
+/* =========================
+   USER IMAGE WRAPPER
+========================= */
+
+.user-avatar-wrapper {
+  width: 82px;
+  height: 82px;
+
+  min-width: 82px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  background: #f3f4f6;
+
+  border: 4px solid rgba(255,255,255,0.15);
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.18);
+
+  flex-shrink: 0;
+
+  transition: 0.3s ease;
+}
+
+
+
+/* =========================
+   USER IMAGE
+========================= */
+
+.user-avatar {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+.user-avatar-wrapper--clickable,
+.user-name--clickable {
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    backg
+}
+
+.user-name--clickable {
+    transition:
+      color 0.2s ease,
+      opacity 0.2s ease;
+}
+
+.user-name--clickable:hover {
+    text-decoration: underline;
+    color: #a5b4fc;
+}
+
+.user-name--clickable:active {
+    opacity: 0.8;
+}
+
+/* CLICKABLE AVATAR IMPROVEMENTS */
+
+.user-avatar-wrapper--clickable {
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+}
+
+
+
+.user-avatar-wrapper--clickable:active {
+    transform: scale(0.98);
+}
+
+.user-avatar-wrapper--clickable:hover {
+  transform: scale(1.05);
+
+  border-color:
+    rgba(99, 102, 241, 0.6);
+
+  box-shadow:
+    0 14px 32px rgba(
+      99,
+      102,
+      241,
+      0.25
+    );
+}
+
+/* =========================
+   USER INFO
+========================= */
+
+.user-info {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  color: #ffffff;
+
+  margin-bottom: 8px;
+
+  word-break: break-word;
+}
+
+.user-email {
+  font-size: 0.95rem;
+
+  color: #d1d5db;
+
+  line-height: 1.5;
+
+  word-break: break-word;
+}
+
+/* =========================
+   CHAT BUTTON
+========================= */
+
+.chat-btn {
+  width: 100%;
+
+  padding: 14px 18px;
+
+  border: none;
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6
+    );
+
+  color: #ffffff;
+
+  font-size: 0.98rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+
+  box-shadow:
+    0 12px 28px rgba(99, 102, 241, 0.28);
+}
+
+.chat-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 16px 34px rgba(99, 102, 241, 0.38);
+}
+
+/* =========================
+   LOADING / ERROR
+========================= */
+
+.users-loading,
+.users-error {
+  width: 100%;
+  max-width: 420px;
+
+  margin: 120px auto;
+
+  padding: 20px;
+
+  border-radius: 22px;
+
+  text-align: center;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  border:
+    1px solid rgba(255,255,255,0.12);
+
+  backdrop-filter: blur(10px);
+
+  color: #ffffff;
+
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 768px) {
+
+  .users-page {
+    padding: 24px 16px;
+  }
+
+  .users-title {
+    font-size: 2rem;
+  }
+
+  .users-grid {
+    gap: 20px;
+  }
+
+  .user-card {
+    border-radius: 22px;
+
+    padding: 20px;
+  }
+
+  .user-avatar-wrapper {
+    width: 72px;
+    height: 72px;
+
+    min-width: 72px;
+  }
+
+  .user-name {
+    font-size: 1.1rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .users-page {
+    padding: 18px 12px;
+  }
+
+  .users-title {
+    font-size: 1.7rem;
+  }
+
+  .users-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .users-grid {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+  .user-card {
+    padding: 18px;
+
+    border-radius: 20px;
+  }
+
+  .user-top {
+    gap: 14px;
+  }
+
+  .user-avatar-wrapper {
+    width: 64px;
+    height: 64px;
+
+    min-width: 64px;
+  }
+
+  .user-name {
+    font-size: 1rem;
+  }
+
+  .user-email {
+    font-size: 0.85rem;
+  }
+
+  .chat-btn {
+    padding: 13px;
+
+    font-size: 0.92rem;
+  }
+}

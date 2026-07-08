@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 
-import AxiosInstance from "../auth/axiosInstance";
+import { useUser } from "../../contexts/UserContext";
 
 import "./Profile.css";
 
@@ -10,74 +8,19 @@ const Profile = () => {
 
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
+  const {
+    user,
+    loading,
+    logout,
+  } = useUser();
 
-  const [loading, setLoading] = useState(true);
+  
 
-  const [error, setError] = useState("");
-
-  const [showProfile, setShowProfile] = useState(true);
-
-  // =========================
-  // FETCH PROFILE
-  // =========================
-  useEffect(() => {
-
-    const fetchProfile = async () => {
-
-      try {
-
-        console.log("🔥 FETCHING PROFILE...");
-
-        const response = await AxiosInstance.get(
-          "/users/profile/"
-        );
-
-        console.log(
-          "✅ PROFILE RESPONSE:",
-          response.data
-        );
-
-        console.log(
-          "🖼 PROFILE PICTURE:",
-          response.data.profile_picture
-        );
-
-        setUser(response.data);
-
-      } catch (err) {
-
-        console.log(
-          "❌ PROFILE FETCH ERROR:",
-          err
-        );
-
-        console.log(
-          "❌ ERROR RESPONSE:",
-          err.response?.data
-        );
-
-        setError("Failed to load profile");
-
-      } finally {
-
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-
-  }, []);
-
+  
   // =========================
   // CLOSE POPUP
   // =========================
   const handleClose = () => {
-
-    console.log("❌ PROFILE CLOSED");
-
-    setShowProfile(false);
-
     navigate("/home");
   };
 
@@ -86,38 +29,37 @@ const Profile = () => {
   // =========================
   const handleEditProfile = () => {
 
-    console.log("✏️ EDIT PROFILE CLICKED");
-
     navigate("/edit-profile");
   };
 
-  // =========================
-  // LOGOUT
-  // =========================
+  const handleCreatePost = () => {
+
+    navigate("/create-post");
+
+  };
+
   const handleLogout = () => {
 
-    console.log("🚪 LOGOUT");
+    logout();
 
-    localStorage.removeItem("accessToken");
+    navigate("/login", { replace: true });
 
-    localStorage.removeItem("refreshToken");
+  };
 
-    localStorage.removeItem("user_id");
+  const handleFollowersClick = () => {
 
-    navigate("/login");
+    navigate(`/profile/followers`);
   };
 
   // =========================
-  // HIDE COMPONENT
+  // OPEN FOLLOWING
   // =========================
-  if (!showProfile) {
+  const handleFollowingClick = () => {
 
-    return null;
-  }
+    navigate(`/profile/following`);
+  };
 
-  // =========================
-  // LOADING
-  // =========================
+ 
   if (loading) {
 
     return (
@@ -127,29 +69,17 @@ const Profile = () => {
     );
   }
 
-  // =========================
-  // ERROR
-  // =========================
-  if (error) {
-
+  if (!user) {
     return (
-      <h2 className="profile-error">
-        {error}
-      </h2>
+        <h2 className="profile-error">
+            User not found
+        </h2>
     );
   }
 
-  // =========================
-  // PROFILE IMAGE
-  // =========================
-  const profileImage = user?.profile_picture
-    ? user.profile_picture
-    : "/default-avatar.svg";
-
-  console.log(
-    "🖼 FINAL IMAGE URL:",
-    profileImage
-  );
+ 
+  const profileImage =
+    user.profile_picture || "/default-avatar.png";
 
   return (
 
@@ -165,60 +95,110 @@ const Profile = () => {
           ✕
         </button>
 
-        {/* PROFILE IMAGE */}
-        <img
-          src={profileImage}
-          alt="avatar"
-          className="profile-image"
-          onLoad={() =>
-            console.log(
-              "✅ IMAGE LOADED SUCCESSFULLY"
-            )
-          }
-          onError={(e) => {
+        {/* PROFILE HEADER */}
+        <div className="profile-header">
 
-            console.log(
-              "❌ IMAGE LOAD FAILED"
-            );
+          <img
+            src={profileImage}
+            alt="avatar"
+            className="profile-image"
+            
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "/default-avatar.png";
+            }}
 
-            console.log(
-              "❌ FAILED URL:",
-              e.target.src
-            );
+          />
 
-            e.target.src =
-              "/default-avatar.svg";
-          }}
-        />
+          <h2 className="profile-username">
+            {user.username}
+          </h2>
 
-        {/* USERNAME */}
-        <h2 className="profile-username">
-          {user?.username}
-        </h2>
+          <p className="profile-email">
+            {user.email ||
+              "No email available"}
+          </p>
 
-        {/* EMAIL */}
-        <p className="profile-email">
-          {user?.email ||
-            "No email available"}
-        </p>
+        </div>
 
-        {/* FULL NAME */}
-        <h3 className="profile-fullname">
-          {user?.first_name ||
-          user?.last_name
-            ? `${user.first_name} ${user.last_name}`
-            : "No name added"}
-        </h3>
+        {/* USER INFO CARD */}
+        <div className="profile-info-card">
 
-        {/* BIO */}
-        <p className="profile-bio">
-          {user?.bio || "No bio yet"}
-        </p>
+          <h3 className="profile-fullname">
+            {`${user.first_name} ${user.last_name}`.trim() || "No name added"}
+          </h3>
 
-        {/* BUTTONS */}
+          <p className="profile-bio">
+            {user.bio || "No bio yet"}
+          </p>
+
+        </div>
+
+        <div className="profile-balance">
+
+          <span className="balance-label">
+              My Balance
+          </span>
+
+          <span className="balance-value">
+              🪙 {user.coin_balance ?? 0}
+          </span>
+
+          <button className="balance-add-btn">
+              <span>+</span>
+          </button>
+
+        </div>
+
+        <div className="profile-create-post-wrapper">
+
+          <button
+            className="profile-create-post-btn"
+            onClick={handleCreatePost}
+          >
+            ✨ Create New Post
+          </button>
+
+        </div>
+
+        {/* STATS CARD */}
+        <div className="profile-stats-card">
+
+          <div
+            className="profile-stat"
+            onClick={handleFollowersClick}
+          >
+            <span className="profile-stat-count">
+              {user.followers_count ?? 0}
+            </span>
+
+            <span className="profile-stat-label">
+              Followers
+            </span>
+          </div>
+
+          <div className="profile-stat-divider"></div>
+
+          <div
+            className="profile-stat"
+            onClick={handleFollowingClick}
+          >
+            <span className="profile-stat-count">
+              {user.following_count ?? 0}
+            </span>
+
+            <span className="profile-stat-label">
+              Following
+            </span>
+          </div>
+
+        </div>
+
+        {/* ACTION BUTTONS */}
         <div className="profile-btn-group">
 
-          {/* EDIT BUTTON */}
+          
+
           <button
             className="profile-edit-btn"
             onClick={handleEditProfile}
@@ -226,7 +206,6 @@ const Profile = () => {
             Edit Profile
           </button>
 
-          {/* LOGOUT BUTTON */}
           <button
             className="profile-logout-btn"
             onClick={handleLogout}

@@ -1,0 +1,115 @@
+.post-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+
+    width: 100%;
+
+    padding: 1.4rem;
+
+    border-radius: 28px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* Glass highlight */
+
+.post-card::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.18),
+            rgba(255,255,255,0) 30%
+        );
+
+    opacity: .8;
+}
+
+/* Hover */
+
+.post-card:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(255,255,255,.22);
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.18),
+        0 6px 16px rgba(255,255,255,.05);
+}
+
+/* Active */
+
+.post-card:active {
+    transform: scale(.995);
+}
+
+/* Space between cards */
+
+.post-card + .post-card {
+    margin-top: 1.5rem;
+}
+
+/* Tablet */
+
+@media (max-width: 992px) {
+
+    .post-card {
+
+        padding: 1.25rem;
+
+        border-radius: 24px;
+
+        gap: 1.2rem;
+    }
+
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .post-card {
+
+        padding: 1rem;
+
+        border-radius: 22px;
+
+        gap: 1rem;
+    }
+
+}
+
+/* Small phones */
+
+@media (max-width: 480px) {
+
+    .post-card {
+
+        padding: .9rem;
+
+        border-radius: 18px;
+    }
+
+}

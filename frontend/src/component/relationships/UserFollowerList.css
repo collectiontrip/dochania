@@ -1,0 +1,205 @@
+.follower-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px;
+
+    min-height: 100vh;
+
+    background:
+    linear-gradient(
+        135deg,
+        #f8fafc 0%,
+        #eef2ff 50%,
+        #f5f3ff 100%
+    );
+}
+
+/* Header */
+
+.follower-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.follower-header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #111827;
+}
+
+.follower-header p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* Empty State */
+
+.empty-state {
+    text-align: center;
+    color: #6b7280;
+    margin-top: 40px;
+    font-size: 1rem;
+}
+
+/* List */
+
+.follower-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Card */
+
+.follower-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 20px;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.75);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255, 255, 255, 0.4);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.follower-card:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(59, 130, 246, 0.25);
+
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Left User Area */
+
+.follower-user {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    flex: 1;
+
+    cursor: pointer;
+}
+
+/* Avatar */
+
+.follower-avatar {
+    width: 64px;
+    height: 64px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 3px solid rgba(255, 255, 255, 0.7);
+
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.12);
+
+    flex-shrink: 0;
+
+    transition:
+        transform 0.25s ease;
+}
+
+.follower-user:hover .follower-avatar {
+    transform: scale(1.05);
+}
+
+/* User Info */
+
+.follower-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.follower-username {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.follower-info small {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+/* Follow Button Wrapper */
+
+.follower-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 16px;
+}
+
+/* Loading/Error */
+
+.follower-page-loading,
+.follower-page-error {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .follower-page {
+        padding: 20px 14px;
+    }
+
+    .follower-card {
+        padding: 14px;
+    }
+
+    .follower-avatar {
+        width: 54px;
+        height: 54px;
+    }
+
+    .follower-username {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .follower-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .follower-user {
+        width: 100%;
+    }
+
+    .follower-action {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .follower-action button {
+        width: 100%;
+    }
+}

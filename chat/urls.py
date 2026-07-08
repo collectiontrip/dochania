@@ -6,13 +6,11 @@ from .views import (
     ConversationViewSet,
     MessageViewSet,
     CallViewSet,
-    NotificationViewSet
 )
 
 router = DefaultRouter()
 router.register(r"conversations", ConversationViewSet, basename="conversation")
 router.register(r"calls", CallViewSet, basename="call")
-router.register(r"notifications", NotificationViewSet, basename="notification")
 
 conversation_router = NestedDefaultRouter(
     router,

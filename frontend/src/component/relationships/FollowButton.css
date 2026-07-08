@@ -1,0 +1,12 @@
+.follow-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.following-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}

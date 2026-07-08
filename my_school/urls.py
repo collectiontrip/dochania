@@ -28,6 +28,8 @@ urlpatterns = [
     path('chat/', include('chat.urls')),
     path('users/', include('core.urls')),
     path('live/', include('live.urls')),
+    path('post/', include('post.urls')),
+    path('relationships/', include('relationships.urls')),
 ]
 
 urlpatterns += static(

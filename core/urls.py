@@ -5,9 +5,17 @@ from .views import (
     get_user_public_key,
     SaveDeviceView,
     ProfileUpdateView,
+    UserDetailView,
 )
 
 urlpatterns = [
+
+    path(
+        "<int:id>/",
+        UserDetailView.as_view(),
+        name="user-detail"
+    ),
+    
     path(
         "save-public-key/",
         save_public_key,

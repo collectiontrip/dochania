@@ -7,14 +7,20 @@ import React, {
 import { useNavigate } from "react-router-dom";
 
 import Cropper from "react-easy-crop";
-
 import AxiosInstance from "../auth/axiosInstance";
+
+import { useUser } from "../../contexts/UserContext";
 
 import "./UpdateProfile.css";
 
 const UpdateProfile = () => {
 
   const navigate = useNavigate();
+  const {
+    user,
+    setUser,
+    loading,
+  } = useUser();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -27,15 +33,11 @@ const UpdateProfile = () => {
 
   const [preview, setPreview] = useState("");
 
-  const [loading, setLoading] = useState(true);
-
   const [updating, setUpdating] = useState(false);
 
   const [error, setError] = useState("");
 
   const [success, setSuccess] = useState("");
-
-  const [showProfile, setShowProfile] = useState(true);
 
   // =========================
   // CROP STATES
@@ -56,75 +58,28 @@ const UpdateProfile = () => {
   const [selectedImage, setSelectedImage] =
     useState(null);
 
-  // =========================
-  // FETCH PROFILE
-  // =========================
+  
+    
   useEffect(() => {
+    
+    if (!user) return;
 
-    const fetchProfile = async () => {
+    setFormData({
+        username: user.username || "",
+        email: user.email || "",
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        bio: user.bio || "",
+        profile_picture: null,
+    });
 
-      try {
+    setPreview(
+        user.profile_picture || ""
+    );
 
-        console.log("🔥 FETCHING PROFILE...");
+  }, [user]);
+   
 
-        const response =
-          await AxiosInstance.get(
-            "/users/profile/"
-          );
-
-        console.log(
-          "✅ PROFILE RESPONSE:",
-          response.data
-        );
-
-        setFormData({
-          username:
-            response.data.username || "",
-          email: response.data.email || "",
-          first_name:
-            response.data.first_name || "",
-          last_name:
-            response.data.last_name || "",
-          bio: response.data.bio || "",
-          profile_picture: null,
-        });
-
-        if (
-          response.data.profile_picture
-        ) {
-
-          setPreview(
-            response.data.profile_picture
-          );
-
-          console.log(
-            "✅ PROFILE IMAGE:",
-            response.data.profile_picture
-          );
-        }
-
-      } catch (err) {
-
-        console.log(
-          "❌ FETCH PROFILE ERROR:",
-          err
-        );
-
-        setError("Failed to load profile");
-
-      } finally {
-
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-
-  }, []);
-
-  // =========================
-  // HANDLE INPUT CHANGE
-  // =========================
   const handleChange = (e) => {
 
     const { name, value } = e.target;
@@ -163,6 +118,18 @@ const UpdateProfile = () => {
     }
   };
 
+  useEffect(() => {
+    return () => {
+        if (selectedImage) {
+            URL.revokeObjectURL(selectedImage);
+        }
+
+        if (preview.startsWith("blob:")) {
+            URL.revokeObjectURL(preview);
+        }
+    };
+  }, [selectedImage, preview]);
+
   // =========================
   // CROP COMPLETE
   // =========================
@@ -170,10 +137,7 @@ const UpdateProfile = () => {
     useCallback(
       (croppedArea, croppedPixels) => {
 
-        console.log(
-          "✂️ CROPPED AREA:",
-          croppedPixels
-        );
+        
 
         setCroppedAreaPixels(
           croppedPixels
@@ -220,6 +184,10 @@ const UpdateProfile = () => {
 
     const ctx = canvas.getContext("2d");
 
+    if (!ctx) {
+      throw new Error("Canvas context not available");
+    }
+
     canvas.width = crop.width;
 
     canvas.height = crop.height;
@@ -236,11 +204,14 @@ const UpdateProfile = () => {
       crop.height
     );
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
 
       canvas.toBlob((blob) => {
 
-        blob.name = "profile.jpeg";
+        if (!blob) {
+          reject(new Error("Failed to crop image"));
+          return;
+        }
 
         const file = new File(
           [blob],
@@ -253,8 +224,10 @@ const UpdateProfile = () => {
         resolve(file);
 
       }, "image/jpeg");
+
     });
-  };
+
+    };
 
   // =========================
   // APPLY CROP
@@ -282,7 +255,13 @@ const UpdateProfile = () => {
       }));
 
       setShowCropper(false);
-
+      setSelectedImage(null);
+      setCroppedAreaPixels(null);
+      setZoom(1);
+      setCrop({
+        x: 0,
+        y: 0,
+      });
       console.log(
         "✅ CROPPED IMAGE READY"
       );
@@ -369,26 +348,21 @@ const UpdateProfile = () => {
         response.data
       );
 
-      const updatedProfile =
-        await AxiosInstance.get(
-          "/users/profile/"
-        );
+      setUser(response.data);
 
-      console.log(
-        "🔄 UPDATED PROFILE:",
-        updatedProfile.data
+      setFormData({
+        username: response.data.username || "",
+        email: response.data.email || "",
+        first_name: response.data.first_name || "",
+        last_name: response.data.last_name || "",
+        bio: response.data.bio || "",
+        profile_picture: null,
+      });
+
+      setPreview(
+          response.data.profile_picture ||
+          "/default-avatar.png"
       );
-
-      if (
-        updatedProfile.data
-          .profile_picture
-      ) {
-
-        setPreview(
-          updatedProfile.data
-            .profile_picture
-        );
-      }
 
       setSuccess(
         "Profile updated successfully"
@@ -437,35 +411,26 @@ const UpdateProfile = () => {
   // =========================
   const handleClose = () => {
 
-    setShowProfile(false);
-
     navigate("/profile");
   };
 
-  // =========================
-  // HIDE COMPONENT
-  // =========================
-  if (!showProfile) {
-
-    return null;
-  }
-
-  // =========================
-  // LOADING
-  // =========================
   if (loading) {
 
     return (
 
-      <div className="update-profile-loading-wrapper">
+        <div className="update-profile-loading-wrapper">
 
-        <h2 className="update-profile-loading">
-          Loading Profile...
-        </h2>
+            <h2 className="update-profile-loading">
+                Loading Profile...
+            </h2>
 
-      </div>
+        </div>
+
     );
   }
+
+
+  
 
   return (
 
@@ -529,9 +494,16 @@ const UpdateProfile = () => {
               <button
                 type="button"
                 className="cropper-cancel-btn"
-                onClick={() =>
-                  setShowCropper(false)
-                }
+                onClick={() => {
+                  setShowCropper(false);
+                  setSelectedImage(null);
+                  setCroppedAreaPixels(null);
+                  setZoom(1);
+                  setCrop({
+                    x: 0,
+                    y: 0,
+                  });
+                }}
               >
                 Cancel
               </button>
@@ -605,7 +577,7 @@ const UpdateProfile = () => {
               <img
                 src={
                   preview ||
-                  "/default-avatar.svg"
+                  "/default-avatar.png"
                 }
                 alt="avatar"
                 className="update-profile-avatar"

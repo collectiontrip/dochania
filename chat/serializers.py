@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
-from .models import Conversation, Message, Call, Notification
+from .models import Conversation, Message, Call
 
 User = get_user_model()
 
@@ -92,19 +92,3 @@ class CallCreateSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["id"]
 
-
-class NotificationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Notification
-        fields = [
-            "id",
-            "notification_type",
-            "title",
-            "body",
-            "related_message",
-            "related_call",
-            "is_read",
-            "created_at"
-        ]
-        read_only_fields = ["id", "created_at"]

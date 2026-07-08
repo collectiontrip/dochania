@@ -1,0 +1,336 @@
+/* ==========================================================
+   Post Content
+========================================================== */
+
+.post-content,
+.post-content * {
+    box-sizing: border-box;
+}
+
+.post-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    padding: 1.5rem;
+    border-radius: 24px;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================
+   Header
+========================================================== */
+
+.post-content__header {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+
+.post-content__title {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.post-content__subtitle {
+    margin: 0;
+
+    color: rgba(255, 255, 255, .72);
+
+    font-size: .92rem;
+    line-height: 1.6;
+}
+
+/* ==========================================================
+   Body
+========================================================== */
+
+.post-content__body {
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+}
+
+/* ==========================================================
+   Textarea
+========================================================== */
+
+.post-content__textarea {
+    width: 100%;
+
+    min-height: 170px;
+    max-height: 500px;
+
+    padding: 1rem 1.1rem;
+
+    resize: none;
+    overflow-y: auto;
+
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, .05);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    color: #fff;
+
+    font: inherit;
+    font-size: .97rem;
+    line-height: 1.7;
+
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    transition:
+        background .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        transform .25s ease;
+}
+
+.post-content__textarea::placeholder {
+    color: rgba(255, 255, 255, .45);
+}
+
+.post-content__textarea:hover:not(:disabled) {
+    background: rgba(255, 255, 255, .07);
+    border-color: rgba(255, 255, 255, .18);
+}
+
+.post-content__textarea:focus {
+    outline: none;
+
+    background: rgba(255, 255, 255, .09);
+
+    border-color: rgba(96, 165, 250, .8);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, .18),
+        0 14px 30px rgba(0, 0, 0, .20);
+}
+
+.post-content__textarea:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
+
+.post-content__textarea--error {
+    border-color: rgba(248, 113, 113, .8);
+
+    box-shadow:
+        0 0 0 4px rgba(248, 113, 113, .12);
+}
+
+/* ==========================================================
+   Footer
+========================================================== */
+
+.post-content__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.post-content__counter {
+    padding: .45rem .9rem;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    color: rgba(255, 255, 255, .72);
+
+    font-size: .83rem;
+    font-weight: 600;
+
+    transition:
+        background .25s ease,
+        border-color .25s ease,
+        color .25s ease;
+}
+
+.post-content__counter--warning {
+    color: #fbbf24;
+
+    background: rgba(251, 191, 36, .08);
+
+    border-color: rgba(251, 191, 36, .35);
+}
+
+/* ==========================================================
+   Error
+========================================================== */
+
+.post-content__error {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+
+    margin: 0;
+
+    padding: .9rem 1rem;
+
+    border-radius: 14px;
+
+    background: rgba(239, 68, 68, .08);
+
+    border: 1px solid rgba(239, 68, 68, .28);
+
+    color: #fca5a5;
+
+    font-size: .88rem;
+    line-height: 1.5;
+}
+
+.post-content__error::before {
+    content: "⚠";
+
+    flex-shrink: 0;
+
+    font-size: 1rem;
+}
+
+/* ==========================================================
+   Scrollbar
+========================================================== */
+
+.post-content__textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.post-content__textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.post-content__textarea::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .18);
+    border-radius: 999px;
+}
+
+.post-content__textarea::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, .28);
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width: 768px) {
+
+    .post-content {
+        padding: 1.25rem;
+        border-radius: 20px;
+    }
+
+    .post-content__title {
+        font-size: 1.05rem;
+    }
+
+    .post-content__subtitle {
+        font-size: .88rem;
+    }
+
+    .post-content__textarea {
+        min-height: 150px;
+    }
+
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 480px) {
+
+    .post-content {
+        padding: 1rem;
+        border-radius: 18px;
+    }
+
+    .post-content__title {
+        font-size: 1rem;
+    }
+
+    .post-content__subtitle {
+        font-size: .84rem;
+    }
+
+    .post-content__textarea {
+        min-height: 130px;
+
+        padding: .9rem;
+
+        font-size: 1rem;
+
+        border-radius: 16px;
+    }
+
+    .post-content__footer {
+        justify-content: center;
+    }
+
+    .post-content__counter {
+        width: 100%;
+        text-align: center;
+    }
+
+    .post-content__error {
+        padding: .8rem .9rem;
+
+        font-size: .82rem;
+    }
+
+}
+
+/* ==========================================================
+   Small Phones
+========================================================== */
+
+@media (max-width: 360px) {
+
+    .post-content {
+        padding: .85rem;
+    }
+
+    .post-content__textarea {
+        min-height: 120px;
+
+        padding: .8rem;
+    }
+
+    .post-content__counter {
+        font-size: .78rem;
+    }
+
+}
+
+/* ==========================================================
+   Accessibility
+========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .post-content *,
+    .post-content__textarea {
+        transition: none !important;
+    }
+
+}

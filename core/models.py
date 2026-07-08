@@ -25,6 +25,8 @@ class User(AbstractUser):
         null=True
         )
 
+    is_private = models.BooleanField(default=False)
+
 
 class UserDevice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

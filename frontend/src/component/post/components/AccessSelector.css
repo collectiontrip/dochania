@@ -1,0 +1,295 @@
+.access-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 1.5rem;
+    width: 100%;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.access-selector__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.access-selector__title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.access-selector__subtitle {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.access-selector__options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.access-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    min-height: 78px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    text-align: left;
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.access-option:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.access-option:active:not(:disabled) {
+    transform: scale(.985);
+}
+
+.access-option:focus-visible {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, 0.25),
+        0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.access-option--active {
+    background: linear-gradient(
+        135deg,
+        rgba(96, 165, 250, 0.22),
+        rgba(124, 58, 237, 0.18)
+    );
+    border-color: rgba(96, 165, 250, 0.45);
+    box-shadow:
+        0 10px 28px rgba(96, 165, 250, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.access-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.access-option__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 1.7rem;
+}
+
+.access-option__content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.access-option__label {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.access-option__description {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.access-option__indicator {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        border-color .25s ease,
+        background .25s ease,
+        transform .25s ease;
+}
+
+.access-option__indicator::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background .25s ease;
+}
+
+.access-option__indicator--active {
+    border-color: #60a5fa;
+    background: rgba(96, 165, 250, 0.18);
+    transform: scale(1.08);
+}
+
+.access-option__indicator--active::after {
+    background: #60a5fa;
+}
+
+/* ---------- Large Tablets ---------- */
+
+@media (max-width: 992px) {
+
+    .access-selector {
+        padding: 1.3rem;
+    }
+
+    .access-option {
+        min-height: 74px;
+    }
+}
+
+/* ---------- Tablets ---------- */
+
+@media (max-width: 768px) {
+
+    .access-selector {
+        padding: 1.2rem;
+        border-radius: 20px;
+    }
+
+    .access-option {
+        gap: .85rem;
+        padding: .95rem;
+    }
+
+    .access-option__icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .access-option__label {
+        font-size: .95rem;
+    }
+
+    .access-option__description {
+        font-size: .84rem;
+    }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 480px) {
+
+    .access-selector {
+        padding: 1rem;
+        border-radius: 18px;
+    }
+
+    .access-selector__title {
+        font-size: 1.05rem;
+    }
+
+    .access-selector__subtitle {
+        font-size: .84rem;
+    }
+
+    .access-option {
+        align-items: flex-start;
+        gap: .8rem;
+        min-height: auto;
+        padding: .9rem;
+    }
+
+    .access-option__icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.3rem;
+        border-radius: 14px;
+    }
+
+    .access-option__label {
+        font-size: .9rem;
+    }
+
+    .access-option__description {
+        font-size: .8rem;
+        line-height: 1.4;
+    }
+
+    .access-option__indicator {
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+    }
+
+    .access-option__indicator::after {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+/* ---------- Small Phones (320px) ---------- */
+
+@media (max-width: 360px) {
+
+    .access-selector {
+        padding: .9rem;
+    }
+
+    .access-option {
+        padding: .8rem;
+        gap: .7rem;
+    }
+
+    .access-option__icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.15rem;
+    }
+
+    .access-option__label {
+        font-size: .86rem;
+    }
+
+    .access-option__description {
+        font-size: .75rem;
+    }
+
+    .access-option__indicator {
+        width: 18px;
+        height: 18px;
+    }
+
+    .access-option__indicator::after {
+        width: 7px;
+        height: 7px;
+    }
+}

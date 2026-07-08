@@ -1,0 +1,246 @@
+.visibility-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: 100%;
+}
+
+.visibility-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+}
+
+.visibility-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.visibility-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 14px 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    color: inherit;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.2s ease;
+}
+
+.visibility-trigger:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.visibility-trigger:active {
+    transform: scale(0.99);
+}
+
+.visibility-trigger:focus-visible {
+    outline: none;
+
+    border-color: rgba(99, 179, 237, 0.8);
+
+    box-shadow:
+        0 0 0 4px rgba(99, 179, 237, 0.18);
+}
+
+.visibility-selected {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    text-align: left;
+}
+
+.visibility-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    font-size: 20px;
+}
+
+.visibility-title {
+    font-size: 15px;
+    font-weight: 600;
+
+    color: #ffffff;
+}
+
+.visibility-subtitle {
+    margin-top: 3px;
+
+    font-size: 13px;
+    line-height: 1.45;
+
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.visibility-arrow {
+    flex-shrink: 0;
+
+    font-size: 13px;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease;
+}
+
+.visibility-trigger:hover .visibility-arrow {
+    color: #ffffff;
+}
+
+.visibility-menu {
+    position: absolute;
+
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 10px;
+
+    border-radius: 18px;
+
+    background: rgba(20, 20, 20, 0.82);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.28);
+
+    animation: visibilityDropdown 0.22s ease;
+
+    z-index: 1000;
+}
+
+.visibility-option {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+    border-radius: 14px;
+
+    background: transparent;
+
+    color: inherit;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.visibility-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+}
+
+.visibility-option.active {
+    background: rgba(255, 255, 255, 0.12);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.visibility-option.active .visibility-title {
+    color: #8ecbff;
+}
+
+@keyframes visibilityDropdown {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .visibility-trigger {
+        padding: 12px 14px;
+    }
+
+    .visibility-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 18px;
+    }
+
+    .visibility-title {
+        font-size: 14px;
+    }
+
+    .visibility-subtitle {
+        font-size: 12px;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .visibility-trigger,
+    .visibility-option,
+    .visibility-arrow,
+    .visibility-menu {
+        transition: none;
+        animation: none;
+    }
+
+}

@@ -1,0 +1,91 @@
+/* ==========================
+   Block Button
+========================== */
+
+.block-btn,
+.unblock-btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #fff;
+    min-width: 110px;
+    letter-spacing: 0.4px;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.18);
+}
+
+/* ==========================
+   Block Button
+========================== */
+
+.block-btn {
+    background: linear-gradient(
+        135deg,
+        #ff4d4d,
+        #d60000
+    );
+}
+
+.block-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 28px rgba(255, 0, 0, 0.35);
+}
+
+.block-btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* ==========================
+   Unblock Button
+========================== */
+
+.unblock-btn {
+    background: linear-gradient(
+        135deg,
+        #1db954,
+        #11823b
+    );
+}
+
+.unblock-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 28px rgba(29, 185, 84, 0.35);
+}
+
+.unblock-btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* ==========================
+   Disabled
+========================== */
+
+.block-btn:disabled,
+.unblock-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 768px) {
+
+    .block-btn,
+    .unblock-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+}

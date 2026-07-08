@@ -7,14 +7,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import mixins, viewsets, permissions, status
-from .models import Conversation, Message, Call, Notification
+from .models import Conversation, Message, Call
 from .serializers import (
     ConversationSerializer,
     ConversationCreateSerializer,
     MessageSerializer,
     CallSerializer,
-    CallCreateSerializer,
-    NotificationSerializer
+    CallCreateSerializer
 
 )
 
@@ -237,29 +236,4 @@ class CallViewSet(
         call.save(update_fields=["status", "ended_at"])
 
         return Response({"status": "missed"})
-
-class NotificationViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    viewsets.GenericViewSet
-):
-
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = NotificationSerializer
-
-    def get_queryset(self):
-        return Notification.objects.filter(
-            user = self.request.user
-        ).order_by("-created_at")
-
-    @action(detail=False, methods=["post"])
-    def mark_all_read(self, request):
-        Notification.objects.filter(
-            user=request.user,
-            is_read=False
-        ).update(is_read=True)
-
-        return Response({"status": "all read"})
-
 

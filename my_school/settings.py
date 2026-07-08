@@ -32,10 +32,17 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'chat',
+    'comments',
     'rest_framework',
     'djoser',
+    'common',
     'core',
+    'likes',
     'live.apps.LiveConfig',
+    'notification',
+    'relationships',
+    'post',
+    'Subscriptions',
     'school',
 ]
 
@@ -175,10 +182,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://192.168.1.3:5173",
-    "http://192.168.1.4:5173",
+    "https://localhost:5173",
+    "https://127.0.0.1:5173",
+    "https://192.168.1.3:5173",
+    "https://192.168.1.4:5173",
+    "https://192.168.1.4:8001",
 ]
 
 # ----------------------

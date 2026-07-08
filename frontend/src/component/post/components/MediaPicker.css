@@ -1,0 +1,154 @@
+.media-picker{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.media-upload-box{
+    position:relative;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:10px;
+
+    min-height:180px;
+
+    padding:28px;
+
+    border-radius:20px;
+
+    cursor:pointer;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,.08);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+}
+
+.media-upload-box:hover{
+    transform:translateY(-2px);
+
+    border-color:rgba(255,255,255,.35);
+
+    background:rgba(255,255,255,.12);
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.15);
+}
+
+.media-upload-box:active{
+    transform:scale(.99);
+}
+
+.media-upload-box input{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    opacity:0;
+
+    cursor:pointer;
+}
+
+.media-upload-icon{
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    width:72px;
+    height:72px;
+
+    border-radius:50%;
+
+    font-size:34px;
+
+    background:rgba(255,255,255,.15);
+
+    border:1px solid rgba(255,255,255,.2);
+
+    backdrop-filter:blur(12px);
+}
+
+.media-upload-title{
+
+    font-size:18px;
+    font-weight:700;
+
+    color:#fff;
+
+    text-align:center;
+}
+
+.media-upload-subtitle{
+
+    font-size:14px;
+
+    color:rgba(255,255,255,.8);
+
+    text-align:center;
+}
+
+.media-upload-limit{
+
+    font-size:13px;
+
+    color:rgba(255,255,255,.6);
+
+    text-align:center;
+}
+
+.media-error{
+
+    margin:0;
+
+    font-size:14px;
+
+    color:#ff6b6b;
+
+    text-align:center;
+}
+
+@media (max-width:600px){
+
+    .media-upload-box{
+
+        min-height:150px;
+
+        padding:20px;
+    }
+
+    .media-upload-icon{
+
+        width:60px;
+        height:60px;
+
+        font-size:28px;
+    }
+
+    .media-upload-title{
+
+        font-size:16px;
+    }
+
+    .media-upload-subtitle{
+
+        font-size:13px;
+    }
+
+}
