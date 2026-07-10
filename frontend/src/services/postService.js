@@ -39,6 +39,15 @@ const postService = {
         );
     },
 
+    getUserPosts(userId, params = {}) {
+        return AxiosInstance.get(
+            `/post/users/${userId}/posts/`,
+            {
+                params,
+            }
+        );
+    },
+
     updatePost(postId, formData) {
         return AxiosInstance.put(
             `/post/${postId}/update/`,

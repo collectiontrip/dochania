@@ -38,6 +38,8 @@ import Profile from "./component/Profile/Profile";
 
 import FollowerList from "./component/relationships/FollowersList";
 import FollowingList from "./component/relationships/FollowingList";
+import SelfPostList from "./component/post/SelfPostList/SelfPostList";
+import UserPostList from "./component/post/PostList/UserPostList/UserPostList";
 
 import UpdateProfile from "./component/Profile/UpdateProfile";
 
@@ -277,6 +279,32 @@ const Layout = () => {
                 ? <CreatePost />
                 : <Navigate to="/login" replace />
             }
+          />
+
+          <Route
+              path="/my-posts"
+              element={
+                  isAuthenticated
+                      ? <SelfPostList />
+                      : <Navigate
+                          to="/login"
+                          replace
+                      />
+              }
+          />
+
+          <Route
+              path="/profile/:userId/posts"
+              element={
+                  isAuthenticated
+                      ? <UserPostList />
+                      : (
+                          <Navigate
+                              to="/login"
+                              replace
+                          />
+                      )
+              }
           />
 
           <Route

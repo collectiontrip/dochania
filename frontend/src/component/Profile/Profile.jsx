@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../contexts/UserContext";
 
+import SelfPostList from "../post/SelfPostList/SelfPostList";
+
 import "./Profile.css";
 
 const Profile = () => {
@@ -212,6 +214,16 @@ const Profile = () => {
           >
             Logout
           </button>
+
+        </div>
+
+        <div className="profile-posts-section">
+
+            <h2 className="profile-posts-title">
+                My Posts
+            </h2>
+
+            <SelfPostList />
 
         </div>
 

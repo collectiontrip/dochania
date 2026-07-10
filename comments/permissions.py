@@ -1,0 +1,28 @@
+from rest_framework.permissions import (
+    SAFE_METHODS,
+    BasePermission,
+)
+
+
+class IsCommentOwnerOrReadOnly(
+    BasePermission,
+):
+
+    message = (
+        "You do not have permission "
+        "to modify this comment."
+    )
+
+    def has_object_permission(
+        self,
+        request,
+        view,
+        obj,
+    ):
+
+        if request.method in SAFE_METHODS:
+            return True 
+
+        return (
+            obj.user == request.user
+        )

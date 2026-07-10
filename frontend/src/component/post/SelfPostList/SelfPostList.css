@@ -1,0 +1,119 @@
+.self-post-list {
+    width: 100%;
+    max-width: 760px;
+
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.self-post-list-loading,
+.self-post-list-error,
+.self-post-list-empty {
+    width: 100%;
+    max-width: 760px;
+
+    margin: 2rem auto;
+    padding: 2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    border-radius: 24px;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.18);
+
+    color: #ffffff;
+
+    font-size: 1rem;
+    font-weight: 500;
+
+    min-height: 180px;
+}
+
+.self-post-list-error {
+    color: #ffb4b4;
+}
+
+.self-post-list-empty {
+    color: #d7d7d7;
+}
+
+@media (max-width: 992px) {
+
+    .self-post-list {
+        max-width: 680px;
+        padding: 1.5rem 1rem 3rem;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .self-post-list {
+        max-width: 100%;
+        padding: 1.25rem 0.9rem 2.5rem;
+        gap: 1.25rem;
+    }
+
+    .self-post-list-loading,
+    .self-post-list-error,
+    .self-post-list-empty {
+        margin: 1.5rem 0.9rem;
+        padding: 1.75rem;
+        min-height: 160px;
+        border-radius: 20px;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .self-post-list {
+        padding: 1rem 0.75rem 2rem;
+        gap: 1rem;
+    }
+
+    .self-post-list-loading,
+    .self-post-list-error,
+    .self-post-list-empty {
+        margin: 1rem 0.75rem;
+        padding: 1.5rem;
+        min-height: 140px;
+
+        border-radius: 18px;
+
+        font-size: 0.95rem;
+    }
+
+}
+
+@media (max-width: 360px) {
+
+    .self-post-list {
+        padding: 0.75rem 0.5rem 1.5rem;
+    }
+
+    .self-post-list-loading,
+    .self-post-list-error,
+    .self-post-list-empty {
+        padding: 1.25rem;
+        border-radius: 16px;
+        font-size: 0.9rem;
+    }
+
+}

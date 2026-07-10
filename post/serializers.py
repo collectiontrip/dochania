@@ -2,8 +2,12 @@ from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import Post, PostMedia
+from core.serializers import UserMiniSerializer
 
+from .models import (
+    Post,
+    PostMedia,
+)
 
 
 class PostMediaSerializer(serializers.ModelSerializer):
@@ -26,8 +30,6 @@ class PostMediaSerializer(serializers.ModelSerializer):
 
 class PostCreateSerializer(serializers.ModelSerializer):
 
-    
-
     class Meta:
         model = Post
         fields = [
@@ -37,36 +39,42 @@ class PostCreateSerializer(serializers.ModelSerializer):
             "coins",
             "allow_comments",
             "hide_like_count",
-            
         ]
-
-   
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
 
-    author_username = serializers.CharField(
-        source="author.username",
-        read_only=True
+    author = UserMiniSerializer(
+        read_only=True,
     )
 
     media = PostMediaSerializer(
         many=True,
-        read_only=True
+        read_only=True,
+    )
+
+    like_count = serializers.ReadOnlyField(
+        source="likes_count",
+    )
+
+    comment_count = serializers.ReadOnlyField(
+        source="comments_count",
     )
 
     class Meta:
         model = Post
+
         fields = [
             "id",
             "author",
-            "author_username",
             "content",
             "visibility",
             "access_type",
             "coins",
             "allow_comments",
             "hide_like_count",
+            "like_count",
+            "comment_count",
             "is_edited",
             "edited_at",
             "is_deleted",
@@ -80,7 +88,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
             "author",
-            "author_username",
+            "like_count",
+            "comment_count",
             "is_edited",
             "edited_at",
             "is_deleted",
@@ -113,18 +122,22 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         ]
 
     @transaction.atomic
-    def update(self, instance, validated_data):
+    def update(
+        self,
+        instance,
+        validated_data,
+    ):
 
         media_data = validated_data.pop(
             "media",
-            None
+            None,
         )
 
         for attr, value in validated_data.items():
             setattr(
                 instance,
                 attr,
-                value
+                value,
             )
 
         instance.is_edited = True
@@ -138,7 +151,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
             for media_item in media_data:
                 PostMedia.objects.create(
                     post=instance,
-                    **media_item
+                    **media_item,
                 )
 
         return instance

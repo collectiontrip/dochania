@@ -1,0 +1,146 @@
+.post-content {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.75rem;
+}
+
+.post-content__text {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.96);
+
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.8;
+
+    letter-spacing: 0.015em;
+
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.post-content__toggle {
+    align-self: flex-start;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #7cc8ff;
+
+    font-size: 0.92rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.post-content__toggle:hover {
+    color: #a8dcff;
+
+    transform: translateX(3px);
+}
+
+.post-content__toggle:active {
+    transform: scale(0.97);
+}
+
+.post-content__toggle:focus-visible {
+    outline: 2px solid rgba(124, 200, 255, 0.45);
+    outline-offset: 4px;
+
+    border-radius: 6px;
+}
+
+.post-content__toggle:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+/* Large Tablet */
+
+@media (max-width: 992px) {
+
+    .post-content {
+        gap: 0.7rem;
+    }
+
+    .post-content__text {
+        font-size: 0.98rem;
+        line-height: 1.75;
+    }
+
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+
+    .post-content {
+        gap: 0.65rem;
+    }
+
+    .post-content__text {
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    .post-content__toggle {
+        font-size: 0.88rem;
+    }
+
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+    .post-content {
+        gap: 0.6rem;
+    }
+
+    .post-content__text {
+        font-size: 0.93rem;
+        line-height: 1.65;
+    }
+
+    .post-content__toggle {
+        font-size: 0.86rem;
+    }
+
+}
+
+/* Small Phones */
+
+@media (max-width: 400px) {
+
+    .post-content__text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .post-content__toggle {
+        font-size: 0.84rem;
+    }
+
+}

@@ -145,3 +145,17 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             'profile_picture',
             'is_private',
         ]
+
+class UserMiniSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+
+        fields = [
+            "id",
+            "username",
+            "profile_picture",
+            "is_verified",
+        ]
+
+        read_only_fields = fields

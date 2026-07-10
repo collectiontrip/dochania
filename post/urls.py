@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     PostCreateView,
     PostListView,
+    UserPostListView,
     PostDetailView,
     PostUpdateView,
     PostDeleteView,
@@ -25,6 +26,12 @@ urlpatterns = [
         "my-posts/",
         SelfPostListView.as_view(),
         name="my-posts",
+    ),
+
+    path(
+        "users/<int:user_id>/posts/",
+        UserPostListView.as_view(),
+        name="user-post-list",
     ),
 
     path(

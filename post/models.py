@@ -2,14 +2,22 @@ import uuid
 from pathlib import Path
 
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.db import models
+from common.models import (
+    SoftDeleteModel,
+    TimeStampedModel,
+)
 
 
 User = settings.AUTH_USER_MODEL
 
 
-class Post(models.Model):
+class Post(
+    SoftDeleteModel,
+    TimeStampedModel,
+):
 
     VISIBILITY_PUBLIC = "public"
     VISIBILITY_FOLLOWERS = "followers"
@@ -43,6 +51,16 @@ class Post(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="posts",
+    )
+
+    likes = GenericRelation(
+        "likes.Like",
+        related_query_name="post",
+    )
+
+    comments = GenericRelation(
+        "comments.Comment",
+        related_query_name="post",
     )
 
     content = models.TextField(
@@ -88,15 +106,7 @@ class Post(models.Model):
         null=True,
     )
 
-    is_deleted = models.BooleanField(
-        default=False,
-        db_index=True,
-    )
-
-    deleted_at = models.DateTimeField(
-        blank=True,
-        null=True,
-    )
+    
 
     is_archived = models.BooleanField(
         default=False,
@@ -108,15 +118,14 @@ class Post(models.Model):
         db_index=True,
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+    
 
     class Meta:
+
+        db_table = "posts"
+
+        verbose_name = "Post"
+        verbose_name_plural = "Posts"
 
         ordering = ["-created_at"]
 
@@ -128,7 +137,10 @@ class Post(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.author.username}'s Post"
+        return (
+            f"{self.author.username} - "
+            f"{self.id}"
+        )
 
     def clean(self):
 
@@ -150,8 +162,27 @@ class Post(models.Model):
 
         super().save(*args, **kwargs)
 
+    @property
+    def likes_count(self):
+        return self.likes.count()
 
-class PostMedia(models.Model):
+
+    @property
+    def comments_count(self):
+        return self.comments.filter(
+            is_deleted=False,
+        ).count()
+
+
+    @property
+    def top_level_comments_count(self):
+        return self.comments.filter(
+            parent=None,
+            is_deleted=False,
+        ).count()
+
+
+class PostMedia(TimeStampedModel):
 
     MEDIA_IMAGE = "image"
     MEDIA_VIDEO = "video"
@@ -187,11 +218,14 @@ class PostMedia(models.Model):
         default=0,
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
+    
 
     class Meta:
+
+        db_table = "post_media"
+
+        verbose_name = "Post Media"
+        verbose_name_plural = "Post Media"
 
         ordering = [
             "order",
@@ -211,8 +245,11 @@ class PostMedia(models.Model):
         ]
 
     def __str__(self):
-
-        return f"{self.media_type} ({self.order}) - {self.post.id}"
+        return (
+            f"{self.media_type} "
+            f"#{self.order} "
+            f"for Post {self.post_id}"
+        )
 
     def clean(self):
 

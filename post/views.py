@@ -1,5 +1,7 @@
 from pathlib import Path
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +10,7 @@ from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
 )
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from relationships.models import Block
 
 from .permissions import IsOwnerOrAdmin
@@ -21,6 +23,11 @@ from .serializers import (
 from .models import (
     Post,
     PostMedia,
+)
+
+from .selectors import (
+    can_view_post,
+    get_user_posts,
 )
 
 
@@ -209,26 +216,60 @@ class SelfPostListView(
     def get_queryset(self):
 
         return (
-            self.get.visible.posts()
+            Post.objects
             .filter(author=self.request.user)
             .order_by(
-                "-ispinned",
+                "-is_pinned",
                 "-created_at",
             )
         )
 
 
-class PostDetailView(
-    PostQueryMixin,
-    generics.RetrieveAPIView,
-):
+class UserPostListView(generics.ListAPIView):
 
     serializer_class = PostDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
 
-        return self.get_visible_posts()
+        author = get_object_or_404(
+            get_user_model(),
+            pk=self.kwargs["user_id"],
+        )
+
+        return get_user_posts(
+            viewer=self.request.user,
+            author=author,
+        )
+
+
+class PostDetailView(generics.RetrieveAPIView):
+
+    serializer_class = PostDetailSerializer
+    permission_classes = [IsAuthenticated]
+
+    queryset = (
+        Post.objects.filter(
+            is_deleted=False,
+            is_archived=False,
+        )
+        .select_related("author")
+        .prefetch_related("media")
+    )
+
+    def get_object(self):
+
+        post = super().get_object()
+
+        if not can_view_post(
+            viewer=self.request.user,
+            post=post,
+        ):
+            raise PermissionDenied(
+                "You do not have permission to view this post."
+            )
+
+        return post
 
 
 class PostUpdateView(generics.UpdateAPIView):

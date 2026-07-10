@@ -1,32 +1,41 @@
 .post-card {
     position: relative;
 
-    display: flex;
-    flex-direction: column;
-    gap: 1.35rem;
+    isolation: isolate;
 
     width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
 
     padding: 1.4rem;
 
     border-radius: 28px;
 
+    overflow: hidden;
+
     background: rgba(255, 255, 255, 0.08);
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.14);
 
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
 
-    overflow: hidden;
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
     transition:
         transform 0.25s ease,
+        box-shadow 0.25s ease,
         border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        background 0.25s ease;
+
+    will-change: transform;
 }
 
-/* Glass highlight */
+/* Glass Highlight */
 
 .post-card::before {
     content: "";
@@ -37,79 +46,149 @@
 
     pointer-events: none;
 
+    border-radius: inherit;
+
     background:
         linear-gradient(
             135deg,
-            rgba(255,255,255,.18),
-            rgba(255,255,255,0) 30%
+            rgba(255, 255, 255, 0.22) 0%,
+            rgba(255, 255, 255, 0.08) 20%,
+            transparent 45%
         );
 
-    opacity: .8;
+    opacity: 0.9;
+}
+
+/* Soft Glow */
+
+.post-card::after {
+    content: "";
+
+    position: absolute;
+
+    top: -40%;
+    right: -35%;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+        rgba(255, 255, 255, 0.12),
+        transparent 70%
+    );
+
+    pointer-events: none;
+
+    filter: blur(30px);
+
+    opacity: 0.5;
 }
 
 /* Hover */
 
 .post-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
 
-    border-color: rgba(255,255,255,.22);
+    background: rgba(255, 255, 255, 0.1);
+
+    border-color: rgba(255, 255, 255, 0.24);
 
     box-shadow:
-        0 20px 40px rgba(0,0,0,.18),
-        0 6px 16px rgba(255,255,255,.05);
+        0 22px 50px rgba(0, 0, 0, 0.22),
+        0 8px 22px rgba(255, 255, 255, 0.06);
 }
 
 /* Active */
 
 .post-card:active {
-    transform: scale(.995);
+    transform: scale(0.995);
 }
 
-/* Space between cards */
+/* Keep Content Above Effects */
+
+.post-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Space Between Cards */
 
 .post-card + .post-card {
     margin-top: 1.5rem;
 }
 
-/* Tablet */
+/* Desktop */
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
 
     .post-card {
-
-        padding: 1.25rem;
-
-        border-radius: 24px;
-
-        gap: 1.2rem;
+        padding: 1.3rem;
     }
 
 }
 
-/* Mobile */
+/* Large Tablet */
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
 
     .post-card {
+        padding: 1.2rem;
 
-        padding: 1rem;
-
-        border-radius: 22px;
+        border-radius: 24px;
 
         gap: 1rem;
     }
 
 }
 
-/* Small phones */
+/* Tablet */
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
 
     .post-card {
+        padding: 1rem;
 
-        padding: .9rem;
+        border-radius: 20px;
+
+        gap: 0.95rem;
+    }
+
+    .post-card + .post-card {
+        margin-top: 1.2rem;
+    }
+
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+    .post-card {
+        padding: 0.95rem;
 
         border-radius: 18px;
+
+        gap: 0.9rem;
+    }
+
+}
+
+/* Small Phones */
+
+@media (max-width: 400px) {
+
+    .post-card {
+        padding: 0.85rem;
+
+        border-radius: 16px;
+
+        gap: 0.8rem;
+    }
+
+    .post-card + .post-card {
+        margin-top: 1rem;
     }
 
 }

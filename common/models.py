@@ -48,12 +48,13 @@ class GenericRelationModel(models.Model):
 class SoftDeleteModel(models.Model):
 
     is_deleted = models.BooleanField(
-        default=False
+        default=False,
+        db_index=True,
     )
 
     deleted_at = models.DateTimeField(
         null=True,
-         blank=True
+        blank=True
     )
 
     objects = ActiveManager()
@@ -63,6 +64,9 @@ class SoftDeleteModel(models.Model):
         abstract = True
     
     def delete(self, using=None, keep_parents=False):
+        
+        if self.is_deleted:
+            return
 
         self.is_deleted = True
         self.deleted_at = timezone.now()

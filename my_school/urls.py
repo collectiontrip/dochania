@@ -27,7 +27,9 @@ urlpatterns = [
     path('school/', include('school.urls')),
     path('chat/', include('chat.urls')),
     path('users/', include('core.urls')),
+    path('comments/', include('comments.urls')),
     path('live/', include('live.urls')),
+    path('likes/', include('likes.urls'),),
     path('post/', include('post.urls')),
     path('relationships/', include('relationships.urls')),
 ]

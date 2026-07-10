@@ -1,0 +1,149 @@
+.post-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    width: 100%;
+
+    padding: 0.9rem 0;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-stats-left,
+.post-stats-right {
+    display: flex;
+    align-items: center;
+}
+
+.post-stats-left {
+    gap: 0.45rem;
+
+    flex-shrink: 0;
+}
+
+.post-stats-right {
+    gap: 0.55rem;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+}
+
+.post-like-icon {
+    color: #ff4d6d;
+
+    font-size: 1rem;
+
+    filter: drop-shadow(
+        0 2px 6px rgba(255, 77, 109, 0.35)
+    );
+
+    transition:
+        transform 0.25s ease,
+        filter 0.25s ease;
+}
+
+.post-like-icon:hover {
+    transform: scale(1.15);
+
+    filter: drop-shadow(
+        0 4px 10px rgba(255, 77, 109, 0.5)
+    );
+}
+
+.post-like-count,
+.post-stat-item {
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.post-like-count:hover,
+.post-stat-item:hover {
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+.post-stat-separator {
+    color: rgba(255, 255, 255, 0.35);
+
+    font-size: 0.9rem;
+
+    user-select: none;
+}
+
+@media (max-width: 992px) {
+
+    .post-stats {
+        padding: 0.85rem 0;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .post-stats {
+        gap: 0.8rem;
+    }
+
+    .post-like-icon {
+        font-size: 0.95rem;
+    }
+
+    .post-like-count,
+    .post-stat-item,
+    .post-stat-separator {
+        font-size: 0.86rem;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .post-stats {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 0.65rem;
+    }
+
+    .post-stats-right {
+        width: 100%;
+
+        justify-content: flex-start;
+
+        gap: 0.45rem;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .post-stats {
+        gap: 0.55rem;
+    }
+
+    .post-like-icon {
+        font-size: 0.9rem;
+    }
+
+    .post-like-count,
+    .post-stat-item,
+    .post-stat-separator {
+        font-size: 0.82rem;
+    }
+
+}

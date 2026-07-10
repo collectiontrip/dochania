@@ -1,3 +1,97 @@
-from django.shortcuts import render
+from django.contrib.contenttypes.models import ContentType
 
-# Create your views here.
+from rest_framework import generics
+from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
+
+from .models import Like
+from .serializers import (
+    LikeCreateSerializer,
+    LikeSerializer,
+)
+
+
+class LikeListCreateView(generics.ListCreateAPIView):
+
+    queryset = Like.objects.all()
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get_queryset(self):
+
+        return (
+            Like.objects
+            .filter(
+                user=self.request.user,
+            )
+            .select_related(
+                "user",
+                "content_type",
+            )
+            .order_by(
+                "-created_at",
+            )
+        )
+
+    def get_serializer_class(self):
+
+        if self.request.method == "POST":
+            return LikeCreateSerializer
+
+        return LikeSerializer
+
+
+class LikeDeleteView(generics.DestroyAPIView):
+
+    queryset = Like.objects.all()
+
+    serializer_class = LikeSerializer
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    ALLOWED_MODELS = (
+        "post",
+        "comment",
+    )
+
+    def get_object(self):
+
+        content_type_name = self.kwargs["content_type"]
+        object_id = self.kwargs["object_id"]
+
+        if content_type_name not in self.ALLOWED_MODELS:
+            raise NotFound(
+                detail="Invalid content type."
+            )
+
+        content_type = ContentType.objects.filter(
+            model=content_type_name,
+        ).first()
+
+        if content_type is None:
+            raise NotFound(
+                detail="Invalid content type."
+            )
+
+        try:
+            return (
+                Like.objects
+                .select_related(
+                    "user",
+                    "content_type",
+                )
+                .get(
+                    user=self.request.user,
+                    content_type=content_type,
+                    object_id=object_id,
+                )
+            )
+
+        except Like.DoesNotExist:
+            raise NotFound(
+                detail="Like does not exist."
+            )
