@@ -1,13 +1,15 @@
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
+# likes/serializers.py
+
+from core.serializers import UserMiniSerializer
 
 from .models import Like
 
 
 class LikeSerializer(serializers.ModelSerializer):
 
-    user = serializers.CharField(
-        source="user.username",
+    user = UserMiniSerializer(
         read_only=True,
     )
 

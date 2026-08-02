@@ -1,0 +1,226 @@
+.comment-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 1rem;
+
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    animation: fadeIn 0.25s ease;
+}
+
+.comment-modal {
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+    animation: modalOpen 0.3s ease;
+}
+
+.comment-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1rem 1.25rem;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.comment-modal-title {
+    margin: 0;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    color: #ffffff;
+}
+
+.comment-modal-close {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    color: #ffffff;
+    font-size: 1.2rem;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.comment-modal-close:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.18);
+    transform: rotate(90deg);
+}
+
+.comment-modal-close:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.comment-modal-close:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.comment-modal-body {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    padding: 1.25rem;
+
+    overflow-y: auto;
+}
+
+.comment-modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.comment-modal-body::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.comment-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 768px) {
+
+    .comment-modal-overlay {
+        padding: 0.75rem;
+    }
+
+    .comment-modal {
+        max-width: 100%;
+        max-height: 92vh;
+
+        border-radius: 20px;
+    }
+
+    .comment-modal-header {
+        padding: 0.9rem 1rem;
+    }
+
+    .comment-modal-body {
+        padding: 1rem;
+    }
+
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 480px) {
+
+    .comment-modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .comment-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 90vh;
+
+        border-radius: 24px 24px 0 0;
+
+        animation: slideUp 0.3s ease;
+    }
+
+    .comment-modal-header {
+        padding: 0.9rem 1rem;
+    }
+
+    .comment-modal-title {
+        font-size: 1.05rem;
+    }
+
+    .comment-modal-close {
+        width: 38px;
+        height: 38px;
+    }
+
+    .comment-modal-body {
+        padding: 1rem;
+    }
+
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+@keyframes modalOpen {
+
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+@keyframes slideUp {
+
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+
+}

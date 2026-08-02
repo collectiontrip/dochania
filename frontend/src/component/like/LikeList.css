@@ -1,0 +1,132 @@
+.like-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    width: 100%;
+}
+
+/* ---------- States ---------- */
+
+.like-list-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 180px;
+
+    padding: 2rem 1rem;
+
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+}
+
+.like-list-state.error {
+    color: #ff8f8f;
+    border-color: rgba(255, 95, 95, 0.25);
+}
+
+/* ---------- Load More ---------- */
+
+.like-list-load-more {
+    width: 100%;
+
+    margin-top: 0.5rem;
+    padding: 0.85rem 1rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.like-list-load-more:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    background: rgba(255, 255, 255, 0.14);
+
+    border-color: rgba(255, 255, 255, 0.22);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.like-list-load-more:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.like-list-load-more:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 768px) {
+
+    .like-list {
+        gap: 0.65rem;
+    }
+
+    .like-list-state {
+        min-height: 150px;
+        padding: 1.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .like-list-load-more {
+        padding: 0.8rem;
+        font-size: 0.92rem;
+    }
+
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 480px) {
+
+    .like-list {
+        gap: 0.5rem;
+    }
+
+    .like-list-state {
+        min-height: 130px;
+
+        padding: 1.25rem 0.8rem;
+
+        border-radius: 14px;
+
+        font-size: 0.88rem;
+    }
+
+    .like-list-load-more {
+        padding: 0.75rem;
+        border-radius: 12px;
+        font-size: 0.88rem;
+    }
+
+}

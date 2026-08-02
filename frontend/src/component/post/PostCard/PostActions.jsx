@@ -1,65 +1,55 @@
 import { memo } from "react";
 
 import {
-    FiHeart,
-    FiMessageCircle,
     FiShare2,
 } from "react-icons/fi";
 
-import {
-    FaHeart,
-} from "react-icons/fa";
+import LikeButton from "../../like/LikeButton";
+import CommentButton from "../../comment/commentButton";
 
 import "./PostActions.css";
 
 const PostActions = ({
+    contentType = "post",
+    objectId,
+
     isLiked = false,
+    likeCount = 0,
+    hideLikeCount = false,
+
+    commentCount = 0,
+    hideCommentCount = false,
 
     likeDisabled = false,
     commentDisabled = false,
     shareDisabled = false,
 
-    onLike = () => {},
+    onLikeChange = () => {},
+    onLikeList = () => {},
     onComment = () => {},
     onShare = () => {},
 }) => {
+
     return (
         <div className="post-actions">
 
-            <button
-                type="button"
-                className={`post-action-btn ${
-                    isLiked ? "liked" : ""
-                }`}
-                onClick={onLike}
+            <LikeButton
+                contentType={contentType}
+                objectId={objectId}
+                isLiked={isLiked}
+                likeCount={likeCount}
+                hideLikeCount={hideLikeCount}
                 disabled={likeDisabled}
-                aria-label={isLiked ? "Unlike post" : "Like post"}
-                aria-pressed={isLiked}
-                aria-disabled={likeDisabled}
-                title={isLiked ? "Unlike" : "Like"}
-            >
-                {isLiked ? (
-                    <FaHeart className="post-action-icon" />
-                ) : (
-                    <FiHeart className="post-action-icon" />
-                )}
+                onChange={onLikeChange}
+                onLikeList={onLikeList}
+            />
 
-                <span>Like</span>
-            </button>
-
-            <button
-                type="button"
-                className="post-action-btn"
-                onClick={onComment}
+            <CommentButton
+                commentCount={commentCount}
+                hideCommentCount={hideCommentCount}
                 disabled={commentDisabled}
-                aria-label="View comments"
-                aria-disabled={commentDisabled}
-                title="Comment"
-            >
-                <FiMessageCircle className="post-action-icon" />
-
-                <span>Comment</span>
-            </button>
+                onClick={onComment}
+            />
 
             <button
                 type="button"
@@ -70,9 +60,13 @@ const PostActions = ({
                 aria-disabled={shareDisabled}
                 title="Share"
             >
-                <FiShare2 className="post-action-icon" />
+                <FiShare2
+                    className="post-action-icon"
+                />
 
-                <span>Share</span>
+                <span>
+                    Share
+                </span>
             </button>
 
         </div>

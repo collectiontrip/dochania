@@ -147,6 +147,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         ]
 
 class UserMiniSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -154,8 +155,13 @@ class UserMiniSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "username",
+            "full_name",
             "profile_picture",
             "is_verified",
+            "is_online",
         ]
 
         read_only_fields = fields
+    
+    def get_full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}".strip()

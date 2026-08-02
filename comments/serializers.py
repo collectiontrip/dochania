@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
 from core.serializers import UserMiniSerializer
@@ -72,6 +73,16 @@ class CommentCreateSerializer(
     BaseCommentSerializer,
 ):
 
+    ALLOWED_MODELS = (
+        "post",
+        "comment",
+    )
+
+    content_type = serializers.SlugRelatedField(
+        slug_field="model",
+        queryset=ContentType.objects.all(),
+    )
+
     class Meta:
 
         model = Comment
@@ -82,6 +93,47 @@ class CommentCreateSerializer(
             "object_id",
             "content",
         )
+
+    def validate(
+        self,
+        attrs,
+    ):
+
+        content_type = attrs["content_type"]
+        object_id = attrs["object_id"]
+
+        if content_type.model not in self.ALLOWED_MODELS:
+            raise serializers.ValidationError(
+                {
+                    "content_type": (
+                        "This content type cannot be commented."
+                    )
+                }
+            )
+
+        model = content_type.model_class()
+
+        if model is None:
+            raise serializers.ValidationError(
+                {
+                    "content_type": (
+                        "Invalid content type."
+                    )
+                }
+            )
+
+        if not model.objects.filter(
+            id=object_id,
+        ).exists():
+            raise serializers.ValidationError(
+                {
+                    "object_id": (
+                        "Object does not exist."
+                    )
+                }
+            )
+
+        return attrs
 
     def create(
         self,

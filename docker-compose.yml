@@ -1,0 +1,113 @@
+services:
+
+  backend:
+    build: .
+    container_name: dochania_backend
+
+    command: >
+      sh -c "
+      python manage.py migrate &&
+      daphne -e ssl:8001:privateKey=key.pem:certKey=cert.pem my_school.asgi:application
+      "
+
+    volumes:
+      - .:/app
+      - ./key.pem:/app/key.pem
+      - ./cert.pem:/app/cert.pem
+
+    ports:
+      - "8001:8001"
+
+    env_file:
+      - .env
+
+    depends_on:
+      - mysql
+      - redis
+
+    restart: unless-stopped
+
+
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: dochania_frontend
+
+    command: npm run dev -- --host 0.0.0.0
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+      # SSL certificates for Vite HTTPS
+      - ./key.pem:/app/key.pem
+      - ./cert.pem:/app/cert.pem
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+
+  mysql:
+    image: mysql:8.0
+
+    container_name: dochania_mysql
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+  redis:
+    image: redis:7-alpine
+
+    container_name: dochania_redis
+
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+
+  celery:
+    build: .
+
+    container_name: dochania_celery
+
+    command: celery -A my_school worker -l info
+
+    volumes:
+      - .:/app
+
+    env_file:
+      - .env
+
+    depends_on:
+      - mysql
+      - redis
+
+    restart: unless-stopped
+
+
+
+volumes:
+
+  mysql_data:

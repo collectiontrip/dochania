@@ -5,14 +5,21 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+
   server: {
-    host: true,
+    host: "0.0.0.0",
     port: 5173,
     strictPort: true,
 
     https: {
-      key: fs.readFileSync(path.resolve(__dirname, "../key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "../cert.pem")),
+      key: fs.readFileSync(path.resolve(__dirname, "key.pem")),
+      cert: fs.readFileSync(path.resolve(__dirname, "cert.pem")),
+    },
+
+    hmr: {
+      host: "localhost",
+      protocol: "wss",
+      port: 5173,
     },
   },
 });
