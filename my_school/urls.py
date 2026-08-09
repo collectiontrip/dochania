@@ -32,6 +32,7 @@ urlpatterns = [
     path('likes/', include('likes.urls'),),
     path('post/', include('post.urls')),
     path('relationships/', include('relationships.urls')),
+    path("reports/", include("reports.urls")), 
 ]
 
 urlpatterns += static(

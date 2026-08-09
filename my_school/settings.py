@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "comments",
     "likes",
     "relationships",
+    "reports",
     "notification",
     "chat",
     "live.apps.LiveConfig",
@@ -259,7 +260,7 @@ DJOSER = {
 SIMPLE_JWT = {
 
     "AUTH_HEADER_TYPES": (
-        "Bearer",
+        "JWT",
     ),
 
 

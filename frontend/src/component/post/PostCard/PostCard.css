@@ -59,6 +59,15 @@
     opacity: 0.9;
 }
 
+.post-card-clickable {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.post-card-clickable:hover {
+    opacity: 0.95;
+}
+
 /* Soft Glow */
 
 .post-card::after {

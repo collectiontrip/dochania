@@ -1,0 +1,536 @@
+/* =========================================================
+   COMMENT ITEM
+   ========================================================= */
+
+.comment-item {
+
+    width: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 13px;
+
+    padding: 15px 16px;
+
+    position: relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.66),
+            rgba(255, 255, 255, 0.36)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.62);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.comment-item:hover {
+
+    transform: translateY(-1px);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.76),
+            rgba(255, 255, 255, 0.44)
+        );
+
+    box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.09),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+
+/* =========================================================
+   AVATAR WRAPPER
+   ========================================================= */
+
+.comment-item-avatar {
+
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.comment-user-avatar {
+
+    width: 42px;
+    height: 42px;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(255, 255, 255, 0.85);
+
+    box-shadow:
+        0 5px 14px rgba(15, 23, 42, 0.12);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   AVATAR FALLBACK
+   ========================================================= */
+
+.comment-user-avatar-fallback {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(148, 163, 184, 0.85),
+            rgba(100, 116, 139, 0.72)
+        );
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    user-select: none;
+}
+
+
+/* =========================================================
+   ONLINE INDICATOR
+   ========================================================= */
+
+.comment-online-indicator {
+
+    width: 10px;
+    height: 10px;
+
+    position: absolute;
+
+    right: 0;
+    bottom: 1px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    border: 2px solid rgba(255, 255, 255, 0.95);
+
+    box-sizing: content-box;
+
+    box-shadow:
+        0 2px 8px rgba(34, 197, 94, 0.35);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.comment-item-main {
+
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.comment-item-header {
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    line-height: 1.25;
+}
+
+
+/* =========================================================
+   AUTHOR
+   ========================================================= */
+
+.comment-author {
+
+    max-width: 100%;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    letter-spacing: -0.1px;
+}
+
+
+/* =========================================================
+   VERIFIED
+   ========================================================= */
+
+.comment-verified {
+
+    width: 16px;
+    height: 16px;
+
+    min-width: 16px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #3b82f6;
+
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    line-height: 1;
+
+    box-shadow:
+        0 3px 8px rgba(59, 130, 246, 0.25);
+}
+
+
+/* =========================================================
+   COMMENT CONTENT
+   ========================================================= */
+
+.comment-item-content {
+
+    width: 100%;
+
+    color: #334155;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+
+    font-weight: 400;
+
+    word-break: break-word;
+
+    overflow-wrap: anywhere;
+
+    white-space: pre-wrap;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.comment-item-footer {
+
+    display: flex;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 1px;
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.comment-date {
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   EDITED
+   ========================================================= */
+
+.comment-edited {
+
+    position: relative;
+
+    padding-left: 8px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.3;
+
+    font-style: italic;
+
+    white-space: nowrap;
+}
+
+
+.comment-edited::before {
+
+    content: "•";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    color: #cbd5e1;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .comment-item {
+
+        padding: 14px;
+
+        gap: 11px;
+
+        border-radius: 16px;
+    }
+
+
+    .comment-item-avatar,
+    .comment-user-avatar {
+
+        width: 40px;
+        height: 40px;
+
+        min-width: 40px;
+    }
+
+
+    .comment-author {
+
+        font-size: 13.5px;
+    }
+
+
+    .comment-item-content {
+
+        font-size: 13.5px;
+
+        line-height: 1.5;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .comment-item {
+
+        padding: 12px;
+
+        gap: 10px;
+
+        border-radius: 14px;
+    }
+
+
+    .comment-item-avatar,
+    .comment-user-avatar {
+
+        width: 36px;
+        height: 36px;
+
+        min-width: 36px;
+    }
+
+
+    .comment-user-avatar {
+
+        border-width: 1.5px;
+    }
+
+
+    .comment-user-avatar-fallback {
+
+        font-size: 14px;
+    }
+
+
+    .comment-online-indicator {
+
+        width: 8px;
+        height: 8px;
+
+        right: -1px;
+        bottom: 0;
+
+        border-width: 1.5px;
+    }
+
+
+    .comment-item-main {
+
+        gap: 4px;
+    }
+
+
+    .comment-author {
+
+        font-size: 13px;
+    }
+
+
+    .comment-verified {
+
+        width: 14px;
+        height: 14px;
+
+        min-width: 14px;
+
+        font-size: 9px;
+    }
+
+
+    .comment-item-content {
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+
+    .comment-date,
+    .comment-edited {
+
+        font-size: 10px;
+    }
+
+
+    .comment-item-footer {
+
+        gap: 7px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .comment-item {
+
+        padding: 10px;
+
+        gap: 9px;
+    }
+
+
+    .comment-item-avatar,
+    .comment-user-avatar {
+
+        width: 34px;
+        height: 34px;
+
+        min-width: 34px;
+    }
+
+
+    .comment-user-avatar-fallback {
+
+        font-size: 13px;
+    }
+
+
+    .comment-item-content {
+
+        font-size: 12.5px;
+    }
+
+
+    .comment-date,
+    .comment-edited {
+
+        font-size: 9.5px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .comment-item {
+
+        transition: none;
+    }
+
+}

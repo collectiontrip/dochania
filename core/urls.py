@@ -6,15 +6,23 @@ from .views import (
     SaveDeviceView,
     ProfileUpdateView,
     UserDetailView,
+    UserListView,
 )
 
 urlpatterns = [
+
+    path(
+        "", 
+        UserListView.as_view(), 
+        name="user-list"
+    ),
 
     path(
         "<int:id>/",
         UserDetailView.as_view(),
         name="user-detail"
     ),
+
     
     path(
         "save-public-key/",

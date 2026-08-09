@@ -3,7 +3,14 @@ import {
   Route,
   NavLink,
   Navigate,
+  useParams,
 } from "react-router-dom";
+
+import { useEffect } from "react";
+import { 
+  getRealtimeSocket,
+  resetRealtimeSocket,
+} from "./socket/socketManager"; 
 
 import { useUser } from "./contexts/UserContext";
 
@@ -38,8 +45,10 @@ import Profile from "./component/Profile/Profile";
 
 import FollowerList from "./component/relationships/FollowersList";
 import FollowingList from "./component/relationships/FollowingList";
+
 import SelfPostList from "./component/post/SelfPostList/SelfPostList";
 import UserPostList from "./component/post/PostList/UserPostList/UserPostList";
+import PostDetail from "./component/post/postDetail/PostDetail";
 
 import UpdateProfile from "./component/Profile/UpdateProfile";
 
@@ -66,6 +75,16 @@ const Layout = () => {
   }
 
   const isAuthenticated = !!user;
+
+  useEffect(() => {
+
+    if (isAuthenticated) {
+      getRealtimeSocket();
+    } else {
+      resetRealtimeSocket();
+    }
+
+  }, [isAuthenticated]);
 
   return (
 
@@ -305,6 +324,11 @@ const Layout = () => {
                           />
                       )
               }
+          />
+
+          <Route
+            path="/posts/:id"
+            element={<PostDetail />}
           />
 
           <Route

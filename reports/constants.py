@@ -1,0 +1,74 @@
+REPORT_REASON_SPAM = "spam"
+REPORT_REASON_HARASSMENT = "harassment"
+REPORT_REASON_HATE_SPEECH = "hate_speech"
+REPORT_REASON_VIOLENCE = "violence"
+REPORT_REASON_NUDITY = "nudity"
+REPORT_REASON_SCAM = "scam"
+REPORT_REASON_COPYRIGHT = "copyright"
+REPORT_REASON_FALSE_INFORMATION = "false_information"
+REPORT_REASON_SELF_HARM = "self_harm"
+REPORT_REASON_IMPERSONATION = "impersonation"
+REPORT_REASON_OTHER = "other"
+
+
+REPORT_REASON_CHOICES = [
+    (REPORT_REASON_SPAM, "Spam"),
+    (REPORT_REASON_HARASSMENT, "Harassment or Bullying"),
+    (REPORT_REASON_HATE_SPEECH, "Hate Speech"),
+    (REPORT_REASON_VIOLENCE, "Violence"),
+    (REPORT_REASON_NUDITY, "Nudity or Sexual Content"),
+    (REPORT_REASON_SCAM, "Scam or Fraud"),
+    (REPORT_REASON_COPYRIGHT, "Copyright Violation"),
+    (REPORT_REASON_FALSE_INFORMATION, "False Information"),
+    (REPORT_REASON_SELF_HARM, "Self Harm"),
+    (REPORT_REASON_IMPERSONATION, "Impersonation"),
+    (REPORT_REASON_OTHER, "Other"),
+]
+
+REPORT_STATUS_PENDING = "pending"
+REPORT_STATUS_IN_REVIEW = "in_review"
+REPORT_STATUS_RESOLVED = "resolved"
+REPORT_STATUS_REJECTED = "rejected"
+
+
+REPORT_STATUS_CHOICES = [
+    (REPORT_STATUS_PENDING, "Pending"),
+    (REPORT_STATUS_IN_REVIEW, "In Review"),
+    (REPORT_STATUS_RESOLVED, "Resolved"),
+    (REPORT_STATUS_REJECTED, "Rejected"),
+]
+
+
+REPORT_ACTION_NONE = "none"
+REPORT_ACTION_WARNING = "warning"
+REPORT_ACTION_CONTENT_REMOVED = "content_removed"
+REPORT_ACTION_ACCOUNT_RESTRICTED = "account_restricted"
+REPORT_ACTION_ACCOUNT_SUSPENDED = "account_suspended"
+REPORT_ACTION_ACCOUNT_BANNED = "account_banned"
+
+
+REPORT_ACTION_CHOICES = [
+    (REPORT_ACTION_NONE, "No Action"),
+    (REPORT_ACTION_WARNING, "Warning Issued"),
+    (REPORT_ACTION_CONTENT_REMOVED, "Content Removed"),
+    (REPORT_ACTION_ACCOUNT_RESTRICTED, "Account Restricted"),
+    (REPORT_ACTION_ACCOUNT_SUSPENDED, "Account Suspended"),
+    (REPORT_ACTION_ACCOUNT_BANNED, "Account Permanently Banned"),
+]
+
+
+EVIDENCE_TYPE_IMAGE = "image"
+EVIDENCE_TYPE_VIDEO = "video"
+EVIDENCE_TYPE_DOCUMENT = "document"
+
+EVIDENCE_TYPE_CHOICES = [
+    (EVIDENCE_TYPE_IMAGE, "Image"),
+    (EVIDENCE_TYPE_VIDEO, "Video"),
+    (EVIDENCE_TYPE_DOCUMENT, "Document"),
+]
+
+
+ALLOWED_REPORT_MODELS = frozenset({
+    "post",
+    "comment",
+})

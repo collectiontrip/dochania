@@ -18,13 +18,10 @@ def get_comments(
     user=None,
 ) -> QuerySet[Comment]:
 
-    return (
-        Comment.objects.for_list(
-            user=user,
-        ).filter(
-            content_type=content_type,
-            object_id=object_id,
-        )
+    return Comment.objects.for_object(
+        content_type=content_type,
+        object_id=object_id,
+        user=user,
     )
 
 

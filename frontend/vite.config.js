@@ -3,6 +3,11 @@ import react from "@vitejs/plugin-react";
 import fs from "fs";
 import path from "path";
 
+const rootDir =
+  path.basename(__dirname) === "frontend"
+    ? path.resolve(__dirname, "..") // Local: frontend -> project root
+    : __dirname;                    // Docker: /app
+
 export default defineConfig({
   plugins: [react()],
 
@@ -12,8 +17,8 @@ export default defineConfig({
     strictPort: true,
 
     https: {
-      key: fs.readFileSync(path.resolve(__dirname, "key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "cert.pem")),
+      key: fs.readFileSync(path.join(rootDir, "key.pem")),
+      cert: fs.readFileSync(path.join(rootDir, "cert.pem")),
     },
 
     hmr: {

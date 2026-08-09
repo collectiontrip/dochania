@@ -2,11 +2,14 @@ import {
     useState,
 } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import PostHeader from "./PostHeader";
 import PostContent from "./PostContent";
 import PostMedia from "./PostMedia";
 import PostStats from "./PostStats";
 import PostActions from "./PostActions";
+
 
 import CommentModal from "../../comment/CommentModal";
 import LikeModal from "../../like/LikeModal";
@@ -17,6 +20,7 @@ import commentService from "../../../services/commentService";
 import "./PostCard.css";
 
 const PostCard = ({ post }) => {
+    const navigate = useNavigate();
 
     const [isCommentOpen, setIsCommentOpen] =
         useState(false);
@@ -26,6 +30,8 @@ const PostCard = ({ post }) => {
 
     const [commentLoading, setCommentLoading] =
         useState(false);
+    
+    
 
     if (!post) {
         return null;
@@ -45,6 +51,14 @@ const PostCard = ({ post }) => {
 
     const handleCloseLikes = () => {
         setIsLikeOpen(false);
+    };
+
+    const handleOpenPostDetail = () => {
+
+        navigate(
+            `/posts/${post.id}`
+        );
+
     };
 
     const handleCreateComment = async (
@@ -159,17 +173,31 @@ const PostCard = ({ post }) => {
 
                 {
                     post.content && (
-                        <PostContent
-                            content={post.content}
-                        />
+                        <div
+                            onClick={handleOpenPostDetail}
+                            className="post-card-clickable"
+                        >
+
+                            <PostContent
+                                content={post.content}
+                            />
+
+                        </div>
                     )
                 }
 
                 {
                     post.media?.length > 0 && (
-                        <PostMedia
-                            media={post.media}
-                        />
+                        <div
+                            onClick={handleOpenPostDetail}
+                            className="post-card-clickable"
+                        >
+
+                            <PostMedia
+                                media={post.media}
+                            />
+
+                        </div>
                     )
                 }
 
