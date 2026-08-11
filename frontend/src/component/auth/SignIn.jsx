@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AxiosInstance from "./axiosInstance";
@@ -6,74 +7,82 @@ import DeviceDetector from "device-detector-js";
 import "./Login.css";
 
 const Login = () => {
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
+  // ==========================================================
+  // Device Name
+  // ==========================================================
+
   const getDeviceName = () => {
     const detector = new DeviceDetector();
     const device = detector.parse(navigator.userAgent);
-    
+
     const ua = navigator.userAgent;
 
     console.log("🧠 Full Device Data:", device);
 
-    // ✅ 1. Agar model mil gaya (best case)
+    // Best case: device model available
     if (device.device?.model) {
       return `${device.device.brand || ""} ${device.device.model}`.trim();
     }
 
+    // Device type fallback
     if (device.device?.type) {
       return device.device.type.toUpperCase();
     }
 
-    // ✅ 2. Android fallback (IMPORTANT FIX 🔥)
+    // Android
     if (/android/i.test(ua)) {
       return "Android Device";
     }
 
-    // ✅ 3. iPhone
+    // iPhone
     if (/iPhone/i.test(ua)) {
       return "iPhone";
     }
 
-    // ✅ 4. Windows
+    // Windows
     if (/Windows/i.test(ua)) {
       return "Windows PC";
     }
 
-    // ✅ 5. Mac
+    // Mac
     if (/Mac/i.test(ua)) {
       return "MacBook";
     }
+
+    // Linux
     if (/Linux/i.test(ua)) {
       return "Linux Laptop";
     }
 
-    // ❌ Last fallback
     return "Unknown Device";
   };
 
-  const getDeviceInfo = () => {
-    const userAgent = navigator.userAgent;
+  // ==========================================================
+  // Device Information
+  // ==========================================================
 
+  const getDeviceInfo = () => {
     return {
-      user_agent: userAgent,
+      user_agent: navigator.userAgent,
       platform: navigator.platform,
       language: navigator.language,
       device_name: getDeviceName(),
     };
   };
 
-  // ------------------------------
+  // ==========================================================
   // Generate RSA Key Pair
-  // ------------------------------
-  const generateKeyPair = async () => {
+  // ==========================================================
 
+  const generateKeyPair = async () => {
     console.log("🔑 Generating RSA key pair...");
 
     const keyPair = await window.crypto.subtle.generateKey(
@@ -87,7 +96,7 @@ const Login = () => {
       ["encrypt", "decrypt"]
     );
 
-    // Export Public Key
+    // Export public key
     const publicKeyBuffer = await window.crypto.subtle.exportKey(
       "spki",
       keyPair.publicKey
@@ -97,151 +106,322 @@ const Login = () => {
       String.fromCharCode(...new Uint8Array(publicKeyBuffer))
     );
 
-    // Export Private Key
+    // Export private key
     const privateKeyJwk = await window.crypto.subtle.exportKey(
       "jwk",
       keyPair.privateKey
     );
 
-    // Save Private Key locally
-    localStorage.setItem("privateKey", JSON.stringify(privateKeyJwk));
+    // Save private key locally
+    localStorage.setItem(
+      "privateKey",
+      JSON.stringify(privateKeyJwk)
+    );
 
     console.log("✅ Key pair generated");
 
     return publicKeyBase64;
   };
 
-  // ------------------------------
+  // ==========================================================
   // Login Submit
-  // ------------------------------
-  const handleSubmit = async (e) => {
+  // ==========================================================
 
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
     setLoading(true);
 
     try {
-
-      const res = await AxiosInstance.post("/auth/jwt/create/", {
-        username: username.trim(),
-        password: password.trim(),
-      });
+      const res = await AxiosInstance.post(
+        "/auth/jwt/create/",
+        {
+          username: username.trim(),
+          password: password.trim(),
+        }
+      );
 
       const { access, refresh } = res.data;
 
+      // Save JWT tokens
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
-      // Get user id from token
+      // Get user ID from JWT
       const userId = getUserId();
+
       localStorage.setItem("user_id", userId);
 
-      console.log("👤 Logged in user id:", userId);
+      console.log(
+        "👤 Logged in user id:",
+        userId
+      );
 
-      // Always generate fresh keys
+      // ======================================================
+      // Generate fresh RSA keys
+      // ======================================================
+
       const publicKey = await generateKeyPair();
 
-      // Save public key to backend
-      await AxiosInstance.post("/users/save-public-key/", {
-        public_key: publicKey,
-        
-      });
+      // ======================================================
+      // Save public key
+      // ======================================================
 
-      
+      await AxiosInstance.post(
+        "/users/save-public-key/",
+        {
+          public_key: publicKey,
+        }
+      );
 
-      console.log("📤 Public Key sent to server:", publicKey);
-      console.log("🔐 Private Key stored locally");
+      console.log(
+        "📤 Public Key sent to server:",
+        publicKey
+      );
+
+      console.log(
+        "🔐 Private Key stored locally"
+      );
+
+      // ======================================================
+      // Save Device
+      // ======================================================
+
       const deviceInfo = getDeviceInfo();
-      console.log("📱 Device Info:", deviceInfo);
 
-      console.log("🔥 DEVICE NAME CHECK:", deviceInfo.device_name);
-      await AxiosInstance.post("/users/save-device/", {
-        device_info: deviceInfo,
-      })
-      .then((res) => {
-        console.log("📱 Device info saved:", res.data);
-      })
-      .catch((err) => {
-        console.error("❌ Device save failed:", err.response?.data || err.message);
-      });
-      
+      console.log(
+        "📱 Device Info:",
+        deviceInfo
+      );
+
+      console.log(
+        "🔥 DEVICE NAME CHECK:",
+        deviceInfo.device_name
+      );
+
+      try {
+        const deviceResponse = await AxiosInstance.post(
+          "/users/save-device/",
+          {
+            device_info: deviceInfo,
+          }
+        );
+
+        console.log(
+          "📱 Device info saved:",
+          deviceResponse.data
+        );
+      } catch (deviceError) {
+        console.error(
+          "❌ Device save failed:",
+          deviceError.response?.data ||
+            deviceError.message
+        );
+      }
+
+      // ======================================================
+      // Login Success
+      // ======================================================
 
       alert("Login successful");
 
       navigate("/home");
 
     } catch (err) {
+      console.error(
+        "❌ Login error:",
+        err.response?.data || err
+      );
 
-      console.error(err);
+      const data = err.response?.data;
 
-      if (err.response && err.response.status === 400) {
-        setError("Invalid username or password");
-      } else {
-        setError("Server not reachable");
+      // ======================================================
+      // Account Locked
+      // ======================================================
+
+      if (data?.locked_until) {
+        setError(
+          data.detail ||
+            "Your account is temporarily locked. Please try again later."
+        );
+
+        return;
       }
+
+      // ======================================================
+      // Wrong Password
+      // ======================================================
+
+      if (
+        data?.remaining_attempts !== undefined
+      ) {
+        setError(
+          `${data.detail} ${data.remaining_attempts} attempt${
+            data.remaining_attempts === 1
+              ? ""
+              : "s"
+          } remaining.`
+        );
+
+        return;
+      }
+
+      // ======================================================
+      // Inactive Account
+      // ======================================================
+
+      if (
+        data?.detail ===
+        "Your account is inactive. Please activate your account first."
+      ) {
+        setError(
+          "Your account is inactive. Please activate your account first."
+        );
+
+        return;
+      }
+
+      // ======================================================
+      // Invalid Username / Password
+      // ======================================================
+
+      if (
+        err.response?.status === 400
+      ) {
+        setError(
+          data?.detail ||
+            "Invalid username or password."
+        );
+
+        return;
+      }
+
+      // ======================================================
+      // Server Error
+      // ======================================================
+
+      setError(
+        "Server not reachable. Please try again later."
+      );
 
     } finally {
       setLoading(false);
     }
   };
 
+  // ==========================================================
+  // JSX
+  // ==========================================================
+
   return (
+    <div className="login-page">
 
-    <div className="login-container">
+      <div className="login-card">
 
-      <h2 className="login-title">Sign In</h2>
+        <div className="login-header">
 
-      <form className="login-form" onSubmit={handleSubmit}>
+          <h2 className="login-title">
+            Welcome Back
+          </h2>
 
-        <div className="login-field">
-          <label className="login-label">Username</label>
+          <p className="login-subtitle">
+            Sign in to continue to MediaApp
+          </p>
 
-          <input
-            className="login-input"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
         </div>
 
-        <div className="login-field">
-          <label className="login-label">Password</label>
-
-          <input
-            className="login-input"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        {error && <p className="login-error">{error}</p>}
-
-        <button
-          className="login-button"
-          type="submit"
-          disabled={loading}
+        <form
+          className="login-form"
+          onSubmit={handleSubmit}
         >
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
 
-         
+          {/* Username */}
 
-        {/* 👇 NEW: Forgot Password Link */}
-        <p
-          className="forgot-link"
-          onClick={() => navigate("/forgot-password")}
-        >
-          Forgot Password?
-        </p>
-          
+          <div className="login-field">
 
-      </form>
+            <label className="login-label">
+              Username
+            </label>
+
+            <input
+              className="login-input"
+              type="text"
+              value={username}
+              onChange={(e) =>
+                setUsername(e.target.value)
+              }
+              placeholder="Enter your username"
+              autoComplete="username"
+              required
+            />
+
+          </div>
+
+          {/* Password */}
+
+          <div className="login-field">
+
+            <label className="login-label">
+              Password
+            </label>
+
+            <input
+              className="login-input"
+              type="password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              required
+            />
+
+          </div>
+
+          {/* Error */}
+
+          {error && (
+            <p className="login-error">
+              {error}
+            </p>
+          )}
+
+          {/* Sign In */}
+
+          <button
+            className="login-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Signing in..."
+              : "Sign In"}
+          </button>
+
+          {/* Footer */}
+
+          <div className="login-footer">
+
+            <p
+              className="forgot-link"
+              onClick={() =>
+                navigate("/forgot-password")
+              }
+            >
+              Forgot Password?
+            </p>
+
+          </div>
+
+        </form>
+
+      </div>
 
     </div>
   );
 };
 
 export default Login;
+

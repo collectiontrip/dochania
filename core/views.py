@@ -1,6 +1,8 @@
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+
 
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
@@ -10,9 +12,14 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 from relationships.models import Block
 from .models import UserDevice
-from .serializers import ProfileUpdateSerializer, UserSerializer
+from .serializers import (
+    ProfileUpdateSerializer,
+    UserSerializer,
+    CustomTokenObtainPairSerializer,
+)
 
 
 User = get_user_model()
@@ -74,6 +81,13 @@ class UserDetailView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return get_visible_users(self.request.user)
+
+
+
+class CustomTokenObtainPairView(
+    TokenObtainPairView
+):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 # ==========================================================
@@ -200,3 +214,6 @@ class ProfileUpdateView(RetrieveUpdateAPIView):
     def patch(self, request, *args, **kwargs):
         print("PATCH DATA:", request.data)
         return self.partial_update(request, *args, **kwargs)
+
+
+

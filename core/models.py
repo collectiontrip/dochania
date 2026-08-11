@@ -31,6 +31,20 @@ class User(AbstractUser):
         default=False,
     )
 
+    failed_login_attempts = models.PositiveSmallIntegerField(
+        default=0,
+    )
+
+    locked_until = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    last_failed_login_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
 
 class UserDevice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
