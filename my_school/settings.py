@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "comments",
     "likes",
     "relationships",
+    "moderation",
     "reports",
     "notification",
     "chat",

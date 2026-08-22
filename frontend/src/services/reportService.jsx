@@ -3,10 +3,25 @@ import axiosInstance from "../component/auth/axiosInstance";
 
 const reportService = {
 
-    // --------------------------------------------------
+    // ============================================================
+    // GET REPORT REASONS
+    // GET /reports/reasons/
+    // ============================================================
+
+    getReportReasons: async () => {
+
+        const response = await axiosInstance.get(
+            "/reports/reasons/"
+        );
+
+        return response.data;
+    },
+
+
+    // ============================================================
     // CREATE REPORT
     // POST /reports/
-    // --------------------------------------------------
+    // ============================================================
 
     createReport: async ({
         contentType,
@@ -21,7 +36,7 @@ const reportService = {
                 content_type: contentType,
                 object_id: objectId,
                 reason,
-                description,
+                description: description.trim(),
             }
         );
 
@@ -29,12 +44,14 @@ const reportService = {
     },
 
 
-    // --------------------------------------------------
+    // ============================================================
     // GET MY REPORTS
     // GET /reports/my-reports/
-    // --------------------------------------------------
+    // ============================================================
 
-    getMyReports: async (params = {}) => {
+    getMyReports: async (
+        params = {}
+    ) => {
 
         const response = await axiosInstance.get(
             "/reports/my-reports/",
@@ -47,15 +64,22 @@ const reportService = {
     },
 
 
-    // --------------------------------------------------
+    // ============================================================
     // GET REPORT LIST
     // GET /reports/
-    // --------------------------------------------------
-    // Staff/moderator can get reports.
-    // Normal user gets only their own reports
-    // because of get_queryset() in backend.
+    // ============================================================
+    //
+    // Moderator:
+    //     Gets all reports.
+    //
+    // Normal user:
+    //     Backend restricts results to own reports.
+    //
+    // ============================================================
 
-    getReports: async (params = {}) => {
+    getReports: async (
+        params = {}
+    ) => {
 
         const response = await axiosInstance.get(
             "/reports/",
@@ -68,12 +92,34 @@ const reportService = {
     },
 
 
-    // --------------------------------------------------
+    // ============================================================
+    // GET MODERATION QUEUE
+    // GET /reports/moderation/
+    // ============================================================
+
+    getModerationReports: async (
+        params = {}
+    ) => {
+
+        const response = await axiosInstance.get(
+            "/reports/moderation/",
+            {
+                params,
+            }
+        );
+
+        return response.data;
+    },
+
+
+    // ============================================================
     // GET SINGLE REPORT
     // GET /reports/<id>/
-    // --------------------------------------------------
+    // ============================================================
 
-    getReport: async (reportId) => {
+    getReport: async (
+        reportId
+    ) => {
 
         const response = await axiosInstance.get(
             `/reports/${reportId}/`
@@ -83,10 +129,10 @@ const reportService = {
     },
 
 
-    // --------------------------------------------------
-    // UPDATE REPORT / MODERATION
+    // ============================================================
+    // UPDATE REPORT
     // PATCH /reports/<id>/
-    // --------------------------------------------------
+    // ============================================================
 
     updateReport: async (
         reportId,
@@ -102,14 +148,34 @@ const reportService = {
     },
 
 
-    // --------------------------------------------------
-    // UPLOAD EVIDENCE
+    // ============================================================
+    // REPLACE REPORT
+    // PUT /reports/<id>/
+    // ============================================================
+
+    replaceReport: async (
+        reportId,
+        data
+    ) => {
+
+        const response = await axiosInstance.put(
+            `/reports/${reportId}/`,
+            data
+        );
+
+        return response.data;
+    },
+
+
+    // ============================================================
+    // UPLOAD SINGLE EVIDENCE
     // POST /reports/<id>/evidence/
-    // --------------------------------------------------
+    // ============================================================
 
     uploadEvidence: async (
         reportId,
-        file
+        file,
+        evidenceType = "image"
     ) => {
 
         const formData = new FormData();
@@ -118,6 +184,12 @@ const reportService = {
             "file",
             file
         );
+
+        formData.append(
+            "evidence_type",
+            evidenceType
+        );
+
 
         const response = await axiosInstance.post(
             `/reports/${reportId}/evidence/`,
@@ -133,31 +205,85 @@ const reportService = {
     },
 
 
-    // --------------------------------------------------
+    // ============================================================
     // UPLOAD MULTIPLE EVIDENCE FILES
-    // --------------------------------------------------
-    // Backend allows maximum 5 files per report.
-    // This method uploads them one by one.
+    // ============================================================
+    //
+    // Backend maximum:
+    //     5 evidence records per report.
+    //
+    // Files are uploaded sequentially so the backend remains
+    // authoritative about the maximum allowed evidence.
+    //
+    // ============================================================
 
     uploadEvidenceFiles: async (
         reportId,
         files
     ) => {
 
+        if (!files?.length) {
+            return [];
+        }
+
+
+        if (files.length > 5) {
+            throw new Error(
+                "Maximum 5 evidence files are allowed."
+            );
+        }
+
+
         const uploadedEvidence = [];
 
-        for (const file of files) {
+
+        for (const item of files) {
+
+            let file;
+            let evidenceType = "image";
+
+
+            // ----------------------------------------------------
+            // Support:
+            //
+            // File
+            //
+            // OR
+            //
+            // {
+            //     file,
+            //     evidenceType
+            // }
+            // ----------------------------------------------------
+
+            if (
+                item instanceof File
+            ) {
+
+                file = item;
+
+            } else {
+
+                file = item.file;
+
+                evidenceType =
+                    item.evidenceType || "image";
+            }
+
 
             const evidence =
                 await reportService.uploadEvidence(
                     reportId,
-                    file
+                    file,
+                    evidenceType
                 );
+
 
             uploadedEvidence.push(
                 evidence
             );
         }
+
 
         return uploadedEvidence;
     },
