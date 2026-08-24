@@ -1,151 +1,86 @@
-import { useEffect, useState } from "react";
+import {
+    useState,
+} from "react";
 
-import reportService from "../../services/reportService";
+
+import ReportModal from "./ReportModal";
 
 
-function ReportButton({
+import "./ReportButton.css";
+
+
+const ReportButton = ({
     contentType,
     objectId,
     className = "",
-}) {
+}) => {
 
-    const [isOpen, setIsOpen] = useState(false);
-
-    const [reasons, setReasons] = useState([]);
-
-    const [reason, setReason] = useState("");
-
-    const [description, setDescription] = useState("");
-
-    const [loadingReasons, setLoadingReasons] = useState(false);
-
-    const [submitting, setSubmitting] = useState(false);
-
-    const [error, setError] = useState("");
-
-    const [submitted, setSubmitted] = useState(false);
+    const [isOpen, setIsOpen] =
+        useState(false);
 
 
     // ============================================================
-    // ERROR HANDLER
+    // OPEN MODAL
     // ============================================================
 
-    const getErrorMessage = (
-        error,
-        fallback = "Something went wrong.",
-    ) => {
-        const data = error?.response?.data;
+    const handleOpenReport = () => {
 
-        if (
-            typeof data?.detail === "string"
-        ) {
-            return data.detail;
-        }
+        setIsOpen(true);
 
-        if (
-            typeof data === "string"
-        ) {
-            return data;
-        }
-
-        if (
-            data
-            && typeof data === "object"
-        ) {
-            const values = Object.values(data);
-
-            for (const value of values) {
-
-                if (Array.isArray(value)) {
-
-                    const message = value.find(
-                        (item) =>
-                            typeof item === "string",
-                    );
-
-                    if (message) {
-                        return message;
-                    }
-                }
-
-                if (
-                    typeof value === "string"
-                ) {
-                    return value;
-                }
-
-
-            }
-        }
-
-        return fallback;
     };
 
+
     // ============================================================
-    // LOAD REPORT REASONS
+    // CLOSE MODAL
     // ============================================================
 
-    useEffect(() => {
+    const handleCloseReport = () => {
 
-        if (
-            !isOpen
-            || reason.length > 0
-        ) {
-            return;
-        }
+        setIsOpen(false);
 
-        let isMounted = true;
+    };
 
-        const loadReasons = async () => {
 
-            setLoadingReasons(true);
-            setError("");
+    // ============================================================
+    // RENDER
+    // ============================================================
 
-            try {
+    return (
+        <>
 
-                const data = 
-                    await reportService.getReportReasons();
-
-                if (!isMounted) {
-                    return;
+            <button
+                type="button"
+                className={
+                    `report-button ${className}`.trim()
                 }
-
-                setReasons(
-                    Array.isArray(data)
-                        ? data
-                        : [],
-                );
-                
-            } catch (error) {
-
-                if (!isMounted) {
-                    return;
+                onClick={
+                    handleOpenReport
                 }
+                aria-label="Report content"
+                aria-haspopup="dialog"
+                aria-expanded={isOpen}
+            >
+                Report
+            </button>
 
-                setError(
-                    getErrorMessage(
-                        error,
-                        "Unable to load report reasons.",
-                    ),
-                );
 
-            } finally {
-
-                if (isMounted) {
-                    setLoadingReasons(false);
+            <ReportModal
+                isOpen={isOpen}
+                contentType={
+                    contentType
                 }
-            }
+                objectId={
+                    objectId
+                }
+                onClose={
+                    handleCloseReport
+                }
+            />
 
-        };
+        </>
+    );
 
-        loadReasons();
+};
 
-        return () => {
-            isMounted = false;
-        };
-        
-    }, [
-        isOpen,
-        reason.length,
-    ]);
-}
+
+export default ReportButton;

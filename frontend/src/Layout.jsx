@@ -3,16 +3,20 @@ import {
   Route,
   NavLink,
   Navigate,
-  useParams,
 } from "react-router-dom";
 
-import { useEffect } from "react";
-import { 
+import {
+  useEffect,
+} from "react";
+
+import {
   getRealtimeSocket,
   resetRealtimeSocket,
-} from "./socket/socketManager"; 
+} from "./socket/socketManager";
 
-import { useUser } from "./contexts/UserContext";
+import {
+  useUser,
+} from "./contexts/UserContext";
 
 import Home from "./component/home";
 
@@ -35,6 +39,7 @@ import PrivateChat from "./component/chat/PrivateChat";
 import Users from "./component/Users";
 
 import UserFollowerList from "./component/relationships/UserFollowersList";
+
 import UserFollowingList from "./component/relationships/UserFollowingList";
 
 import Live from "./component/Live";
@@ -44,17 +49,27 @@ import Viewer from "./component/Viewer";
 import Profile from "./component/Profile/Profile";
 
 import FollowerList from "./component/relationships/FollowersList";
+
 import FollowingList from "./component/relationships/FollowingList";
 
 import SelfPostList from "./component/post/SelfPostList/SelfPostList";
+
 import UserPostList from "./component/post/PostList/UserPostList/UserPostList";
+
 import PostDetail from "./component/post/postDetail/PostDetail";
+
+import MyReports from "./component/report/MyReport";
 
 import UpdateProfile from "./component/Profile/UpdateProfile";
 
 import UserProfile from "./component/Profile/UserProfile";
 
 import "./App.css";
+
+
+// ============================================================
+// LAYOUT
+// ============================================================
 
 const Layout = () => {
 
@@ -63,43 +78,112 @@ const Layout = () => {
     loading,
   } = useUser();
 
+
+  // ============================================================
+  // AUTHENTICATION STATE
+  // ============================================================
+
+  const isAuthenticated =
+    Boolean(user);
+
+
+  // ============================================================
+  // PROFILE IMAGE
+  // ============================================================
+
   const profileImage =
-    user?.profile_picture || "/default-avatar.png";
+    user?.profile_picture
+    || "/default-avatar.png";
 
-  if (loading) {
-    return (
-      <h2 className="profile-loading">
-        Loading...
-      </h2>
-    );
-  }
 
-  const isAuthenticated = !!user;
+  // ============================================================
+  // REALTIME SOCKET
+  // ============================================================
 
   useEffect(() => {
 
-    if (isAuthenticated) {
-      getRealtimeSocket();
-    } else {
-      resetRealtimeSocket();
+    if (loading) {
+      return;
     }
 
-  }, [isAuthenticated]);
+
+    if (isAuthenticated) {
+
+      getRealtimeSocket();
+
+    } else {
+
+      resetRealtimeSocket();
+
+    }
+
+
+    return () => {
+
+      if (!isAuthenticated) {
+        resetRealtimeSocket();
+      }
+
+    };
+
+  }, [
+    isAuthenticated,
+    loading,
+  ]);
+
+
+  // ============================================================
+  // LOADING
+  // ============================================================
+
+  if (loading) {
+
+    return (
+
+      <h2 className="profile-loading">
+        Loading...
+      </h2>
+
+    );
+  }
+
+
+  // ============================================================
+  // RENDER
+  // ============================================================
 
   return (
 
     <div className="app-root">
 
-      {/* 🔥 HEADER */}
+
+      {/* ======================================================
+          HEADER
+      ====================================================== */}
+
       <header className="app-header">
+
+
+        {/* ====================================================
+            LOGO
+        ==================================================== */}
 
         <div className="logo">
           MediaApp
         </div>
 
+
+        {/* ====================================================
+            NAVIGATION
+        ==================================================== */}
+
         <nav className="nav-bar">
 
-          {/* HOME */}
+
+          {/* ==================================================
+              HOME
+          ================================================== */}
+
           <NavLink
             to="/home"
             className={({ isActive }) =>
@@ -111,7 +195,11 @@ const Layout = () => {
             Home
           </NavLink>
 
-          {/* MEDIA */}
+
+          {/* ==================================================
+              MEDIA
+          ================================================== */}
+
           <NavLink
             to="/media"
             className={({ isActive }) =>
@@ -123,7 +211,11 @@ const Layout = () => {
             Media
           </NavLink>
 
-          {/* USERS */}
+
+          {/* ==================================================
+              USERS
+          ================================================== */}
+
           <NavLink
             to="/users"
             className={({ isActive }) =>
@@ -135,9 +227,20 @@ const Layout = () => {
             Users
           </NavLink>
 
-          {/* 🔴 AUTHENTICATED LINKS */}
+
+          {/* ==================================================
+              AUTHENTICATED LINKS
+          ================================================== */}
+
           {isAuthenticated && (
+
             <>
+
+
+              {/* ==============================================
+                  GO LIVE
+              ============================================== */}
+
               <NavLink
                 to="/live"
                 className={({ isActive }) =>
@@ -148,6 +251,11 @@ const Layout = () => {
               >
                 🔴 Go Live
               </NavLink>
+
+
+              {/* ==============================================
+                  WATCH LIVE
+              ============================================== */}
 
               <NavLink
                 to="/watch"
@@ -160,6 +268,11 @@ const Layout = () => {
                 👀 Watch Live
               </NavLink>
 
+
+              {/* ==============================================
+                  PROFILE
+              ============================================== */}
+
               <NavLink
                 to="/profile"
                 className={({ isActive }) =>
@@ -168,35 +281,68 @@ const Layout = () => {
                     : "nav-link profile-nav"
                 }
               >
+
                 <img
                   src={profileImage}
-                  alt={user?.username || Profile}
+                  alt={
+                    user?.username
+                    || "Profile"
+                  }
                   className="nav-profile-image"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = "/default-avatar.png";
+                  onError={(event) => {
+
+                    event.currentTarget.onerror =
+                      null;
+
+                    event.currentTarget.src =
+                      "/default-avatar.png";
+
                   }}
                 />
 
+
                 <div className="nav-profile-info">
 
+
                   <span className="nav-profile-name">
-                    {user?.username}
+                    {
+                      user?.username
+                    }
                   </span>
 
+
                   <span className="nav-profile-coins">
-                    🪙 {user?.coin_balance ?? 0}
+                    🪙{" "}
+                    {
+                      user?.coin_balance
+                      ?? 0
+                    }
                   </span>
+
 
                 </div>
 
               </NavLink>
+
+
             </>
+
           )}
 
-          {/* 🔐 GUEST LINKS */}
+
+          {/* ==================================================
+              GUEST LINKS
+          ================================================== */}
+
           {!isAuthenticated && (
+
             <>
+
+
+              {/* ==============================================
+                  SIGN UP
+              ============================================== */}
+
               <NavLink
                 to="/signup"
                 className={({ isActive }) =>
@@ -208,6 +354,11 @@ const Layout = () => {
                 SignUp
               </NavLink>
 
+
+              {/* ==============================================
+                  LOGIN
+              ============================================== */}
+
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
@@ -218,17 +369,29 @@ const Layout = () => {
               >
                 Login
               </NavLink>
+
+
             </>
+
           )}
 
         </nav>
 
       </header>
 
-      {/* 🔥 MAIN CONTENT */}
+
+      {/* ======================================================
+          MAIN CONTENT
+      ====================================================== */}
+
       <main className="app-container">
 
         <Routes>
+
+
+          {/* ==================================================
+              ROOT
+          ================================================== */}
 
           <Route
             path="/"
@@ -240,175 +403,282 @@ const Layout = () => {
             }
           />
 
+
+          {/* ==================================================
+              PUBLIC ROUTES
+          ================================================== */}
+
           <Route
             path="/home"
             element={<Home />}
           />
+
 
           <Route
             path="/media"
             element={<MediaAccess />}
           />
 
+
           <Route
             path="/users"
             element={<Users />}
           />
 
-          <Route
-            path="/users/:id"
-            element={
-              isAuthenticated
-                ? <UserProfile />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/profile/followers"
-            element={
-              isAuthenticated
-                ? <FollowerList />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/profile/following"
-            element={
-              isAuthenticated
-                ? <FollowingList />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/profile/:userId/followers"
-            element={
-              isAuthenticated
-                ? <UserFollowerList />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/create-post"
-            element={
-              isAuthenticated
-                ? <CreatePost />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-              path="/my-posts"
-              element={
-                  isAuthenticated
-                      ? <SelfPostList />
-                      : <Navigate
-                          to="/login"
-                          replace
-                      />
-              }
-          />
-
-          <Route
-              path="/profile/:userId/posts"
-              element={
-                  isAuthenticated
-                      ? <UserPostList />
-                      : (
-                          <Navigate
-                              to="/login"
-                              replace
-                          />
-                      )
-              }
-          />
 
           <Route
             path="/posts/:id"
             element={<PostDetail />}
           />
 
-          <Route
-            path="/profile/:userId/following"
-            element={
-              isAuthenticated
-                ? <UserFollowingList />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/chat/:userId"
-            element={
-              isAuthenticated
-                ? <PrivateChat />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/profile"
-            element={
-              isAuthenticated
-                ? <Profile />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/edit-profile"
-            element={
-              isAuthenticated
-                ? <UpdateProfile />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/live"
-            element={
-              isAuthenticated
-                ? <Live />
-                : <Navigate to="/login" replace />
-            }
-          />
-
-          <Route
-            path="/watch"
-            element={
-              isAuthenticated
-                ? <Viewer />
-                : <Navigate to="/login" replace />
-            }
-          />
 
           <Route
             path="/signup"
             element={<SignUp />}
           />
 
+
           <Route
             path="/login"
             element={<Login />}
           />
+
 
           <Route
             path="/forgot-password"
             element={<ForgotPassword />}
           />
 
+
           <Route
             path="/password/reset/confirm/:uid/:token"
             element={<ResetPassword />}
           />
 
+
           <Route
             path="/activate/:uid/:token"
             element={<Activate />}
           />
+
+
+          {/* ==================================================
+              AUTHENTICATED ROUTES
+          ================================================== */}
+
+          <Route
+            path="/users/:id"
+            element={
+              isAuthenticated
+                ? <UserProfile />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/profile"
+            element={
+              isAuthenticated
+                ? <Profile />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/profile/followers"
+            element={
+              isAuthenticated
+                ? <FollowerList />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/profile/following"
+            element={
+              isAuthenticated
+                ? <FollowingList />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/profile/:userId/followers"
+            element={
+              isAuthenticated
+                ? <UserFollowerList />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/profile/:userId/following"
+            element={
+              isAuthenticated
+                ? <UserFollowingList />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/profile/:userId/posts"
+            element={
+              isAuthenticated
+                ? <UserPostList />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/create-post"
+            element={
+              isAuthenticated
+                ? <CreatePost />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/my-posts"
+            element={
+              isAuthenticated
+                ? <SelfPostList />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/chat/:userId"
+            element={
+              isAuthenticated
+                ? <PrivateChat />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/reports"
+            element={
+              isAuthenticated
+                ? <MyReports />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/edit-profile"
+            element={
+              isAuthenticated
+                ? <UpdateProfile />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/live"
+            element={
+              isAuthenticated
+                ? <Live />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          <Route
+            path="/watch"
+            element={
+              isAuthenticated
+                ? <Viewer />
+                : (
+                  <Navigate
+                    to="/login"
+                    replace
+                  />
+                )
+            }
+          />
+
+
+          {/* ==================================================
+              FALLBACK
+          ================================================== */}
 
           <Route
             path="*"
@@ -420,12 +690,15 @@ const Layout = () => {
             }
           />
 
+
         </Routes>
 
       </main>
 
     </div>
+
   );
 };
+
 
 export default Layout;

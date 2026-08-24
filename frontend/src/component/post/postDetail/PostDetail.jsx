@@ -3,11 +3,14 @@ import {
     useState,
 } from "react";
 
+
 import {
     useParams,
 } from "react-router-dom";
 
+
 import postService from "../../../services/postService";
+
 
 import PostHeader from "../PostCard/PostHeader";
 import PostContent from "../PostCard/PostContent";
@@ -15,12 +18,21 @@ import PostMedia from "../PostCard/PostMedia";
 import PostStats from "../PostCard/PostStats";
 import PostActions from "../PostCard/PostActions";
 
+
 import LikeModal from "../../like/LikeModal";
 import LikeList from "../../like/LikeList";
 import CommentList from "../../comment/CommentList";
 
+
+import ReportButton from "../../report/ReportButton";
+
+
 import "./PostDetail.css";
 
+
+// ============================================================
+// POST DETAIL
+// ============================================================
 
 const PostDetail = () => {
 
@@ -53,9 +65,9 @@ const PostDetail = () => {
     ] = useState(false);
 
 
-    // -----------------------------------------
+    // ============================================================
     // FETCH POST
-    // -----------------------------------------
+    // ============================================================
 
     const fetchPost = async () => {
 
@@ -65,28 +77,37 @@ const PostDetail = () => {
 
             setError("");
 
+
             const response =
                 await postService.getPost(
-                    id
+                    id,
                 );
 
+
             setPost(
-                response.data
+                response.data,
             );
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.error(
                 "Failed to load post:",
-                error
+                error,
             );
+
 
             setError(
-                error.response?.data?.detail ||
-                "Failed to load post."
+                error?.response?.data?.detail ||
+                error?.response?.data?.message ||
+                error?.message ||
+                "Failed to load post.",
             );
 
-        } finally {
+        }
+
+        finally {
 
             setLoading(false);
 
@@ -95,9 +116,9 @@ const PostDetail = () => {
     };
 
 
-    // -----------------------------------------
+    // ============================================================
     // LOAD POST
-    // -----------------------------------------
+    // ============================================================
 
     useEffect(() => {
 
@@ -105,14 +126,15 @@ const PostDetail = () => {
             return;
         }
 
+
         fetchPost();
 
     }, [id]);
 
 
-    // -----------------------------------------
+    // ============================================================
     // LIKE MODAL
-    // -----------------------------------------
+    // ============================================================
 
     const handleOpenLikes = () => {
 
@@ -128,14 +150,16 @@ const PostDetail = () => {
     };
 
 
-    // -----------------------------------------
+    // ============================================================
     // LOADING
-    // -----------------------------------------
+    // ============================================================
 
     if (loading) {
 
         return (
-            <div className="post-detail-loading">
+            <div
+                className="post-detail-loading"
+            >
                 Loading post...
             </div>
         );
@@ -143,14 +167,16 @@ const PostDetail = () => {
     }
 
 
-    // -----------------------------------------
+    // ============================================================
     // ERROR
-    // -----------------------------------------
+    // ============================================================
 
     if (error) {
 
         return (
-            <div className="post-detail-error">
+            <div
+                className="post-detail-error"
+            >
                 {error}
             </div>
         );
@@ -158,14 +184,16 @@ const PostDetail = () => {
     }
 
 
-    // -----------------------------------------
+    // ============================================================
     // POST NOT FOUND
-    // -----------------------------------------
+    // ============================================================
 
     if (!post) {
 
         return (
-            <div className="post-detail-empty">
+            <div
+                className="post-detail-empty"
+            >
                 Post not found.
             </div>
         );
@@ -173,42 +201,70 @@ const PostDetail = () => {
     }
 
 
-    // -----------------------------------------
+    // ============================================================
     // RENDER
-    // -----------------------------------------
+    // ============================================================
 
     return (
 
-        <div className="post-detail">
+        <div
+            className="post-detail"
+        >
 
-            <article className="post-detail-card">
+            {/* ==================================================
+                POST
+            ================================================== */}
+
+            <article
+                className="post-detail-card"
+            >
+
+                {/* ==================================================
+                    HEADER
+                ================================================== */}
 
                 <PostHeader
                     post={post}
                 />
 
 
+                {/* ==================================================
+                    CONTENT
+                ================================================== */}
+
                 {
                     post.content && (
 
                         <PostContent
-                            content={post.content}
+                            content={
+                                post.content
+                            }
                         />
 
                     )
                 }
 
+
+                {/* ==================================================
+                    MEDIA
+                ================================================== */}
 
                 {
                     post.media?.length > 0 && (
 
                         <PostMedia
-                            media={post.media}
+                            media={
+                                post.media
+                            }
                         />
 
                     )
                 }
 
+
+                {/* ==================================================
+                    STATS
+                ================================================== */}
 
                 <PostStats
                     likeCount={
@@ -223,9 +279,15 @@ const PostDetail = () => {
                 />
 
 
+                {/* ==================================================
+                    ACTIONS
+                ================================================== */}
+
                 <PostActions
                     contentType="post"
-                    objectId={post.id}
+                    objectId={
+                        post.id
+                    }
                     isLiked={
                         post.is_liked ?? false
                     }
@@ -243,12 +305,24 @@ const PostDetail = () => {
                     }
                 />
 
+
+                {/* ==================================================
+                    REPORT POST
+                ================================================== */}
+
+                <ReportButton
+                    contentType="post"
+                    objectId={
+                        post.id
+                    }
+                />
+
             </article>
 
 
-            {/* --------------------------------- */}
-            {/* LIKES MODAL                       */}
-            {/* --------------------------------- */}
+            {/* ==================================================
+                LIKES MODAL
+            ================================================== */}
 
             <LikeModal
                 isOpen={
@@ -269,14 +343,24 @@ const PostDetail = () => {
 
             </LikeModal>
 
-            <section className="post-detail-comments">
+
+            {/* ==================================================
+                COMMENTS
+            ================================================== */}
+
+            <section
+                className="post-detail-comments"
+            >
 
                 <h2>
                     Comments
                 </h2>
 
+
                 <CommentList
-                    postId={id}
+                    postId={
+                        id
+                    }
                 />
 
             </section>

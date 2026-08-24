@@ -1,0 +1,1036 @@
+/* ============================================================
+   REPORT CARD
+============================================================ */
+
+.report-card {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 1.25rem;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.12);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.09),
+            rgba(255, 255, 255, 0.035)
+        );
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+        0 12px 40px
+            rgba(0, 0, 0, 0.18),
+        inset 0 1px 0
+            rgba(255, 255, 255, 0.08);
+
+    color:
+        rgba(255, 255, 255, 0.92);
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* ============================================================
+   TOP GLASS HIGHLIGHT
+============================================================ */
+
+.report-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 8%;
+    right: 8%;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.35),
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   AMBIENT GLOW
+============================================================ */
+
+.report-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    top: -90px;
+    right: -70px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(99, 102, 241, 0.13);
+
+    filter: blur(45px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* ============================================================
+   HOVER
+============================================================ */
+
+.report-card:hover {
+    transform:
+        translateY(-3px);
+
+    border-color:
+        rgba(255, 255, 255, 0.2);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.105),
+            rgba(255, 255, 255, 0.045)
+        );
+
+    box-shadow:
+        0 18px 48px
+            rgba(0, 0, 0, 0.23),
+        inset 0 1px 0
+            rgba(255, 255, 255, 0.1);
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.report-card-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 1.15rem;
+
+    min-width: 0;
+}
+
+
+/* ============================================================
+   REASON
+============================================================ */
+
+.report-card-reason {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.report-card-reason h3 {
+    margin: 0.3rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.97);
+
+    font-size: 1rem;
+
+    font-weight: 650;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   COMMON LABEL
+============================================================ */
+
+.report-card-label {
+    display: block;
+
+    margin-bottom: 0.3rem;
+
+    color:
+        rgba(255, 255, 255, 0.45);
+
+    font-size: 0.67rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.075em;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   REPORTED CONTENT
+============================================================ */
+
+.report-card-reported-content {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* ============================================================
+   CONTENT HEADER
+============================================================ */
+
+.report-card-content-header {
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 0.75rem;
+}
+
+
+.report-card-content-label {
+    color:
+        rgba(255, 255, 255, 0.55);
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.065em;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   POST / COMMENT CONTAINER
+============================================================ */
+
+.report-card-post,
+.report-card-comment {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 1rem;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.09);
+
+    border-radius: 16px;
+
+    background:
+        rgba(0, 0, 0, 0.13);
+
+    box-shadow:
+        inset 0 1px 0
+            rgba(255, 255, 255, 0.035);
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   COMMENT CONTAINER
+============================================================ */
+
+.report-card-comment {
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    border-color:
+        rgba(255, 255, 255, 0.1);
+}
+
+
+/* ============================================================
+   AUTHOR
+============================================================ */
+
+.report-card-author {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    min-width: 0;
+
+    margin-bottom: 0.8rem;
+}
+
+
+.report-card-author-image,
+.report-card-author-placeholder {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+}
+
+
+.report-card-author-image {
+    display: block;
+
+    object-fit: cover;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.14);
+
+    box-shadow:
+        0 3px 12px
+            rgba(0, 0, 0, 0.2);
+}
+
+
+.report-card-author-placeholder {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.06)
+        );
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.12);
+
+    color:
+        rgba(255, 255, 255, 0.8);
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+}
+
+
+.report-card-author-name {
+    min-width: 0;
+
+    color:
+        rgba(255, 255, 255, 0.84);
+
+    font-size: 0.84rem;
+
+    font-weight: 600;
+
+    line-height: 1.35;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   CONTENT PREVIEW
+============================================================ */
+
+.report-card-content-preview {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.72);
+
+    font-size: 0.86rem;
+
+    font-weight: 400;
+
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+
+    word-break: break-word;
+
+    white-space: pre-wrap;
+}
+
+
+/* ============================================================
+   COMMENT PREVIEW
+============================================================ */
+
+.report-card-comment-preview {
+    padding: 0.75rem 0.85rem;
+
+    border-left:
+        2px solid
+        rgba(255, 255, 255, 0.18);
+
+    border-radius: 0 8px 8px 0;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    color:
+        rgba(255, 255, 255, 0.68);
+
+    font-size: 0.85rem;
+
+    font-style: italic;
+}
+
+
+/* ============================================================
+   MEDIA
+============================================================ */
+
+.report-card-media {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(120px, 1fr)
+        );
+
+    gap: 0.55rem;
+
+    width: 100%;
+
+    margin-top: 0.9rem;
+}
+
+
+.report-card-media-item {
+    display: block;
+
+    width: 100%;
+
+    max-height: 220px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 12px;
+
+    background:
+        rgba(0, 0, 0, 0.2);
+
+    object-fit: cover;
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   VIDEO
+============================================================ */
+
+video.report-card-media-item {
+    aspect-ratio: 16 / 10;
+
+    object-fit: cover;
+}
+
+
+/* ============================================================
+   IMAGE
+============================================================ */
+
+img.report-card-media-item {
+    aspect-ratio: 1 / 1;
+}
+
+
+/* ============================================================
+   VIEW BUTTON
+============================================================ */
+
+.report-card-view-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 36px;
+
+    margin-top: 0.9rem;
+
+    padding:
+        0.55rem
+        0.9rem;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.13);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color:
+        rgba(255, 255, 255, 0.82);
+
+    font-family: inherit;
+
+    font-size: 0.78rem;
+
+    font-weight: 650;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.report-card-view-button:hover {
+    transform:
+        translateY(-1px);
+
+    border-color:
+        rgba(255, 255, 255, 0.24);
+
+    background:
+        rgba(255, 255, 255, 0.1);
+
+    color:
+        rgba(255, 255, 255, 0.98);
+}
+
+
+.report-card-view-button:active {
+    transform:
+        translateY(0);
+}
+
+
+.report-card-view-button:focus-visible {
+    outline: 2px solid
+        rgba(255, 255, 255, 0.35);
+
+    outline-offset: 2px;
+}
+
+
+/* ============================================================
+   COMMENT WRAPPER
+============================================================ */
+
+.report-card-comment-wrapper {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.75rem;
+
+    width: 100%;
+}
+
+
+/* ============================================================
+   ORIGINAL POST
+============================================================ */
+
+.report-card-parent-post {
+    position: relative;
+
+    padding-left: 1rem;
+}
+
+
+/* ============================================================
+   ORIGINAL POST CONNECTOR
+============================================================ */
+
+.report-card-parent-post::before {
+    content: "";
+
+    position: absolute;
+
+    top: -0.75rem;
+    bottom: 1.25rem;
+
+    left: 0.35rem;
+
+    width: 1px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.08),
+            rgba(255, 255, 255, 0.18),
+            rgba(255, 255, 255, 0.06)
+        );
+}
+
+
+/* ============================================================
+   ORIGINAL POST LABEL
+============================================================ */
+
+.report-card-parent-post
+.report-card-content-label {
+    color:
+        rgba(255, 255, 255, 0.42);
+}
+
+
+/* ============================================================
+   CONTENT UNAVAILABLE
+============================================================ */
+
+.report-card-content-unavailable {
+    padding: 1rem;
+
+    border:
+        1px dashed
+        rgba(255, 255, 255, 0.12);
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    color:
+        rgba(255, 255, 255, 0.45);
+
+    font-size: 0.82rem;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   DESCRIPTION
+============================================================ */
+
+.report-card-description {
+    margin-top: 1rem;
+
+    padding-top: 0.95rem;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.075);
+}
+
+
+.report-card-description p {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.68);
+
+    font-size: 0.85rem;
+
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+
+    white-space: pre-wrap;
+}
+
+
+/* ============================================================
+   DATE
+============================================================ */
+
+.report-card-date {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-top: 1rem;
+
+    padding-top: 0.85rem;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.075);
+}
+
+
+.report-card-date .report-card-label {
+    margin: 0;
+}
+
+
+.report-card-date time {
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.74rem;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 768px) {
+
+    .report-card {
+        padding: 1.05rem;
+
+        border-radius: 17px;
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+
+    .report-card-header {
+        gap: 0.75rem;
+
+        margin-bottom: 1rem;
+    }
+
+
+    .report-card-reason h3 {
+        font-size: 0.95rem;
+    }
+
+
+    .report-card-post,
+    .report-card-comment {
+        padding: 0.9rem;
+
+        border-radius: 14px;
+    }
+
+
+    .report-card-content-preview {
+        font-size: 0.83rem;
+    }
+
+
+    .report-card-media {
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(100px, 1fr)
+            );
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .report-card {
+        padding: 0.9rem;
+
+        border-radius: 15px;
+    }
+
+
+    .report-card:hover {
+        transform: none;
+    }
+
+
+    .report-card-header {
+        gap: 0.65rem;
+
+        margin-bottom: 0.9rem;
+    }
+
+
+    .report-card-label {
+        font-size: 0.63rem;
+    }
+
+
+    .report-card-reason h3 {
+        font-size: 0.89rem;
+    }
+
+
+    .report-card-post,
+    .report-card-comment {
+        padding: 0.8rem;
+
+        border-radius: 13px;
+    }
+
+
+    .report-card-content-label {
+        font-size: 0.64rem;
+    }
+
+
+    .report-card-author {
+        gap: 0.55rem;
+
+        margin-bottom: 0.7rem;
+    }
+
+
+    .report-card-author-image,
+    .report-card-author-placeholder {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .report-card-author-name {
+        font-size: 0.79rem;
+    }
+
+
+    .report-card-content-preview {
+        font-size: 0.8rem;
+
+        line-height: 1.55;
+    }
+
+
+    .report-card-comment-preview {
+        padding: 0.65rem 0.7rem;
+
+        font-size: 0.79rem;
+    }
+
+
+    .report-card-media {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 0.45rem;
+
+        margin-top: 0.75rem;
+    }
+
+
+    .report-card-media-item {
+        max-height: 180px;
+
+        border-radius: 10px;
+    }
+
+
+    .report-card-view-button {
+        width: 100%;
+
+        min-height: 35px;
+
+        margin-top: 0.75rem;
+
+        font-size: 0.75rem;
+    }
+
+
+    .report-card-parent-post {
+        padding-left: 0.75rem;
+    }
+
+
+    .report-card-parent-post::before {
+        left: 0.25rem;
+    }
+
+
+    .report-card-description {
+        margin-top: 0.85rem;
+
+        padding-top: 0.8rem;
+    }
+
+
+    .report-card-description p {
+        font-size: 0.79rem;
+
+        line-height: 1.55;
+    }
+
+
+    .report-card-date {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 0.3rem;
+
+        margin-top: 0.8rem;
+
+        padding-top: 0.7rem;
+    }
+
+
+    .report-card-date time {
+        font-size: 0.71rem;
+
+        text-align: left;
+
+        white-space: normal;
+    }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+============================================================ */
+
+@media (max-width: 400px) {
+
+    .report-card {
+        padding: 0.8rem;
+
+        border-radius: 13px;
+    }
+
+
+    .report-card-header {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .report-card-post,
+    .report-card-comment {
+        padding: 0.75rem;
+
+        border-radius: 12px;
+    }
+
+
+    .report-card-media {
+        grid-template-columns: 1fr;
+    }
+
+
+    .report-card-media-item {
+        max-height: 220px;
+
+        aspect-ratio: 16 / 11;
+    }
+}
+
+
+/* ============================================================
+   EXTRA SMALL
+============================================================ */
+
+@media (max-width: 340px) {
+
+    .report-card {
+        padding: 0.7rem;
+    }
+
+
+    .report-card-reason h3 {
+        font-size: 0.85rem;
+    }
+
+
+    .report-card-content-preview {
+        font-size: 0.76rem;
+    }
+
+
+    .report-card-description p {
+        font-size: 0.75rem;
+    }
+}
+
+
+/* ============================================================
+   TOUCH DEVICES
+============================================================ */
+
+@media (hover: none) {
+
+    .report-card:hover {
+        transform: none;
+
+        border-color:
+            rgba(255, 255, 255, 0.12);
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.09),
+                rgba(255, 255, 255, 0.035)
+            );
+
+        box-shadow:
+            0 12px 40px
+                rgba(0, 0, 0, 0.18),
+            inset 0 1px 0
+                rgba(255, 255, 255, 0.08);
+    }
+
+
+    .report-card-view-button:hover {
+        transform: none;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .report-card,
+    .report-card-view-button {
+        transition: none;
+    }
+}

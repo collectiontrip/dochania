@@ -2,7 +2,10 @@ from django.db import transaction
 from django.db.models import Prefetch
 from django.utils import timezone
 
-from rest_framework import mixins, status
+from rest_framework import (
+    mixins,
+    status,
+)
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -143,7 +146,7 @@ class ReportViewSet(
         self,
     ):
         """
-        Return permissions according to the current action.
+        Return permissions according to current action.
         """
 
         if self.action in (
@@ -222,9 +225,9 @@ class ReportViewSet(
         serializer,
     ):
         """
-        Reporter is assigned inside ReportCreateSerializer.
+        Reporter is assigned inside serializer.
 
-        Do not accept reporter from frontend.
+        Frontend cannot provide reporter.
         """
 
         serializer.save()
@@ -330,8 +333,7 @@ class ReportViewSet(
         note="",
     ):
         """
-        Create an audit log only when moderation state
-        actually changes.
+        Create audit log only when moderation state changes.
         """
 
         status_changed = (
@@ -375,8 +377,6 @@ class ReportViewSet(
     ):
         """
         Return available report reasons.
-
-        REPORT_REASON_CHOICES is the single source of truth.
         """
 
         return Response(
@@ -398,6 +398,9 @@ class ReportViewSet(
     @action(
         detail=False,
         methods=["get"],
+        permission_classes=[
+            IsAuthenticated,
+        ],
         url_path="my-reports",
     )
     def my_reports(
@@ -408,13 +411,19 @@ class ReportViewSet(
         Return only reports created by the
         authenticated user.
 
-        This remains user-scoped even for moderators.
+        Even moderators receive only their own
+        reports from this endpoint.
         """
 
-        queryset = self.filter_queryset(
-            self.queryset.filter(
+        queryset = (
+            self.queryset
+            .filter(
                 reporter=request.user,
             )
+        )
+
+        queryset = self.filter_queryset(
+            queryset,
         )
 
         page = self.paginate_queryset(
@@ -461,8 +470,6 @@ class ReportViewSet(
     ):
         """
         Moderator-only moderation queue.
-
-        Returns all reports.
         """
 
         queryset = self.filter_queryset(
@@ -543,7 +550,10 @@ class ReportViewSet(
             # Status check
             # ----------------------------------------------------
 
-            if report.status != REPORT_STATUS_PENDING:
+            if (
+                report.status
+                != REPORT_STATUS_PENDING
+            ):
 
                 return Response(
                     {
@@ -600,9 +610,11 @@ class ReportViewSet(
         # Response
         # --------------------------------------------------------
 
-        response_serializer = ReportEvidenceSerializer(
-            evidence,
-            context=self.get_serializer_context(),
+        response_serializer = (
+            ReportEvidenceSerializer(
+                evidence,
+                context=self.get_serializer_context(),
+            )
         )
 
         return Response(

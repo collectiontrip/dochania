@@ -1,0 +1,207 @@
+/* ============================================================
+   REPORT BUTTON
+   ============================================================ */
+
+.report-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 72px;
+    min-height: 38px;
+
+    padding: 0.55rem 0.9rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    color:
+        rgba(255, 255, 255, 0.86);
+
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+
+    line-height: 1;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.12);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* ============================================================
+   HOVER
+   ============================================================ */
+
+.report-button:hover {
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    border-color:
+        rgba(255, 255, 255, 0.26);
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.18);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* ============================================================
+   ACTIVE
+   ============================================================ */
+
+.report-button:active {
+    transform:
+        translateY(0);
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+
+/* ============================================================
+   FOCUS
+   ============================================================ */
+
+.report-button:focus {
+    outline: none;
+}
+
+
+.report-button:focus-visible {
+    outline: none;
+
+    border-color:
+        rgba(255, 255, 255, 0.38);
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.10),
+        0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+
+/* ============================================================
+   OPEN STATE
+   ============================================================ */
+
+.report-button[aria-expanded="true"] {
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    border-color:
+        rgba(255, 255, 255, 0.28);
+
+    color:
+        #ffffff;
+}
+
+
+/* ============================================================
+   DISABLED
+   ============================================================ */
+
+.report-button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* ============================================================
+   SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .report-button {
+        min-width: 68px;
+        min-height: 36px;
+
+        padding:
+            0.5rem 0.75rem;
+
+        border-radius: 9px;
+
+        font-size: 0.8125rem;
+    }
+
+}
+
+
+/* ============================================================
+   EXTRA SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 400px) {
+
+    .report-button {
+        min-width: 64px;
+        min-height: 34px;
+
+        padding:
+            0.45rem 0.65rem;
+
+        font-size: 0.78rem;
+    }
+
+}
+
+
+/* ============================================================
+   TOUCH DEVICES
+   ============================================================ */
+
+@media (hover: none) {
+
+    .report-button:hover {
+        transform: none;
+
+        background:
+            rgba(255, 255, 255, 0.06);
+
+        border-color:
+            rgba(255, 255, 255, 0.14);
+
+        box-shadow:
+            0 4px 14px rgba(0, 0, 0, 0.12);
+    }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .report-button {
+        transition: none;
+    }
+
+}

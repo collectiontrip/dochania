@@ -1,0 +1,684 @@
+/* ============================================================
+   REPORT EVIDENCE UPLOAD
+   ============================================================ */
+
+.report-evidence-upload {
+    width: 100%;
+
+    padding: 1.25rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 18px;
+
+    background:
+        rgba(255, 255, 255, 0.055);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.14);
+
+    color:
+        rgba(255, 255, 255, 0.9);
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.report-evidence-upload__header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 1rem;
+}
+
+
+.report-evidence-upload__header h3 {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.94);
+
+    font-size: 1rem;
+    font-weight: 650;
+
+    line-height: 1.4;
+}
+
+
+.report-evidence-upload__header span {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 42px;
+
+    padding:
+        0.3rem 0.55rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color:
+        rgba(255, 255, 255, 0.58);
+
+    font-size: 0.72rem;
+    font-weight: 600;
+
+    line-height: 1;
+}
+
+
+/* ============================================================
+   FILE PICKER
+   ============================================================ */
+
+.report-evidence-upload__picker {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 90px;
+
+    padding: 1rem;
+
+    border:
+        1px dashed rgba(255, 255, 255, 0.2);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    color:
+        rgba(255, 255, 255, 0.7);
+
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.report-evidence-upload__picker:hover {
+    background:
+        rgba(255, 255, 255, 0.065);
+
+    border-color:
+        rgba(255, 255, 255, 0.34);
+
+    color:
+        rgba(255, 255, 255, 0.92);
+}
+
+
+.report-evidence-upload__picker input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   SELECTED FILE LIST
+   ============================================================ */
+
+.report-evidence-upload__list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.7rem;
+
+    margin-top: 1rem;
+}
+
+
+/* ============================================================
+   FILE ITEM
+   ============================================================ */
+
+.report-evidence-upload__item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.75rem;
+
+    min-width: 0;
+
+    padding: 0.7rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.09);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.report-evidence-upload__item:hover {
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    border-color:
+        rgba(255, 255, 255, 0.15);
+}
+
+
+/* ============================================================
+   IMAGE PREVIEW
+   ============================================================ */
+
+.report-evidence-upload__preview {
+    width: 54px;
+    height: 54px;
+
+    flex-shrink: 0;
+
+    object-fit: cover;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255, 255, 255, 0.04);
+}
+
+
+/* ============================================================
+   NON-IMAGE FILE
+   ============================================================ */
+
+.report-evidence-upload__file {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 54px;
+    height: 54px;
+
+    flex-shrink: 0;
+
+    padding: 0.35rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255, 255, 255, 0.05);
+
+    color:
+        rgba(255, 255, 255, 0.55);
+
+    font-size: 0.62rem;
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   FILE INFO
+   ============================================================ */
+
+.report-evidence-upload__info {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    flex: 1;
+
+    gap: 0.25rem;
+}
+
+
+.report-evidence-upload__info span {
+    display: block;
+
+    color:
+        rgba(255, 255, 255, 0.82);
+
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    line-height: 1.35;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.report-evidence-upload__info small {
+    color:
+        rgba(255, 255, 255, 0.42);
+
+    font-size: 0.7rem;
+
+    line-height: 1.3;
+}
+
+
+/* ============================================================
+   REMOVE BUTTON
+   ============================================================ */
+
+.report-evidence-upload__item button {
+    flex-shrink: 0;
+
+    min-height: 32px;
+
+    padding:
+        0.4rem 0.65rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 255, 255, 0.045);
+
+    color:
+        rgba(255, 255, 255, 0.58);
+
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.report-evidence-upload__item button:hover:not(:disabled) {
+    background:
+        rgba(244, 67, 54, 0.12);
+
+    border-color:
+        rgba(244, 67, 54, 0.28);
+
+    color:
+        rgba(255, 140, 140, 0.95);
+}
+
+
+.report-evidence-upload__item button:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   MESSAGES
+   ============================================================ */
+
+.report-evidence-upload__error,
+.report-evidence-upload__success {
+    margin: 0.85rem 0 0;
+
+    padding:
+        0.65rem 0.75rem;
+
+    border-radius: 9px;
+
+    font-size: 0.78rem;
+
+    line-height: 1.45;
+}
+
+
+.report-evidence-upload__error {
+    border:
+        1px solid rgba(244, 67, 54, 0.2);
+
+    background:
+        rgba(244, 67, 54, 0.08);
+
+    color:
+        rgba(255, 150, 150, 0.92);
+}
+
+
+.report-evidence-upload__success {
+    border:
+        1px solid rgba(76, 175, 80, 0.2);
+
+    background:
+        rgba(76, 175, 80, 0.08);
+
+    color:
+        rgba(145, 225, 150, 0.92);
+}
+
+
+/* ============================================================
+   UPLOAD BUTTON
+   ============================================================ */
+
+.report-evidence-upload__button {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 42px;
+
+    margin-top: 1rem;
+
+    padding:
+        0.6rem 1rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.14);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    color:
+        rgba(255, 255, 255, 0.88);
+
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.1);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.report-evidence-upload__button:hover:not(:disabled) {
+    background:
+        rgba(255, 255, 255, 0.13);
+
+    border-color:
+        rgba(255, 255, 255, 0.25);
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.16);
+
+    transform:
+        translateY(-1px);
+}
+
+
+.report-evidence-upload__button:active:not(:disabled) {
+    transform:
+        translateY(0);
+}
+
+
+.report-evidence-upload__button:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
+}
+
+
+.report-evidence-upload__button:focus {
+    outline: none;
+}
+
+
+.report-evidence-upload__button:focus-visible {
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.1),
+        0 8px 22px rgba(0, 0, 0, 0.14);
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .report-evidence-upload {
+        padding: 1.05rem;
+
+        border-radius: 16px;
+    }
+
+
+    .report-evidence-upload__picker {
+        min-height: 82px;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .report-evidence-upload {
+        padding: 0.9rem;
+
+        border-radius: 14px;
+    }
+
+
+    .report-evidence-upload__header {
+        margin-bottom: 0.85rem;
+    }
+
+
+    .report-evidence-upload__header h3 {
+        font-size: 0.92rem;
+    }
+
+
+    .report-evidence-upload__picker {
+        min-height: 76px;
+
+        padding: 0.85rem;
+
+        border-radius: 11px;
+
+        font-size: 0.8rem;
+    }
+
+
+    .report-evidence-upload__item {
+        align-items: flex-start;
+
+        padding: 0.6rem;
+
+        gap: 0.6rem;
+    }
+
+
+    .report-evidence-upload__preview,
+    .report-evidence-upload__file {
+        width: 48px;
+        height: 48px;
+    }
+
+
+    .report-evidence-upload__info {
+        padding-top: 0.15rem;
+    }
+
+
+    .report-evidence-upload__item button {
+        min-height: 30px;
+
+        padding:
+            0.35rem 0.5rem;
+
+        font-size: 0.68rem;
+    }
+
+
+    .report-evidence-upload__button {
+        min-height: 40px;
+
+        margin-top: 0.85rem;
+    }
+
+}
+
+
+/* ============================================================
+   EXTRA SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 400px) {
+
+    .report-evidence-upload {
+        padding: 0.8rem;
+    }
+
+
+    .report-evidence-upload__item {
+        flex-wrap: wrap;
+    }
+
+
+    .report-evidence-upload__info {
+        flex-basis: calc(100% - 60px);
+    }
+
+
+    .report-evidence-upload__item button {
+        width: 100%;
+
+        margin-top: 0.25rem;
+    }
+
+}
+
+
+/* ============================================================
+   TOUCH DEVICES
+   ============================================================ */
+
+@media (hover: none) {
+
+    .report-evidence-upload__picker:hover {
+        background:
+            rgba(255, 255, 255, 0.035);
+
+        border-color:
+            rgba(255, 255, 255, 0.2);
+
+        color:
+            rgba(255, 255, 255, 0.7);
+    }
+
+
+    .report-evidence-upload__item:hover {
+        background:
+            rgba(255, 255, 255, 0.035);
+
+        border-color:
+            rgba(255, 255, 255, 0.09);
+    }
+
+
+    .report-evidence-upload__button:hover:not(:disabled) {
+        transform: none;
+
+        background:
+            rgba(255, 255, 255, 0.08);
+
+        border-color:
+            rgba(255, 255, 255, 0.14);
+
+        box-shadow:
+            0 5px 18px rgba(0, 0, 0, 0.1);
+    }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .report-evidence-upload,
+    .report-evidence-upload__picker,
+    .report-evidence-upload__item,
+    .report-evidence-upload__item button,
+    .report-evidence-upload__button {
+        transition: none;
+    }
+
+}

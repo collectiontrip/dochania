@@ -33,7 +33,7 @@ from .serializers import (
     UserModerationSerializer,
 )
 
-from .service import (
+from .services import (
     InvalidModerationAction,
     InvalidModerationDecision,
     ModerationPermissionError,
