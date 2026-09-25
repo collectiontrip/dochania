@@ -1,24 +1,46 @@
-from rest_framework_simplejwt.views import TokenObtainPairView
-from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
+from rest_framework import (
+    generics,
+    status,
+)
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+)
+from rest_framework.generics import (
+    RetrieveUpdateAPIView,
+)
+from rest_framework.parsers import (
+    FormParser,
+    MultiPartParser,
+)
+from rest_framework.permissions import (
+    IsAuthenticated,
+)
+from rest_framework.response import (
+    Response,
+)
+from rest_framework.views import (
+    APIView,
+)
 
-from rest_framework import generics, status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 from relationships.models import Block
+
 from .models import UserDevice
+
 from .serializers import (
+    CustomTokenObtainPairSerializer,
+    CustomTokenRefreshSerializer,
     ProfileUpdateSerializer,
     UserSerializer,
-    CustomTokenObtainPairSerializer,
 )
 
 
@@ -29,21 +51,45 @@ User = get_user_model()
 # Helper: Visible Users
 # ==========================================================
 
-def get_visible_users(user):
-    blocked_ids = Block.objects.filter(
-        blocker=user
-    ).values_list("blocked_id", flat=True)
 
-    blocked_you_ids = Block.objects.filter(
-        blocked=user
-    ).values_list("blocker_id", flat=True)
+def get_visible_users(user):
+
+    blocked_ids = (
+        Block.objects
+        .filter(
+            blocker=user,
+        )
+        .values_list(
+            "blocked_id",
+            flat=True,
+        )
+    )
+
+    blocked_you_ids = (
+        Block.objects
+        .filter(
+            blocked=user,
+        )
+        .values_list(
+            "blocker_id",
+            flat=True,
+        )
+    )
 
     return (
         User.objects
-        .filter(is_active=True)
-        .exclude(id=user.id)
-        .exclude(id__in=blocked_ids)
-        .exclude(id__in=blocked_you_ids)
+        .filter(
+            is_active=True,
+        )
+        .exclude(
+            id=user.id,
+        )
+        .exclude(
+            id__in=blocked_ids,
+        )
+        .exclude(
+            id__in=blocked_you_ids,
+        )
     )
 
 
@@ -51,62 +97,134 @@ def get_visible_users(user):
 # User List
 # ==========================================================
 
-class UserListView(generics.ListAPIView):
+
+class UserListView(
+    generics.ListAPIView
+):
+
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
 
     def get_queryset(self):
-        queryset = get_visible_users(self.request.user)
 
-        search = self.request.query_params.get("search")
+        queryset = get_visible_users(
+            self.request.user
+        )
+
+        search = self.request.query_params.get(
+            "search"
+        )
 
         if search:
+
             queryset = queryset.filter(
-                Q(username__icontains=search)
-                | Q(first_name__icontains=search)
-                | Q(last_name__icontains=search)
+                Q(
+                    username__icontains=search,
+                )
+                | Q(
+                    first_name__icontains=search,
+                )
+                | Q(
+                    last_name__icontains=search,
+                )
             )
 
-        return queryset.order_by("username")
+        return queryset.order_by(
+            "username"
+        )
 
 
 # ==========================================================
 # User Detail
 # ==========================================================
 
-class UserDetailView(generics.RetrieveAPIView):
+
+class UserDetailView(
+    generics.RetrieveAPIView
+):
+
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     lookup_field = "id"
 
     def get_queryset(self):
-        return get_visible_users(self.request.user)
 
+        return get_visible_users(
+            self.request.user
+        )
+
+
+# ==========================================================
+# CUSTOM JWT LOGIN
+# ==========================================================
 
 
 class CustomTokenObtainPairView(
     TokenObtainPairView
 ):
-    serializer_class = CustomTokenObtainPairSerializer
+
+    serializer_class = (
+        CustomTokenObtainPairSerializer
+    )
+
+
+# ==========================================================
+# CUSTOM JWT REFRESH
+# ==========================================================
+
+
+class CustomTokenRefreshView(
+    TokenRefreshView
+):
+
+    serializer_class = (
+        CustomTokenRefreshSerializer
+    )
 
 
 # ==========================================================
 # Public Key APIs
 # ==========================================================
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def save_public_key(request):
-    public_key = request.data.get("public_key")
 
-    if not public_key or len(public_key) < 100:
+@api_view(["POST"])
+@permission_classes([
+    IsAuthenticated,
+])
+def save_public_key(request):
+
+    public_key = request.data.get(
+        "public_key"
+    )
+
+    if (
+        not public_key
+        or len(public_key) < 100
+    ):
+
         return Response(
-            {"error": "Valid public_key is required"},
+            {
+                "error": (
+                    "Valid public_key is required"
+                )
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
 
     request.user.public_key = public_key
-    request.user.save(update_fields=["public_key"])
+
+    request.user.save(
+        update_fields=[
+            "public_key",
+        ]
+    )
 
     return Response(
         {
@@ -118,17 +236,29 @@ def save_public_key(request):
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_user_public_key(request, user_id):
+@permission_classes([
+    IsAuthenticated,
+])
+def get_user_public_key(
+    request,
+    user_id,
+):
 
     user = get_object_or_404(
-        get_visible_users(request.user),
+        get_visible_users(
+            request.user,
+        ),
         id=user_id,
     )
 
     if not user.public_key:
+
         return Response(
-            {"error": "User has no public key"},
+            {
+                "error": (
+                    "User has no public key"
+                )
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -145,31 +275,64 @@ def get_user_public_key(request, user_id):
 # Save Device
 # ==========================================================
 
-class SaveDeviceView(APIView):
-    permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        device_info = request.data.get("device_info", {})
+class SaveDeviceView(
+    APIView
+):
 
-        print("🔥 FULL REQUEST DATA:", request.data)
-        print("🔥 DEVICE INFO:", device_info)
-        print("🔥 DEVICE NAME:", device_info.get("device_name"))
+    permission_classes = [
+        IsAuthenticated,
+    ]
 
-        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    def post(
+        self,
+        request,
+    ):
 
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(",")[0]
-        else:
-            ip = request.META.get("REMOTE_ADDR")
-
-        user_agent = (
-            device_info.get("user_agent")
-            or request.META.get("HTTP_USER_AGENT", "")
+        device_info = request.data.get(
+            "device_info",
+            {},
         )
 
-        platform = device_info.get("platform") or "Unknown"
+        # --------------------------------------------------
+        # CLIENT IP
+        # --------------------------------------------------
 
-        device_name = device_info.get("device_name") or "Unknown Device"
+        ip = request.META.get(
+            "REMOTE_ADDR"
+        )
+
+        # --------------------------------------------------
+        # DEVICE INFORMATION
+        # --------------------------------------------------
+
+        user_agent = (
+            device_info.get(
+                "user_agent"
+            )
+            or request.META.get(
+                "HTTP_USER_AGENT",
+                "",
+            )
+        )
+
+        platform = (
+            device_info.get(
+                "platform"
+            )
+            or "Unknown"
+        )
+
+        device_name = (
+            device_info.get(
+                "device_name"
+            )
+            or "Unknown Device"
+        )
+
+        # --------------------------------------------------
+        # SAVE DEVICE
+        # --------------------------------------------------
 
         device = UserDevice.objects.create(
             user=request.user,
@@ -178,8 +341,6 @@ class SaveDeviceView(APIView):
             device_name=device_name,
             ip_address=ip,
         )
-
-        print("✅ DEVICE SAVED:", device.id)
 
         return Response(
             {
@@ -195,25 +356,54 @@ class SaveDeviceView(APIView):
 # Profile Update
 # ==========================================================
 
-class ProfileUpdateView(RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]
+
+class ProfileUpdateView(
+    RetrieveUpdateAPIView
+):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    parser_classes = [
+        MultiPartParser,
+        FormParser,
+    ]
 
     def get_object(self):
+
         return self.request.user
 
     def get_serializer_class(self):
+
         if self.request.method == "GET":
+
             return UserSerializer
+
         return ProfileUpdateSerializer
 
-    def put(self, request, *args, **kwargs):
-        print("PUT DATA:", request.data)
-        return self.update(request, *args, **kwargs)
+    def put(
+        self,
+        request,
+        *args,
+        **kwargs,
+    ):
 
-    def patch(self, request, *args, **kwargs):
-        print("PATCH DATA:", request.data)
-        return self.partial_update(request, *args, **kwargs)
+        return self.update(
+            request,
+            *args,
+            **kwargs,
+        )
 
+    def patch(
+        self,
+        request,
+        *args,
+        **kwargs,
+    ):
 
-
+        return self.partial_update(
+            request,
+            *args,
+            **kwargs,
+        )

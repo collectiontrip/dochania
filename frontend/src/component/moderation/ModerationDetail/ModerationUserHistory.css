@@ -1,0 +1,853 @@
+/* ============================================================
+   MODERATION USER HISTORY
+   ============================================================ */
+
+.moderation-user-history {
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    padding: 24px;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+/* ============================================================
+   DECORATIVE GLASS GLOW
+   ============================================================ */
+
+.moderation-user-history::before {
+    content: "";
+
+    position: absolute;
+    top: -120px;
+    right: -100px;
+
+    width: 260px;
+    height: 260px;
+
+    border-radius: 50%;
+
+    background: rgba(99, 102, 241, 0.11);
+
+    filter: blur(70px);
+
+    pointer-events: none;
+}
+
+.moderation-user-history::after {
+    content: "";
+
+    position: absolute;
+    bottom: -140px;
+    left: -120px;
+
+    width: 280px;
+    height: 280px;
+
+    border-radius: 50%;
+
+    background: rgba(56, 189, 248, 0.07);
+
+    filter: blur(80px);
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.moderation-user-history__header {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.moderation-user-history__eyebrow {
+    margin: 0 0 5px;
+
+    color: rgba(255, 255, 255, 0.46);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.moderation-user-history__title {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    line-height: 1.25;
+}
+
+.moderation-user-history__count {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 34px;
+    padding: 7px 13px;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    color: rgba(255, 255, 255, 0.76);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 6px 18px rgba(0, 0, 0, 0.12);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+
+/* ============================================================
+   USER SUMMARY
+   ============================================================ */
+
+.moderation-user-history__user {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 20px;
+    padding: 15px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.moderation-user-history__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 48px;
+    height: 48px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99, 102, 241, 0.38),
+            rgba(56, 189, 248, 0.22)
+        );
+
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+.moderation-user-history__user-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.moderation-user-history__username {
+    overflow: hidden;
+
+    color: rgba(255, 255, 255, 0.92);
+
+    font-size: 15px;
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.moderation-user-history__id {
+    overflow: hidden;
+
+    color: rgba(255, 255, 255, 0.38);
+
+    font-size: 10px;
+    font-weight: 500;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   HISTORY LIST
+   ============================================================ */
+
+.moderation-user-history__list {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 13px;
+
+    margin-top: 20px;
+}
+
+
+/* ============================================================
+   HISTORY RECORD
+   ============================================================ */
+
+.moderation-user-history__record {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.018)
+        );
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.moderation-user-history__record:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(255, 255, 255, 0.13);
+
+    box-shadow:
+        0 13px 30px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ============================================================
+   RECORD HEADER
+   ============================================================ */
+
+.moderation-user-history__record-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+}
+
+.moderation-user-history__record-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: rgba(255, 255, 255, 0.36);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+}
+
+.moderation-user-history__action {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.90);
+
+    font-size: 15px;
+    font-weight: 700;
+
+    line-height: 1.35;
+}
+
+.moderation-user-history__status {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 29px;
+    padding: 5px 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: rgba(255, 255, 255, 0.70);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.04em;
+}
+
+
+/* ============================================================
+   RECORD META
+   ============================================================ */
+
+.moderation-user-history__meta {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+.moderation-user-history__meta-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 0;
+
+    padding: 11px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 12px;
+
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.moderation-user-history__meta-item span {
+    color: rgba(255, 255, 255, 0.35);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.moderation-user-history__meta-item strong {
+    overflow: hidden;
+
+    color: rgba(255, 255, 255, 0.76);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   DECISION CHANGE
+   ============================================================ */
+
+.moderation-user-history__decision {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 14px;
+    padding: 13px;
+
+    border: 1px solid rgba(255, 255, 255, 0.065);
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99, 102, 241, 0.055),
+            rgba(255, 255, 255, 0.018)
+        );
+}
+
+.moderation-user-history__decision-item {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.moderation-user-history__decision-item span {
+    color: rgba(255, 255, 255, 0.34);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.moderation-user-history__decision-item strong {
+    overflow: hidden;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.moderation-user-history__decision-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: rgba(255, 255, 255, 0.48);
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+
+.moderation-user-history__note {
+    margin-top: 14px;
+    padding: 13px 14px;
+
+    border-left: 2px solid rgba(255, 255, 255, 0.16);
+    border-radius: 0 12px 12px 0;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.moderation-user-history__note span {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: rgba(255, 255, 255, 0.38);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.moderation-user-history__note p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.66);
+
+    font-size: 12px;
+    font-weight: 400;
+
+    line-height: 1.65;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   PERMANENT ACTION
+   ============================================================ */
+
+.moderation-user-history__permanent {
+    display: inline-flex;
+    align-items: center;
+
+    margin-top: 14px;
+    padding: 6px 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.moderation-user-history__empty {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 20px;
+    padding: 18px;
+
+    border: 1px dashed rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.moderation-user-history__empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: rgba(255, 255, 255, 0.58);
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.moderation-user-history__empty h3 {
+    margin: 0 0 5px;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.moderation-user-history__empty p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.40);
+
+    font-size: 11px;
+
+    line-height: 1.55;
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .moderation-user-history {
+        padding: 21px;
+
+        border-radius: 19px;
+    }
+
+    .moderation-user-history__title {
+        font-size: 20px;
+    }
+
+    .moderation-user-history__record {
+        padding: 16px;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+
+    .moderation-user-history {
+        padding: 18px;
+
+        border-radius: 17px;
+
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    .moderation-user-history__header {
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .moderation-user-history__title {
+        font-size: 19px;
+    }
+
+    .moderation-user-history__count {
+        min-height: 31px;
+        padding: 6px 10px;
+
+        font-size: 10px;
+    }
+
+    .moderation-user-history__user {
+        margin-top: 16px;
+
+        padding: 12px 13px;
+    }
+
+    .moderation-user-history__avatar {
+        width: 43px;
+        height: 43px;
+
+        font-size: 15px;
+    }
+
+    .moderation-user-history__username {
+        font-size: 14px;
+    }
+
+    .moderation-user-history__list {
+        margin-top: 16px;
+
+        gap: 10px;
+    }
+
+    .moderation-user-history__record {
+        padding: 15px;
+
+        border-radius: 15px;
+    }
+
+    .moderation-user-history__record-header {
+        gap: 12px;
+    }
+
+    .moderation-user-history__action {
+        font-size: 14px;
+    }
+
+    .moderation-user-history__meta {
+        gap: 8px;
+
+        margin-top: 12px;
+    }
+
+    .moderation-user-history__meta-item {
+        padding: 10px;
+    }
+
+    .moderation-user-history__decision {
+        gap: 7px;
+
+        padding: 11px;
+    }
+
+    .moderation-user-history__empty {
+        align-items: flex-start;
+
+        margin-top: 16px;
+        padding: 15px;
+    }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 420px) {
+
+    .moderation-user-history {
+        padding: 15px;
+    }
+
+    .moderation-user-history__header {
+        flex-direction: column;
+    }
+
+    .moderation-user-history__count {
+        align-self: flex-start;
+    }
+
+    .moderation-user-history__user {
+        gap: 10px;
+    }
+
+    .moderation-user-history__avatar {
+        width: 39px;
+        height: 39px;
+
+        font-size: 14px;
+    }
+
+    .moderation-user-history__username {
+        font-size: 13px;
+    }
+
+    .moderation-user-history__id {
+        font-size: 9px;
+    }
+
+    .moderation-user-history__record {
+        padding: 13px;
+    }
+
+    .moderation-user-history__record-header {
+        flex-direction: column;
+
+        gap: 9px;
+    }
+
+    .moderation-user-history__status {
+        align-self: flex-start;
+    }
+
+    .moderation-user-history__meta {
+        grid-template-columns: 1fr;
+    }
+
+    .moderation-user-history__decision {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+    .moderation-user-history__decision-arrow {
+        transform: rotate(90deg);
+    }
+
+    .moderation-user-history__empty {
+        gap: 10px;
+    }
+
+    .moderation-user-history__empty-icon {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+
+/* ============================================================
+   VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 340px) {
+
+    .moderation-user-history {
+        padding: 13px;
+    }
+
+    .moderation-user-history__title {
+        font-size: 17px;
+    }
+
+    .moderation-user-history__empty {
+        flex-direction: column;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-user-history__record {
+        transition: none;
+    }
+}

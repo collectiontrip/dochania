@@ -1,0 +1,919 @@
+/* ============================================================
+   MODERATION REPORTS PANEL
+   ============================================================ */
+
+.moderation-reports-panel {
+    position: relative;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 24px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.72);
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.84),
+            rgba(255, 255, 255, 0.58)
+        );
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+        0 20px 55px
+        rgba(15, 23, 42, 0.07),
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.82);
+
+    overflow: hidden;
+
+    isolation: isolate;
+}
+
+
+/* ============================================================
+   DECORATIVE GLOWS
+   ============================================================ */
+
+.moderation-reports-panel::before {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    top: -170px;
+    right: -80px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(99, 102, 241, 0.09);
+
+    filter: blur(5px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+.moderation-reports-panel::after {
+    content: "";
+
+    position: absolute;
+
+    width: 230px;
+    height: 230px;
+
+    bottom: -175px;
+    left: -100px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(14, 165, 233, 0.07);
+
+    filter: blur(4px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.moderation-reports-panel__header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid
+        rgba(15, 23, 42, 0.065);
+}
+
+
+.moderation-reports-panel__eyebrow {
+    margin: 0 0 5px;
+
+    color: #667085;
+
+    font-size: 0.7rem;
+    font-weight: 750;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.085em;
+}
+
+
+.moderation-reports-panel__title {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: clamp(
+        1.3rem,
+        2vw,
+        1.65rem
+    );
+
+    font-weight: 750;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.03em;
+}
+
+
+/* ============================================================
+   REPORT COUNT
+   ============================================================ */
+
+.moderation-reports-panel__count {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 32px;
+
+    padding: 0 12px;
+
+    border: 1px solid
+        rgba(79, 70, 229, 0.12);
+
+    border-radius: 999px;
+
+    background:
+        rgba(79, 70, 229, 0.07);
+
+    color: #4338ca;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   REPORT LIST
+   ============================================================ */
+
+.moderation-reports-panel__list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    margin-top: 18px;
+}
+
+
+/* ============================================================
+   REPORT CARD
+   ============================================================ */
+
+.moderation-reports-panel__report {
+    position: relative;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid
+        rgba(15, 23, 42, 0.065);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.68),
+            rgba(255, 255, 255, 0.42)
+        );
+
+    box-shadow:
+        0 8px 24px
+        rgba(15, 23, 42, 0.045),
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.72);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.moderation-reports-panel__report:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(79, 70, 229, 0.12);
+
+    box-shadow:
+        0 14px 30px
+        rgba(15, 23, 42, 0.07),
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.82);
+}
+
+
+/* ============================================================
+   REPORT HEADER
+   ============================================================ */
+
+.moderation-reports-panel__report-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid
+        rgba(15, 23, 42, 0.055);
+}
+
+
+.moderation-reports-panel__report-number {
+    display: flex;
+
+    align-items: center;
+
+    min-width: 0;
+
+    gap: 10px;
+}
+
+
+.moderation-reports-panel__report-index {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    min-width: 32px;
+    height: 28px;
+
+    padding: 0 8px;
+
+    box-sizing: border-box;
+
+    border-radius: 9px;
+
+    background:
+        rgba(15, 23, 42, 0.055);
+
+    color: #667085;
+
+    font-size: 0.7rem;
+    font-weight: 750;
+
+    line-height: 1;
+}
+
+
+.moderation-reports-panel__reason {
+    min-width: 0;
+
+    color: #344054;
+
+    font-size: 0.92rem;
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.moderation-reports-panel__status {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    min-height: 28px;
+
+    padding: 0 10px;
+
+    border: 1px solid
+        rgba(15, 23, 42, 0.07);
+
+    border-radius: 999px;
+
+    font-size: 0.67rem;
+    font-weight: 750;
+
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* ------------------------------------------------------------
+   PENDING
+   ------------------------------------------------------------ */
+
+.moderation-reports-panel__status--pending {
+    background:
+        rgba(245, 158, 11, 0.10);
+
+    color: #a16207;
+
+    border-color:
+        rgba(245, 158, 11, 0.16);
+}
+
+
+/* ------------------------------------------------------------
+   RESOLVED
+   ------------------------------------------------------------ */
+
+.moderation-reports-panel__status--resolved {
+    background:
+        rgba(16, 185, 129, 0.10);
+
+    color: #047857;
+
+    border-color:
+        rgba(16, 185, 129, 0.16);
+}
+
+
+/* ------------------------------------------------------------
+   OTHER STATUSES
+   ------------------------------------------------------------ */
+
+.moderation-reports-panel__status--in_review {
+    background:
+        rgba(59, 130, 246, 0.10);
+
+    color: #1d4ed8;
+
+    border-color:
+        rgba(59, 130, 246, 0.16);
+}
+
+
+.moderation-reports-panel__status--rejected {
+    background:
+        rgba(239, 68, 68, 0.09);
+
+    color: #b91c1c;
+
+    border-color:
+        rgba(239, 68, 68, 0.15);
+}
+
+
+/* ============================================================
+   META
+   ============================================================ */
+
+.moderation-reports-panel__meta {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+
+.moderation-reports-panel__meta-item {
+    min-width: 0;
+
+    padding: 12px 13px;
+
+    border: 1px solid
+        rgba(15, 23, 42, 0.055);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.42);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.68);
+}
+
+
+.moderation-reports-panel__meta-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #98a2b3;
+
+    font-size: 0.65rem;
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.055em;
+}
+
+
+.moderation-reports-panel__meta-item strong {
+    display: block;
+
+    color: #475467;
+
+    font-size: 0.79rem;
+    font-weight: 650;
+
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   DESCRIPTION
+   ============================================================ */
+
+.moderation-reports-panel__description {
+    margin-top: 14px;
+
+    padding: 14px 15px;
+
+    border: 1px solid
+        rgba(15, 23, 42, 0.055);
+
+    border-radius: 14px;
+
+    background:
+        rgba(248, 250, 252, 0.48);
+}
+
+
+.moderation-reports-panel__description-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #667085;
+
+    font-size: 0.67rem;
+    font-weight: 750;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.06em;
+}
+
+
+.moderation-reports-panel__description p {
+    margin: 0;
+
+    color: #475467;
+
+    font-size: 0.82rem;
+    font-weight: 450;
+
+    line-height: 1.65;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   EVIDENCE
+   ============================================================ */
+
+.moderation-reports-panel__evidence {
+    margin-top: 14px;
+}
+
+
+.moderation-reports-panel__evidence-label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #667085;
+
+    font-size: 0.67rem;
+    font-weight: 750;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.06em;
+}
+
+
+.moderation-reports-panel__evidence-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+.moderation-reports-panel__evidence-item {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 32px;
+
+    padding: 0 11px;
+
+    border: 1px solid
+        rgba(79, 70, 229, 0.13);
+
+    border-radius: 10px;
+
+    background:
+        rgba(79, 70, 229, 0.065);
+
+    color: #4338ca;
+
+    font-size: 0.7rem;
+    font-weight: 700;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.moderation-reports-panel__evidence-item:hover {
+    transform: translateY(-1px);
+
+    background:
+        rgba(79, 70, 229, 0.10);
+
+    border-color:
+        rgba(79, 70, 229, 0.20);
+
+    box-shadow:
+        0 5px 14px
+        rgba(79, 70, 229, 0.08);
+}
+
+
+.moderation-reports-panel__evidence-item:focus-visible {
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(79, 70, 229, 0.12);
+}
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.moderation-reports-panel__empty {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 18px;
+
+    padding: 20px;
+
+    border: 1px dashed
+        rgba(15, 23, 42, 0.10);
+
+    border-radius: 17px;
+
+    background:
+        rgba(255, 255, 255, 0.38);
+}
+
+
+.moderation-reports-panel__empty-icon {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid
+        rgba(16, 185, 129, 0.15);
+
+    border-radius: 13px;
+
+    background:
+        rgba(16, 185, 129, 0.09);
+
+    color: #047857;
+
+    font-size: 1rem;
+    font-weight: 800;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.7);
+}
+
+
+.moderation-reports-panel__empty h3 {
+    margin: 0 0 4px;
+
+    color: #344054;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+
+.moderation-reports-panel__empty p {
+    margin: 0;
+
+    color: #667085;
+
+    font-size: 0.77rem;
+
+    line-height: 1.55;
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .moderation-reports-panel {
+        padding: 21px;
+
+        border-radius: 21px;
+    }
+
+
+    .moderation-reports-panel__report {
+        padding: 16px;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+
+    .moderation-reports-panel {
+        padding: 18px;
+
+        border-radius: 19px;
+    }
+
+
+    .moderation-reports-panel__header {
+        align-items: flex-start;
+    }
+
+
+    .moderation-reports-panel__title {
+        font-size: 1.25rem;
+    }
+
+
+    .moderation-reports-panel__count {
+        min-height: 29px;
+
+        padding: 0 10px;
+
+        font-size: 0.68rem;
+    }
+
+
+    .moderation-reports-panel__report-header {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+
+    .moderation-reports-panel__status {
+        align-self: flex-start;
+    }
+
+
+    .moderation-reports-panel__meta {
+        grid-template-columns: 1fr;
+    }
+
+
+    .moderation-reports-panel__empty {
+        align-items: flex-start;
+
+        padding: 16px;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .moderation-reports-panel {
+        padding: 15px;
+
+        border-radius: 17px;
+    }
+
+
+    .moderation-reports-panel__header {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+
+    .moderation-reports-panel__count {
+        align-self: flex-start;
+    }
+
+
+    .moderation-reports-panel__list {
+        gap: 11px;
+
+        margin-top: 14px;
+    }
+
+
+    .moderation-reports-panel__report {
+        padding: 14px;
+
+        border-radius: 15px;
+    }
+
+
+    .moderation-reports-panel__report-number {
+        align-items: flex-start;
+    }
+
+
+    .moderation-reports-panel__reason {
+        font-size: 0.84rem;
+    }
+
+
+    .moderation-reports-panel__meta-item {
+        padding: 11px 12px;
+    }
+
+
+    .moderation-reports-panel__description {
+        padding: 12px 13px;
+    }
+
+
+    .moderation-reports-panel__empty {
+        flex-direction: column;
+    }
+
+
+    .moderation-reports-panel__empty-icon {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 11px;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+    .moderation-reports-panel {
+        padding: 13px;
+
+        border-radius: 15px;
+    }
+
+
+    .moderation-reports-panel__report {
+        padding: 12px;
+    }
+
+
+    .moderation-reports-panel__report-number {
+        gap: 7px;
+    }
+
+
+    .moderation-reports-panel__report-index {
+        min-width: 29px;
+        height: 26px;
+
+        padding: 0 7px;
+
+        font-size: 0.65rem;
+    }
+
+
+    .moderation-reports-panel__reason {
+        font-size: 0.8rem;
+    }
+
+
+    .moderation-reports-panel__meta-item {
+        padding: 10px;
+    }
+
+
+    .moderation-reports-panel__evidence-list {
+        flex-direction: column;
+    }
+
+
+    .moderation-reports-panel__evidence-item {
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-reports-panel__report,
+    .moderation-reports-panel__evidence-item {
+        transition: none;
+    }
+
+}

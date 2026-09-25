@@ -1,0 +1,443 @@
+/* ============================================================
+   MODERATION PAGINATION
+============================================================ */
+
+.moderation-pagination {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    margin-top: 28px;
+    padding: 14px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    overflow-x: auto;
+    scrollbar-width: thin;
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   PAGE CONTAINER
+============================================================ */
+
+.moderation-pagination__pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   COMMON BUTTON
+============================================================ */
+
+.moderation-pagination__button,
+.moderation-pagination__page {
+    height: 40px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 11px;
+
+    background:
+        rgba(255, 255, 255, 0.055);
+
+    color: inherit;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+
+    box-sizing: border-box;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ============================================================
+   PREVIOUS / NEXT BUTTON
+============================================================ */
+
+.moderation-pagination__button {
+    min-width: 100px;
+
+    padding: 0 15px;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   PAGE BUTTON
+============================================================ */
+
+.moderation-pagination__page {
+    width: 40px;
+
+    padding: 0;
+
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   HOVER
+============================================================ */
+
+.moderation-pagination__button:not(:disabled):hover,
+.moderation-pagination__page:not(
+    .moderation-pagination__page--active
+):hover {
+
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    border-color:
+        rgba(255, 255, 255, 0.22);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.14);
+}
+
+
+/* ============================================================
+   ACTIVE PAGE
+============================================================ */
+
+.moderation-pagination__page--active {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99, 102, 241, 0.95),
+            rgba(139, 92, 246, 0.90)
+        );
+
+    border-color:
+        rgba(167, 139, 250, 0.65);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 7px 20px rgba(99, 102, 241, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+    cursor: default;
+}
+
+
+/* ============================================================
+   DISABLED BUTTON
+============================================================ */
+
+.moderation-pagination__button:disabled {
+    opacity: 0.38;
+
+    cursor: not-allowed;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    border-color:
+        rgba(255, 255, 255, 0.07);
+
+    box-shadow: none;
+}
+
+
+/* ============================================================
+   FOCUS
+============================================================ */
+
+.moderation-pagination__button:focus-visible,
+.moderation-pagination__page:focus-visible {
+
+    outline: none;
+
+    border-color:
+        rgba(129, 140, 248, 0.75);
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.20);
+}
+
+
+/* ============================================================
+   ARROW
+============================================================ */
+
+.moderation-pagination__previous span:first-child,
+.moderation-pagination__next span:last-child {
+
+    font-size: 17px;
+    line-height: 1;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.moderation-pagination__previous:not(:disabled):hover
+span:first-child {
+
+    transform:
+        translateX(-3px);
+}
+
+
+.moderation-pagination__next:not(:disabled):hover
+span:last-child {
+
+    transform:
+        translateX(3px);
+}
+
+
+/* ============================================================
+   ELLIPSIS
+============================================================ */
+
+.moderation-pagination__ellipsis {
+    width: 30px;
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color:
+        rgba(255, 255, 255, 0.48);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    flex-shrink: 0;
+
+    user-select: none;
+}
+
+
+/* ============================================================
+   SCROLLBAR
+============================================================ */
+
+.moderation-pagination::-webkit-scrollbar {
+    height: 5px;
+}
+
+
+.moderation-pagination::-webkit-scrollbar-track {
+    background:
+        transparent;
+}
+
+
+.moderation-pagination::-webkit-scrollbar-thumb {
+    background:
+        rgba(255, 255, 255, 0.16);
+
+    border-radius: 999px;
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 768px) {
+
+    .moderation-pagination {
+        gap: 10px;
+
+        margin-top: 22px;
+        padding: 12px;
+    }
+
+
+    .moderation-pagination__button {
+        min-width: 88px;
+
+        padding: 0 12px;
+
+        font-size: 13px;
+    }
+
+
+    .moderation-pagination__page {
+        width: 38px;
+    }
+
+
+    .moderation-pagination__pages {
+        gap: 6px;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 560px) {
+
+    .moderation-pagination {
+        justify-content: flex-start;
+
+        gap: 8px;
+
+        padding: 10px;
+
+        border-radius: 15px;
+
+        overflow-x: auto;
+    }
+
+
+    .moderation-pagination__button {
+        min-width: 42px;
+        width: 42px;
+
+        padding: 0;
+
+        border-radius: 10px;
+    }
+
+
+    .moderation-pagination__button span:not(
+        :first-child
+    ) {
+
+        display: none;
+    }
+
+
+    .moderation-pagination__next span:first-child {
+        display: none;
+    }
+
+
+    .moderation-pagination__next span:last-child {
+        display: inline-flex;
+    }
+
+
+    .moderation-pagination__page {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 10px;
+
+        font-size: 13px;
+    }
+
+
+    .moderation-pagination__ellipsis {
+        width: 24px;
+        height: 38px;
+
+        font-size: 11px;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+============================================================ */
+
+@media (max-width: 380px) {
+
+    .moderation-pagination {
+        gap: 6px;
+
+        padding: 8px;
+    }
+
+
+    .moderation-pagination__button {
+        width: 38px;
+        min-width: 38px;
+
+        height: 36px;
+    }
+
+
+    .moderation-pagination__page {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    .moderation-pagination__pages {
+        gap: 4px;
+    }
+
+
+    .moderation-pagination__ellipsis {
+        width: 20px;
+        height: 36px;
+    }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-pagination__button,
+    .moderation-pagination__page,
+    .moderation-pagination__previous span:first-child,
+    .moderation-pagination__next span:last-child {
+
+        transition: none;
+    }
+
+}

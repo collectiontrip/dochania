@@ -1,5 +1,10 @@
+
 import axiosInstance from "../component/auth/axiosInstance";
 
+
+// ==================================================
+// MODERATION SERVICE
+// ==================================================
 
 const moderationService = {
 
@@ -117,7 +122,7 @@ const moderationService = {
 
     resolveCase: async (
         caseId,
-        data
+        data = {}
     ) => {
 
         const response = await axiosInstance.post(
@@ -236,7 +241,9 @@ const moderationService = {
     // GET /moderation/users/<id>/
     // --------------------------------------------------
 
-    getUserModeration: async (userModerationId) => {
+    getUserModeration: async (
+        userModerationId
+    ) => {
 
         const response = await axiosInstance.get(
             `/moderation/users/${userModerationId}/`
@@ -338,7 +345,27 @@ const moderationService = {
         return response.data;
     },
 
+
+    // ==================================================
+    // MODERATION STATS
+    // ==================================================
+
+    // --------------------------------------------------
+    // GET MODERATION CASE STATISTICS
+    // GET /moderation/cases/stats/
+    // --------------------------------------------------
+
+    getStats: async () => {
+
+        const response = await axiosInstance.get(
+            "/moderation/cases/stats/"
+        );
+
+        return response.data;
+    },
+
 };
 
 
 export default moderationService;
+

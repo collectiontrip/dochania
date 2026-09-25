@@ -1,3 +1,8 @@
+from datetime import timedelta
+
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+
 from djoser.serializers import (
     UserCreateSerializer as BaseUserCreateSerializer,
     UserSerializer as BaseUserSerializer,
@@ -7,17 +12,25 @@ from rest_framework import serializers
 
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer,
+    TokenRefreshSerializer,
+)
+
+from rest_framework_simplejwt.tokens import (
+    RefreshToken,
 )
 
 from core.tasks import send_account_locked_email
 
-from django.contrib.auth import get_user_model
-from django.utils import timezone
+from relationships.models import (
+    Follow,
+    Block,
+)
 
-from datetime import timedelta
+from moderation.models import (
+    UserModeration,
+)
 
 from .models import User
-from relationships.models import Follow, Block
 
 
 # ==========================================================
@@ -110,18 +123,57 @@ class UserSerializer(BaseUserSerializer):
             "email",
             "first_name",
             "last_name",
+
+            # ------------------------------------------------
+            # ACCOUNT / MODERATION STATUS
+            # ------------------------------------------------
+
+            "is_active",
+            "is_moderator",
+            "is_superuser",
+
+            # ------------------------------------------------
+            # ONLINE / ACTIVITY
+            # ------------------------------------------------
+
             "is_online",
             "last_seen",
+
+            # ------------------------------------------------
+            # PROFILE
+            # ------------------------------------------------
+
             "bio",
             "profile_picture",
             "is_private",
+
+            # ------------------------------------------------
+            # RELATIONSHIPS
+            # ------------------------------------------------
+
             "is_following",
             "is_followed_by",
             "is_blocked",
             "blocked_you",
+
+            # ------------------------------------------------
+            # COUNTS
+            # ------------------------------------------------
+
             "followers_count",
             "following_count",
+
+            # ------------------------------------------------
+            # COINS
+            # ------------------------------------------------
+
             "coin_balance",
+        ]
+
+        read_only_fields = [
+            "is_active",
+            "is_moderator",
+            "is_superuser",
         ]
 
     # ======================================================
@@ -311,22 +363,22 @@ class CustomTokenObtainPairSerializer(
         username = attrs.get("username")
         password = attrs.get("password")
 
-        User = get_user_model()
+        UserModel = get_user_model()
 
         now = timezone.now()
 
         # ==================================================
-        # Find User
+        # FIND USER
         # ==================================================
 
         user = (
-            User.objects
+            UserModel.objects
             .filter(username=username)
             .first()
         )
 
         # ==================================================
-        # Unknown Username
+        # UNKNOWN USERNAME
         # ==================================================
 
         if user is None:
@@ -340,7 +392,7 @@ class CustomTokenObtainPairSerializer(
             )
 
         # ==================================================
-        # Check Existing Lock
+        # CHECK EXISTING LOGIN LOCK
         # ==================================================
 
         if (
@@ -360,7 +412,7 @@ class CustomTokenObtainPairSerializer(
             )
 
         # ==================================================
-        # Clear Expired Lock
+        # CLEAR EXPIRED LOGIN LOCK
         # ==================================================
 
         if (
@@ -381,7 +433,7 @@ class CustomTokenObtainPairSerializer(
             )
 
         # ==================================================
-        # Check Account Activation
+        # CHECK ACCOUNT ACTIVATION
         #
         # Inactive accounts do NOT consume failed
         # password attempts.
@@ -401,7 +453,81 @@ class CustomTokenObtainPairSerializer(
             )
 
         # ==================================================
-        # Check Password
+        # CHECK MODERATION STATUS
+        #
+        # Restriction does NOT prevent login.
+        #
+        # Suspension and permanent ban DO prevent login.
+        # ==================================================
+
+        moderation = (
+            UserModeration.objects
+            .filter(
+                user=user,
+            )
+            .first()
+        )
+
+        if moderation:
+
+            # ------------------------------------------------
+            # NORMALIZE EXPIRED SUSPENSION
+            # ------------------------------------------------
+
+            if (
+                moderation.is_suspended
+                and moderation.suspension_expires_at
+                and moderation.suspension_expires_at <= now
+            ):
+
+                moderation.is_suspended = False
+                moderation.suspension_expires_at = None
+
+                moderation.save(
+                    update_fields=[
+                        "is_suspended",
+                        "suspension_expires_at",
+                        "updated_at",
+                    ]
+                )
+
+            # ------------------------------------------------
+            # PERMANENT BAN
+            # ------------------------------------------------
+
+            if moderation.is_banned:
+
+                raise serializers.ValidationError(
+                    {
+                        "detail": (
+                            "Your account has been "
+                            "permanently banned."
+                        ),
+                        "account_banned": True,
+                    }
+                )
+
+            # ------------------------------------------------
+            # ACTIVE SUSPENSION
+            # ------------------------------------------------
+
+            if moderation.is_suspended:
+
+                raise serializers.ValidationError(
+                    {
+                        "detail": (
+                            "Your account is currently "
+                            "suspended."
+                        ),
+                        "account_suspended": True,
+                        "suspension_expires_at": (
+                            moderation.suspension_expires_at
+                        ),
+                    }
+                )
+
+        # ==================================================
+        # CHECK PASSWORD
         # ==================================================
 
         if not user.check_password(password):
@@ -417,7 +543,7 @@ class CustomTokenObtainPairSerializer(
             # ==================================================
             # THIRD FAILED ATTEMPT
             #
-            # Lock account for 72 hours
+            # Lock account for 72 hours.
             # ==================================================
 
             if (
@@ -442,12 +568,6 @@ class CustomTokenObtainPairSerializer(
 
                 # ==================================================
                 # SEND ACCOUNT LOCKED EMAIL
-                #
-                # Send the arguments expected by the Celery task:
-                #
-                # user_email
-                # username
-                # locked_until
                 # ==================================================
 
                 try:
@@ -469,7 +589,7 @@ class CustomTokenObtainPairSerializer(
                     )
 
                 # ==================================================
-                # Return Locked Response
+                # RETURN LOCKED RESPONSE
                 # ==================================================
 
                 raise serializers.ValidationError(
@@ -487,7 +607,7 @@ class CustomTokenObtainPairSerializer(
                 )
 
             # ==================================================
-            # Save Failed Attempt
+            # SAVE FAILED ATTEMPT
             # ==================================================
 
             user.save(
@@ -495,7 +615,7 @@ class CustomTokenObtainPairSerializer(
             )
 
             # ==================================================
-            # Remaining Attempts
+            # REMAINING ATTEMPTS
             # ==================================================
 
             remaining_attempts = (
@@ -539,7 +659,170 @@ class CustomTokenObtainPairSerializer(
             )
 
         # ==================================================
-        # Generate Normal JWT Response
+        # GENERATE NORMAL JWT RESPONSE
+        # ==================================================
+
+        return super().validate(attrs)
+
+
+# ==========================================================
+# CUSTOM JWT REFRESH SERIALIZER
+# ==========================================================
+
+
+class CustomTokenRefreshSerializer(
+    TokenRefreshSerializer
+):
+
+    def validate(self, attrs):
+
+        # ==================================================
+        # VALIDATE REFRESH TOKEN FIRST
+        #
+        # IMPORTANT:
+        # Do NOT call super().validate() yet.
+        #
+        # Token rotation/blacklisting may happen inside
+        # the parent serializer. We must check account
+        # moderation status BEFORE allowing rotation.
+        # ==================================================
+
+        refresh_token = RefreshToken(
+            attrs["refresh"]
+        )
+
+        # ==================================================
+        # GET USER ID FROM REFRESH TOKEN
+        # ==================================================
+
+        user_id = refresh_token.get("user_id")
+
+        if not user_id:
+
+            raise serializers.ValidationError(
+                {
+                    "detail": (
+                        "Invalid refresh token."
+                    )
+                }
+            )
+
+        # ==================================================
+        # FIND USER
+        # ==================================================
+
+        UserModel = get_user_model()
+
+        user = (
+            UserModel.objects
+            .filter(
+                id=user_id,
+            )
+            .first()
+        )
+
+        if user is None:
+
+            raise serializers.ValidationError(
+                {
+                    "detail": (
+                        "User account no longer exists."
+                    )
+                }
+            )
+
+        # ==================================================
+        # CHECK ACCOUNT STATUS
+        # ==================================================
+
+        if not user.is_active:
+
+            raise serializers.ValidationError(
+                {
+                    "detail": (
+                        "Your account is inactive."
+                    ),
+                    "account_inactive": True,
+                }
+            )
+
+        now = timezone.now()
+
+        # ==================================================
+        # CHECK MODERATION STATUS
+        # ==================================================
+
+        moderation = (
+            UserModeration.objects
+            .filter(
+                user=user,
+            )
+            .first()
+        )
+
+        if moderation:
+
+            # ------------------------------------------------
+            # NORMALIZE EXPIRED SUSPENSION
+            # ------------------------------------------------
+
+            if (
+                moderation.is_suspended
+                and moderation.suspension_expires_at
+                and moderation.suspension_expires_at <= now
+            ):
+
+                moderation.is_suspended = False
+                moderation.suspension_expires_at = None
+
+                moderation.save(
+                    update_fields=[
+                        "is_suspended",
+                        "suspension_expires_at",
+                        "updated_at",
+                    ]
+                )
+
+            # ------------------------------------------------
+            # PERMANENT BAN
+            # ------------------------------------------------
+
+            if moderation.is_banned:
+
+                raise serializers.ValidationError(
+                    {
+                        "detail": (
+                            "Your account has been "
+                            "permanently banned."
+                        ),
+                        "account_banned": True,
+                    }
+                )
+
+            # ------------------------------------------------
+            # ACTIVE SUSPENSION
+            # ------------------------------------------------
+
+            if moderation.is_suspended:
+
+                raise serializers.ValidationError(
+                    {
+                        "detail": (
+                            "Your account is currently "
+                            "suspended."
+                        ),
+                        "account_suspended": True,
+                        "suspension_expires_at": (
+                            moderation.suspension_expires_at
+                        ),
+                    }
+                )
+
+        # ==================================================
+        # GENERATE / ROTATE NEW TOKEN
+        #
+        # Moderation checks have passed, so token rotation
+        # can safely happen now.
         # ==================================================
 
         return super().validate(attrs)

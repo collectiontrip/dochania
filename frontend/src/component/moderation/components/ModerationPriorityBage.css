@@ -1,0 +1,399 @@
+/* ============================================================
+   MODERATION PRIORITY BADGE
+   ============================================================ */
+
+.moderation-priority-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+    min-height: 30px;
+
+    padding: 5px 10px;
+
+    gap: 7px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.045);
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+
+    line-height: 1;
+    letter-spacing: 0.02em;
+
+    white-space: nowrap;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.045),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+
+    user-select: none;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* ============================================================
+   PRIORITY INDICATOR
+   ============================================================ */
+
+.moderation-priority-badge__indicator {
+    position: relative;
+
+    flex: 0 0 auto;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+    box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.04);
+
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* ============================================================
+   PRIORITY LABEL
+   ============================================================ */
+
+.moderation-priority-badge__label {
+    display: inline-block;
+
+    line-height: 1.2;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ============================================================
+   LOW PRIORITY
+   ============================================================ */
+
+.moderation-priority-badge--low {
+    border-color:
+        rgba(34, 197, 94, 0.22);
+
+    background:
+        rgba(34, 197, 94, 0.075);
+
+    color:
+        rgba(134, 239, 172, 0.95);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035),
+        0 5px 14px rgba(34, 197, 94, 0.05);
+}
+
+.moderation-priority-badge--low
+.moderation-priority-badge__indicator {
+    background:
+        #4ade80;
+
+    box-shadow:
+        0 0 7px rgba(74, 222, 128, 0.65);
+}
+
+.moderation-priority-badge--low:hover {
+    border-color:
+        rgba(34, 197, 94, 0.38);
+
+    background:
+        rgba(34, 197, 94, 0.11);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.045),
+        0 7px 18px rgba(34, 197, 94, 0.08);
+
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   MEDIUM PRIORITY
+   ============================================================ */
+
+.moderation-priority-badge--medium {
+    border-color:
+        rgba(234, 179, 8, 0.24);
+
+    background:
+        rgba(234, 179, 8, 0.075);
+
+    color:
+        rgba(253, 224, 71, 0.95);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035),
+        0 5px 14px rgba(234, 179, 8, 0.05);
+}
+
+.moderation-priority-badge--medium
+.moderation-priority-badge__indicator {
+    background:
+        #facc15;
+
+    box-shadow:
+        0 0 7px rgba(250, 204, 21, 0.65);
+}
+
+.moderation-priority-badge--medium:hover {
+    border-color:
+        rgba(234, 179, 8, 0.4);
+
+    background:
+        rgba(234, 179, 8, 0.11);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.045),
+        0 7px 18px rgba(234, 179, 8, 0.08);
+
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   HIGH PRIORITY
+   ============================================================ */
+
+.moderation-priority-badge--high {
+    border-color:
+        rgba(249, 115, 22, 0.26);
+
+    background:
+        rgba(249, 115, 22, 0.08);
+
+    color:
+        rgba(253, 186, 116, 0.97);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035),
+        0 5px 14px rgba(249, 115, 22, 0.06);
+}
+
+.moderation-priority-badge--high
+.moderation-priority-badge__indicator {
+    background:
+        #fb923c;
+
+    box-shadow:
+        0 0 8px rgba(251, 146, 60, 0.7);
+}
+
+.moderation-priority-badge--high:hover {
+    border-color:
+        rgba(249, 115, 22, 0.45);
+
+    background:
+        rgba(249, 115, 22, 0.12);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.045),
+        0 7px 20px rgba(249, 115, 22, 0.1);
+
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   URGENT PRIORITY
+   ============================================================ */
+
+.moderation-priority-badge--urgent {
+    border-color:
+        rgba(239, 68, 68, 0.3);
+
+    background:
+        rgba(239, 68, 68, 0.09);
+
+    color:
+        rgba(252, 165, 165, 0.98);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035),
+        0 5px 16px rgba(239, 68, 68, 0.08);
+}
+
+.moderation-priority-badge--urgent
+.moderation-priority-badge__indicator {
+    background:
+        #f87171;
+
+    box-shadow:
+        0 0 8px rgba(248, 113, 113, 0.75);
+}
+
+.moderation-priority-badge--urgent:hover {
+    border-color:
+        rgba(239, 68, 68, 0.5);
+
+    background:
+        rgba(239, 68, 68, 0.13);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.045),
+        0 8px 22px rgba(239, 68, 68, 0.12);
+
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   UNKNOWN / FALLBACK
+   ============================================================ */
+
+.moderation-priority-badge--unknown {
+    border-color:
+        rgba(156, 163, 175, 0.2);
+
+    background:
+        rgba(156, 163, 175, 0.07);
+
+    color:
+        rgba(209, 213, 219, 0.9);
+}
+
+.moderation-priority-badge--unknown
+.moderation-priority-badge__indicator {
+    background:
+        #9ca3af;
+
+    box-shadow:
+        0 0 7px rgba(156, 163, 175, 0.5);
+}
+
+
+/* ============================================================
+   FOCUS ACCESSIBILITY
+   ============================================================ */
+
+.moderation-priority-badge:focus-visible {
+    outline:
+        2px solid rgba(129, 140, 248, 0.75);
+
+    outline-offset: 3px;
+}
+
+
+/* ============================================================
+   LARGE DISPLAY
+   ============================================================ */
+
+@media (min-width: 1400px) {
+
+    .moderation-priority-badge {
+        min-height: 32px;
+
+        padding: 6px 11px;
+
+        gap: 8px;
+
+        font-size: 12px;
+    }
+
+    .moderation-priority-badge__indicator {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .moderation-priority-badge {
+        min-height: 29px;
+
+        padding: 5px 9px;
+
+        gap: 6px;
+
+        font-size: 10.5px;
+    }
+
+    .moderation-priority-badge__indicator {
+        width: 7px;
+        height: 7px;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .moderation-priority-badge {
+        min-height: 28px;
+
+        padding: 5px 8px;
+
+        gap: 6px;
+
+        border-radius: 999px;
+
+        font-size: 10px;
+    }
+
+    .moderation-priority-badge__indicator {
+        width: 6px;
+        height: 6px;
+    }
+
+    .moderation-priority-badge--low:hover,
+    .moderation-priority-badge--medium:hover,
+    .moderation-priority-badge--high:hover,
+    .moderation-priority-badge--urgent:hover {
+        transform: none;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-priority-badge,
+    .moderation-priority-badge__indicator {
+        transition: none;
+    }
+
+    .moderation-priority-badge--low:hover,
+    .moderation-priority-badge--medium:hover,
+    .moderation-priority-badge--high:hover,
+    .moderation-priority-badge--urgent:hover {
+        transform: none;
+    }
+}

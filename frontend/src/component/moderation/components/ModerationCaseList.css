@@ -1,0 +1,185 @@
+/* ============================================================
+   MODERATION CASE LIST
+   ============================================================ */
+
+.moderation-case-list {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    gap: 14px;
+
+    padding: 4px 0;
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   LIST TOP HIGHLIGHT
+   ============================================================ */
+
+.moderation-case-list::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 8%;
+
+    width: 84%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.06),
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   CASE CARD WRAPPER
+   ============================================================ */
+
+.moderation-case-list > * {
+    width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   CASE CARD TRANSITION
+   ============================================================ */
+
+.moderation-case-list > * {
+    transition:
+        transform 0.22s ease,
+        filter 0.22s ease;
+}
+
+
+/* ============================================================
+   DESKTOP HOVER
+   ============================================================ */
+
+@media (min-width: 769px) {
+
+    .moderation-case-list > *:hover {
+        filter:
+            drop-shadow(
+                0 12px 24px rgba(0, 0, 0, 0.08)
+            );
+    }
+}
+
+
+/* ============================================================
+   LARGE DESKTOP
+   ============================================================ */
+
+@media (min-width: 1400px) {
+
+    .moderation-case-list {
+        gap: 16px;
+
+        padding-top: 5px;
+    }
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .moderation-case-list {
+        gap: 13px;
+
+        padding-top: 3px;
+    }
+}
+
+
+/* ============================================================
+   SMALL TABLET
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    .moderation-case-list {
+        gap: 12px;
+
+        padding-top: 2px;
+    }
+
+    .moderation-case-list::before {
+        left: 5%;
+
+        width: 90%;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .moderation-case-list {
+        gap: 10px;
+
+        padding: 0;
+    }
+
+    .moderation-case-list > * {
+        width: 100%;
+    }
+
+    .moderation-case-list::before {
+        display: none;
+    }
+
+}
+
+
+/* ============================================================
+   EXTRA SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+    .moderation-case-list {
+        gap: 9px;
+    }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-case-list > * {
+        transition: none;
+    }
+
+    .moderation-case-list > *:hover {
+        filter: none;
+    }
+
+}

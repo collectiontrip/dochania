@@ -1,3 +1,4 @@
+
 """
 Django settings for my_school project.
 """
@@ -5,7 +6,9 @@ Django settings for my_school project.
 from pathlib import Path
 from datetime import timedelta
 import os
+
 from dotenv import load_dotenv
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -53,7 +56,7 @@ INSTALLED_APPS = [
     "likes",
     "relationships",
     "moderation",
-    "reports",
+    "reports.apps.ReportsConfig",
     "notification",
     "chat",
     "live.apps.LiveConfig",
@@ -95,8 +98,13 @@ ROOT_URLCONF = "my_school.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+
+        "DIRS": [
+            BASE_DIR / "templates",
+        ],
+
         "APP_DIRS": True,
+
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
@@ -139,16 +147,28 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "MinimumLengthValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "CommonPasswordValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "NumericPasswordValidator"
+        ),
     },
 ]
 
@@ -189,9 +209,8 @@ AUTH_USER_MODEL = "core.User"
 # ==========================================================
 
 REST_FRAMEWORK = {
-
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "core.authentication.CustomJWTAuthentication",
     ),
 
     "DEFAULT_FILTER_BACKENDS": [
@@ -204,7 +223,10 @@ REST_FRAMEWORK = {
 # FRONTEND
 # ==========================================================
 
-FRONTEND_URL = os.getenv("FRONTEND_URL")
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "https://localhost:5173",
+).rstrip("/")
 
 
 # ==========================================================
@@ -212,43 +234,47 @@ FRONTEND_URL = os.getenv("FRONTEND_URL")
 # ==========================================================
 
 DJOSER = {
-
     "SERIALIZERS": {
         "user_create": "core.serializers.UserCreateSerializer",
         "user": "core.serializers.UserSerializer",
         "current_user": "core.serializers.UserSerializer",
 
-        "token_create": ( 
-            "core.serializers.CustomTokenObtainPairSerializer" 
+        "token_create": (
+            "core.serializers.CustomTokenObtainPairSerializer"
         ),
     },
 
+    # ------------------------------------------------------
+    # CUSTOM EMAILS
+    # ------------------------------------------------------
+
+    "EMAIL": {
+        "activation": "core.emails.CustomActivationEmail",
+    },
 
     "PERMISSIONS": {
         "user_list": [
-            "rest_framework.permissions.IsAuthenticated"
+            "rest_framework.permissions.IsAuthenticated",
         ],
 
         "user": [
-            "rest_framework.permissions.IsAuthenticated"
+            "rest_framework.permissions.IsAuthenticated",
         ],
 
         "current_user": [
-            "rest_framework.permissions.IsAuthenticated"
+            "rest_framework.permissions.IsAuthenticated",
         ],
     },
 
-
     "HIDE_USERS": False,
 
+    "PASSWORD_RESET_CONFIRM_URL": (
+        "password/reset/confirm/{uid}/{token}"
+    ),
 
-    "PASSWORD_RESET_CONFIRM_URL":
-        "password/reset/confirm/{uid}/{token}",
-
-
-    "ACTIVATION_URL":
-        "activate/{uid}/{token}",
-
+    "ACTIVATION_URL": (
+        "activate/{uid}/{token}"
+    ),
 
     "SEND_ACTIVATION_EMAIL": True,
 
@@ -263,31 +289,27 @@ DJOSER = {
 # ==========================================================
 
 SIMPLE_JWT = {
-
     "AUTH_HEADER_TYPES": (
         "JWT",
     ),
-
 
     "ACCESS_TOKEN_LIFETIME": timedelta(
         minutes=int(
             os.getenv(
                 "ACCESS_TOKEN_LIFETIME",
-                5
+                5,
             )
         )
     ),
-
 
     "REFRESH_TOKEN_LIFETIME": timedelta(
         days=int(
             os.getenv(
                 "REFRESH_TOKEN_LIFETIME",
-                17
+                17,
             )
         )
     ),
-
 
     "ROTATE_REFRESH_TOKENS": True,
 
@@ -315,26 +337,23 @@ CSRF_TRUSTED_ORIGINS = [
 # ==========================================================
 
 CHANNEL_LAYERS = {
-
     "default": {
-
-        "BACKEND":
-            "channels_redis.core.RedisChannelLayer",
-
+        "BACKEND": (
+            "channels_redis.core.RedisChannelLayer"
+        ),
 
         "CONFIG": {
-
             "hosts": [
                 (
                     os.getenv(
                         "REDIS_HOST",
-                        "redis"
+                        "redis",
                     ),
 
                     int(
                         os.getenv(
                             "REDIS_PORT",
-                            6379
+                            6379,
                         )
                     ),
                 )
@@ -350,26 +369,24 @@ CHANNEL_LAYERS = {
 
 CELERY_BROKER_URL = os.getenv(
     "CELERY_BROKER_URL",
-    "redis://redis:6379/0"
+    "redis://redis:6379/0",
 )
 
 
 CELERY_RESULT_BACKEND = os.getenv(
     "CELERY_RESULT_BACKEND",
-    "redis://redis:6379/0"
+    "redis://redis:6379/0",
 )
 
 
 CELERY_ACCEPT_CONTENT = [
-    "json"
+    "json",
 ]
 
 
 CELERY_TASK_SERIALIZER = "json"
 
-
 CELERY_RESULT_SERIALIZER = "json"
-
 
 CELERY_TIMEZONE = TIME_ZONE
 
@@ -385,37 +402,37 @@ EMAIL_BACKEND = os.getenv(
 
 
 EMAIL_HOST = os.getenv(
-    "EMAIL_HOST"
+    "EMAIL_HOST",
 )
 
 
 EMAIL_PORT = int(
     os.getenv(
         "EMAIL_PORT",
-        587
+        587,
     )
 )
 
 
 EMAIL_USE_TLS = os.getenv(
     "EMAIL_USE_TLS",
-    "True"
+    "True",
 ) == "True"
 
 
 EMAIL_USE_SSL = os.getenv(
     "EMAIL_USE_SSL",
-    "False"
+    "False",
 ) == "True"
 
 
 EMAIL_HOST_USER = os.getenv(
-    "EMAIL_HOST_USER"
+    "EMAIL_HOST_USER",
 )
 
 
 EMAIL_HOST_PASSWORD = os.getenv(
-    "EMAIL_HOST_PASSWORD"
+    "EMAIL_HOST_PASSWORD",
 )
 
 

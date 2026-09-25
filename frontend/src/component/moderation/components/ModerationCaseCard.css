@@ -1,0 +1,1028 @@
+/* ============================================================
+   MODERATION CASE CARD
+   ============================================================ */
+
+.moderation-case-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.17),
+        0 5px 16px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    isolation: isolate;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+
+/* ============================================================
+   TOP GLASS HIGHLIGHT
+   ============================================================ */
+
+.moderation-case-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 3%,
+            rgba(255, 255, 255, 0.17) 50%,
+            transparent 97%
+        );
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+/* ============================================================
+   AMBIENT GLASS GLOW
+   ============================================================ */
+
+.moderation-case-card::after {
+    content: "";
+
+    position: absolute;
+
+    top: -130px;
+    right: -90px;
+
+    width: 260px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(99, 102, 241, 0.055);
+
+    filter: blur(70px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* ============================================================
+   CARD HOVER
+   ============================================================ */
+
+.moderation-case-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        rgba(255, 255, 255, 0.15);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.085),
+            rgba(255, 255, 255, 0.03)
+        );
+
+    box-shadow:
+        0 24px 52px rgba(0, 0, 0, 0.2),
+        0 8px 22px rgba(0, 0, 0, 0.09),
+        inset 0 1px 0 rgba(255, 255, 255, 0.075);
+}
+
+
+/* ============================================================
+   CARD HEADER
+   ============================================================ */
+
+.moderation-case-card-header {
+    position: relative;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    width: 100%;
+
+    padding: 22px 22px 18px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+
+    box-sizing: border-box;
+
+    z-index: 1;
+}
+
+
+/* ============================================================
+   CARD TITLE
+   ============================================================ */
+
+.moderation-case-card-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    min-width: 0;
+
+    gap: 16px;
+
+    flex: 1;
+}
+
+
+/* ============================================================
+   CASE LABEL
+   ============================================================ */
+
+.moderation-case-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color:
+        rgba(255, 255, 255, 0.43);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   CASE ID
+   ============================================================ */
+
+.moderation-case-card-title h3 {
+    margin: 0;
+
+    max-width: 100%;
+
+    color: #ffffff;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    letter-spacing: -0.015em;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   CASE DECISION
+   ============================================================ */
+
+.moderation-case-decision {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    min-height: 29px;
+
+    padding: 5px 10px;
+
+    gap: 7px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.045);
+
+    color:
+        rgba(255, 255, 255, 0.78);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    text-transform: capitalize;
+
+    white-space: nowrap;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+
+/* ============================================================
+   DECISION INDICATOR
+   ============================================================ */
+
+.moderation-case-decision-indicator {
+    width: 7px;
+    height: 7px;
+
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+
+    background:
+        currentColor;
+
+    box-shadow:
+        0 0 7px currentColor;
+}
+
+
+/* ============================================================
+   PENDING DECISION
+   ============================================================ */
+
+.moderation-case-decision-pending {
+    border-color:
+        rgba(234, 179, 8, 0.25);
+
+    background:
+        rgba(234, 179, 8, 0.075);
+
+    color:
+        rgba(253, 224, 71, 0.95);
+}
+
+
+/* ============================================================
+   RESOLVED DECISION
+   ============================================================ */
+
+.moderation-case-decision-resolved {
+    border-color:
+        rgba(34, 197, 94, 0.25);
+
+    background:
+        rgba(34, 197, 94, 0.075);
+
+    color:
+        rgba(134, 239, 172, 0.95);
+}
+
+
+/* ============================================================
+   REJECTED DECISION
+   ============================================================ */
+
+.moderation-case-decision-rejected {
+    border-color:
+        rgba(239, 68, 68, 0.25);
+
+    background:
+        rgba(239, 68, 68, 0.075);
+
+    color:
+        rgba(252, 165, 165, 0.96);
+}
+
+
+/* ============================================================
+   UNKNOWN DECISION
+   ============================================================ */
+
+.moderation-case-decision-unknown {
+    border-color:
+        rgba(156, 163, 175, 0.2);
+
+    background:
+        rgba(156, 163, 175, 0.06);
+
+    color:
+        rgba(209, 213, 219, 0.9);
+}
+
+
+/* ============================================================
+   CARD BODY
+   ============================================================ */
+
+.moderation-case-card-body {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 0;
+
+    width: 100%;
+
+    padding: 4px 22px;
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   CASE INFO
+   ============================================================ */
+
+.moderation-case-info {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    min-width: 0;
+
+    min-height: 68px;
+
+    padding: 13px 16px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   CASE INFO LABEL
+   ============================================================ */
+
+.moderation-case-info > span {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color:
+        rgba(255, 255, 255, 0.4);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    letter-spacing: 0.075em;
+
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   CASE INFO VALUE
+   ============================================================ */
+
+.moderation-case-info > strong {
+    display: block;
+
+    min-width: 0;
+
+    color:
+        rgba(255, 255, 255, 0.86);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   ALTERNATE INFO COLUMN
+   ============================================================ */
+
+.moderation-case-info:nth-child(odd) {
+    border-right:
+        1px solid rgba(255, 255, 255, 0.055);
+}
+
+
+/* ============================================================
+   DESCRIPTION
+   ============================================================ */
+
+.moderation-case-description {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+
+    padding: 15px 16px 16px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.055);
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   DESCRIPTION LABEL
+   ============================================================ */
+
+.moderation-case-description > span {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color:
+        rgba(255, 255, 255, 0.4);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    letter-spacing: 0.075em;
+
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   DESCRIPTION TEXT
+   ============================================================ */
+
+.moderation-case-description > p {
+    margin: 0;
+
+    max-width: 100%;
+
+    color:
+        rgba(255, 255, 255, 0.66);
+
+    font-size: 13px;
+    font-weight: 400;
+
+    line-height: 1.65;
+
+    word-break: break-word;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   REPORT STATUS
+   ============================================================ */
+
+.moderation-case-report-status {
+    display: flex;
+
+    align-items: center;
+
+    min-width: 0;
+}
+
+
+/* ============================================================
+   CARD FOOTER
+   ============================================================ */
+
+.moderation-case-card-footer {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    width: 100%;
+
+    padding: 17px 22px 19px;
+
+    background:
+        rgba(0, 0, 0, 0.055);
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   CASE DATES
+   ============================================================ */
+
+.moderation-case-dates {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    min-width: 0;
+
+    gap: 6px 18px;
+
+    color:
+        rgba(255, 255, 255, 0.36);
+
+    font-size: 10px;
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   DATE VALUE
+   ============================================================ */
+
+.moderation-case-dates strong {
+    color:
+        rgba(255, 255, 255, 0.62);
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   VIEW DETAILS BUTTON
+   ============================================================ */
+
+.moderation-case-view-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    min-height: 38px;
+
+    padding: 0 16px;
+
+    border:
+        1px solid rgba(129, 140, 248, 0.25);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background:
+        rgba(99, 102, 241, 0.09);
+
+    color:
+        rgba(199, 210, 254, 0.95);
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    white-space: nowrap;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.moderation-case-view-button:hover {
+    transform: translateY(-1px);
+
+    border-color:
+        rgba(129, 140, 248, 0.5);
+
+    background:
+        rgba(99, 102, 241, 0.15);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 20px rgba(99, 102, 241, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+.moderation-case-view-button:active {
+    transform: translateY(0);
+}
+
+
+.moderation-case-view-button:focus-visible {
+    outline:
+        2px solid rgba(129, 140, 248, 0.75);
+
+    outline-offset: 3px;
+}
+
+
+/* ============================================================
+   ASSIGNED CARD
+   ============================================================ */
+
+.moderation-case-card-assigned {
+    border-left:
+        2px solid rgba(99, 102, 241, 0.42);
+}
+
+
+/* ============================================================
+   UNASSIGNED CARD
+   ============================================================ */
+
+.moderation-case-card-unassigned {
+    border-left:
+        2px solid rgba(234, 179, 8, 0.38);
+}
+
+
+/* ============================================================
+   CLOSED CARD
+   ============================================================ */
+
+.moderation-case-card-closed {
+    opacity: 0.88;
+}
+
+
+/* ============================================================
+   CLOSED CARD HOVER
+   ============================================================ */
+
+.moderation-case-card-closed:hover {
+    opacity: 0.95;
+}
+
+
+/* ============================================================
+   LARGE DESKTOP
+   ============================================================ */
+
+@media (min-width: 1400px) {
+
+    .moderation-case-card-header {
+        padding: 24px 24px 20px;
+    }
+
+    .moderation-case-card-body {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .moderation-case-card-footer {
+        padding:
+            18px 24px 21px;
+    }
+
+    .moderation-case-card-title h3 {
+        font-size: 19px;
+    }
+
+    .moderation-case-info {
+        min-height: 72px;
+    }
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .moderation-case-card {
+        border-radius: 18px;
+    }
+
+    .moderation-case-card-header {
+        padding: 19px 19px 16px;
+
+        gap: 14px;
+    }
+
+    .moderation-case-card-title {
+        gap: 12px;
+    }
+
+    .moderation-case-card-title h3 {
+        font-size: 17px;
+    }
+
+    .moderation-case-card-body {
+        padding:
+            3px 19px;
+    }
+
+    .moderation-case-info {
+        min-height: 64px;
+
+        padding:
+            12px 13px;
+    }
+
+    .moderation-case-card-footer {
+        padding:
+            15px 19px 17px;
+    }
+
+    .moderation-case-dates {
+        gap:
+            5px 14px;
+    }
+}
+
+
+/* ============================================================
+   SMALL TABLET
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    .moderation-case-card-header {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 14px;
+    }
+
+    .moderation-case-card-title {
+        width: 100%;
+    }
+
+    .moderation-case-header
+    .moderation-priority-badge {
+        align-self: flex-start;
+    }
+
+    .moderation-case-card-header
+    > .moderation-priority-badge {
+        align-self: flex-start;
+    }
+
+    .moderation-case-card-body {
+        grid-template-columns: 1fr;
+    }
+
+    .moderation-case-info:nth-child(odd) {
+        border-right: none;
+    }
+
+    .moderation-case-info {
+        min-height: 61px;
+    }
+
+    .moderation-case-description {
+        grid-column: auto;
+    }
+
+    .moderation-case-card-footer {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 13px;
+    }
+
+    .moderation-case-dates {
+        width: 100%;
+    }
+
+    .moderation-case-view-button {
+        width: 100%;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .moderation-case-card {
+        border-radius: 15px;
+
+        box-shadow:
+            0 13px 32px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .moderation-case-card:hover {
+        transform: translateY(-1px);
+    }
+
+    .moderation-case-card-header {
+        padding:
+            16px 15px 14px;
+
+        gap: 12px;
+    }
+
+    .moderation-case-card-title {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .moderation-case-label {
+        margin-bottom: 5px;
+
+        font-size: 9px;
+    }
+
+    .moderation-case-card-title h3 {
+        font-size: 16px;
+    }
+
+    .moderation-case-decision {
+        min-height: 27px;
+
+        padding:
+            5px 9px;
+
+        gap: 6px;
+
+        font-size: 10px;
+    }
+
+    .moderation-case-decision-indicator {
+        width: 6px;
+        height: 6px;
+    }
+
+    .moderation-case-card-body {
+        padding:
+            2px 15px;
+    }
+
+    .moderation-case-info {
+        min-height: 59px;
+
+        padding:
+            11px 9px;
+    }
+
+    .moderation-case-info > span,
+    .moderation-case-description > span {
+        font-size: 9px;
+    }
+
+    .moderation-case-info > strong {
+        font-size: 12px;
+    }
+
+    .moderation-case-description {
+        padding:
+            13px 9px 14px;
+    }
+
+    .moderation-case-description > p {
+        font-size: 12px;
+
+        line-height: 1.55;
+
+        -webkit-line-clamp: 4;
+    }
+
+    .moderation-case-card-footer {
+        padding:
+            13px 15px 15px;
+    }
+
+    .moderation-case-dates {
+        gap:
+            5px 11px;
+
+        font-size: 9px;
+    }
+
+    .moderation-case-view-button {
+        min-height: 42px;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+    }
+
+    .moderation-case-card-assigned {
+        border-left-width: 2px;
+    }
+
+    .moderation-case-card-unassigned {
+        border-left-width: 2px;
+    }
+}
+
+
+/* ============================================================
+   EXTRA SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+    .moderation-case-card-header {
+        padding:
+            14px 13px 13px;
+    }
+
+    .moderation-case-card-body {
+        padding:
+            2px 13px;
+    }
+
+    .moderation-case-card-footer {
+        padding:
+            12px 13px 14px;
+    }
+
+    .moderation-case-card-title h3 {
+        font-size: 15px;
+    }
+
+    .moderation-case-info > strong {
+        font-size: 11.5px;
+    }
+
+    .moderation-case-dates {
+        font-size: 8.5px;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-case-card,
+    .moderation-case-view-button {
+        transition: none;
+    }
+
+    .moderation-case-card:hover {
+        transform: none;
+    }
+
+    .moderation-case-view-button:hover {
+        transform: none;
+    }
+}

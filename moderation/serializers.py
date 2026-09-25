@@ -11,8 +11,8 @@ from reports.constants import (
     REPORT_ACTION_WARNING,
 )
 
-from .constants import (
-    MODERATION_DECISION_CHOICES,
+from reports.serializers import (
+    ReportSerializer,
 )
 
 from .models import (
@@ -27,7 +27,9 @@ from .models import (
 # ============================================================
 
 
-class ModeratorUserSerializer(serializers.Serializer):
+class ModeratorUserSerializer(
+    serializers.Serializer,
+):
 
     id = serializers.IntegerField(
         read_only=True,
@@ -53,6 +55,7 @@ class ModerationActionLogSerializer(
     )
 
     class Meta:
+
         model = ModerationActionLog
 
         fields = [
@@ -82,6 +85,10 @@ class UserModerationCaseSerializer(
     serializers.ModelSerializer,
 ):
 
+    report = ReportSerializer(
+        read_only=True,
+    )
+
     assigned_to = ModeratorUserSerializer(
         read_only=True,
         allow_null=True,
@@ -93,12 +100,14 @@ class UserModerationCaseSerializer(
     )
 
     class Meta:
+
         model = ModerationCase
 
         fields = [
             "id",
             "report",
             "assigned_to",
+            "priority",
             "decision",
             "moderator_note",
             "started_at",
@@ -112,54 +121,15 @@ class UserModerationCaseSerializer(
             "id",
             "report",
             "assigned_to",
+            "priority",
+            "decision",
+            "moderator_note",
             "started_at",
             "resolved_at",
             "created_at",
             "updated_at",
             "action_logs",
         ]
-
-    def validate_decision(self, value):
-
-        if value is None:
-            return value
-
-        if not isinstance(value, str):
-            raise serializers.ValidationError(
-                "Invalid decision value."
-            )
-
-        value = value.strip()
-
-        if not value:
-            raise serializers.ValidationError(
-                "Decision cannot be empty."
-            )
-
-        valid_decisions = {
-            choice[0]
-            for choice in MODERATION_DECISION_CHOICES
-        }
-
-        if value not in valid_decisions:
-            raise serializers.ValidationError(
-                "Invalid moderation decision."
-            )
-
-        return value
-
-    def validate_moderator_note(self, value):
-
-        if value is None:
-            return ""
-
-        if len(value) > 10000:
-            raise serializers.ValidationError(
-                "Moderator note cannot exceed "
-                "10000 characters."
-            )
-
-        return value
 
 
 # ============================================================
@@ -176,6 +146,7 @@ class UserModerationSerializer(
     )
 
     class Meta:
+
         model = UserModeration
 
         fields = [
@@ -192,123 +163,6 @@ class UserModerationSerializer(
         ]
 
         read_only_fields = fields
-
-    def validate(self, attrs):
-
-        now = timezone.now()
-
-        is_restricted = attrs.get(
-            "is_restricted",
-            getattr(
-                self.instance,
-                "is_restricted",
-                False,
-            ),
-        )
-
-        restriction_expires_at = attrs.get(
-            "restriction_expires_at",
-            getattr(
-                self.instance,
-                "restriction_expires_at",
-                None,
-            ),
-        )
-
-        is_suspended = attrs.get(
-            "is_suspended",
-            getattr(
-                self.instance,
-                "is_suspended",
-                False,
-            ),
-        )
-
-        suspension_expires_at = attrs.get(
-            "suspension_expires_at",
-            getattr(
-                self.instance,
-                "suspension_expires_at",
-                None,
-            ),
-        )
-
-        is_banned = attrs.get(
-            "is_banned",
-            getattr(
-                self.instance,
-                "is_banned",
-                False,
-            ),
-        )
-
-        ban_reason = attrs.get(
-            "ban_reason",
-            getattr(
-                self.instance,
-                "ban_reason",
-                "",
-            ),
-        )
-
-        # ----------------------------------------------------
-        # Restriction Validation
-        # ----------------------------------------------------
-
-        if (
-            is_restricted
-            and restriction_expires_at is not None
-            and restriction_expires_at <= now
-        ):
-            raise serializers.ValidationError({
-                "restriction_expires_at": (
-                    "Restriction expiry must be "
-                    "in the future."
-                )
-            })
-
-        # ----------------------------------------------------
-        # Suspension Validation
-        # ----------------------------------------------------
-
-        if (
-            is_suspended
-            and suspension_expires_at is not None
-            and suspension_expires_at <= now
-        ):
-            raise serializers.ValidationError({
-                "suspension_expires_at": (
-                    "Suspension expiry must be "
-                    "in the future."
-                )
-            })
-
-        # ----------------------------------------------------
-        # Ban Validation
-        # ----------------------------------------------------
-
-        if is_banned:
-
-            if (
-                not ban_reason
-                or not ban_reason.strip()
-            ):
-                raise serializers.ValidationError({
-                    "ban_reason": (
-                        "Ban reason is required "
-                        "when the user is banned."
-                    )
-                })
-
-            if len(ban_reason) > 10000:
-                raise serializers.ValidationError({
-                    "ban_reason": (
-                        "Ban reason cannot exceed "
-                        "10000 characters."
-                    )
-                })
-
-        return attrs
 
 
 # ============================================================
@@ -359,15 +213,32 @@ class ModerationResolveSerializer(
         max_length=10000,
     )
 
-    def validate_action_reason(self, value):
+    # ========================================================
+    # Field Validation
+    # ========================================================
+
+    def validate_action_reason(
+        self,
+        value,
+    ):
 
         return value.strip()
 
-    def validate_note(self, value):
+    def validate_note(
+        self,
+        value,
+    ):
 
         return value.strip()
 
-    def validate(self, attrs):
+    # ========================================================
+    # Object Validation
+    # ========================================================
+
+    def validate(
+        self,
+        attrs,
+    ):
 
         now = timezone.now()
 
@@ -389,22 +260,23 @@ class ModerationResolveSerializer(
             False,
         )
 
-        # ----------------------------------------------------
+        # ====================================================
         # Restriction Expiry
-        # ----------------------------------------------------
+        # ====================================================
 
-        if restriction_expires_at is not None:
+        if action == REPORT_ACTION_ACCOUNT_RESTRICTED:
 
-            if action != REPORT_ACTION_ACCOUNT_RESTRICTED:
+            if restriction_expires_at is None:
+
                 raise serializers.ValidationError({
                     "restriction_expires_at": (
-                        "Restriction expiry can only "
-                        "be provided for an account "
-                        "restriction action."
+                        "Restriction expiry is required "
+                        "for an account restriction."
                     )
                 })
 
             if restriction_expires_at <= now:
+
                 raise serializers.ValidationError({
                     "restriction_expires_at": (
                         "Restriction expiry must be "
@@ -412,22 +284,33 @@ class ModerationResolveSerializer(
                     )
                 })
 
-        # ----------------------------------------------------
+        elif restriction_expires_at is not None:
+
+            raise serializers.ValidationError({
+                "restriction_expires_at": (
+                    "Restriction expiry can only be "
+                    "provided for an account "
+                    "restriction action."
+                )
+            })
+
+        # ====================================================
         # Suspension Expiry
-        # ----------------------------------------------------
+        # ====================================================
 
-        if suspension_expires_at is not None:
+        if action == REPORT_ACTION_ACCOUNT_SUSPENDED:
 
-            if action != REPORT_ACTION_ACCOUNT_SUSPENDED:
+            if suspension_expires_at is None:
+
                 raise serializers.ValidationError({
                     "suspension_expires_at": (
-                        "Suspension expiry can only "
-                        "be provided for an account "
-                        "suspension action."
+                        "Suspension expiry is required "
+                        "for an account suspension."
                     )
                 })
 
             if suspension_expires_at <= now:
+
                 raise serializers.ValidationError({
                     "suspension_expires_at": (
                         "Suspension expiry must be "
@@ -435,32 +318,57 @@ class ModerationResolveSerializer(
                     )
                 })
 
-        # ----------------------------------------------------
+        elif suspension_expires_at is not None:
+
+            raise serializers.ValidationError({
+                "suspension_expires_at": (
+                    "Suspension expiry can only be "
+                    "provided for an account "
+                    "suspension action."
+                )
+            })
+
+        # ====================================================
         # Permanent Action
-        # ----------------------------------------------------
+        #
+        # Permanent is supported only for account ban.
+        # ====================================================
 
         if is_permanent:
 
-            if action not in {
-                REPORT_ACTION_ACCOUNT_BANNED,
-                REPORT_ACTION_ACCOUNT_SUSPENDED,
-                REPORT_ACTION_ACCOUNT_RESTRICTED,
-            }:
+            if action != REPORT_ACTION_ACCOUNT_BANNED:
+
                 raise serializers.ValidationError({
                     "is_permanent": (
-                        "Permanent action is only valid "
-                        "for account restriction, "
-                        "suspension, or ban."
+                        "Permanent action is only "
+                        "valid for an account ban."
                     )
                 })
 
-        # ----------------------------------------------------
-        # Permanent + Expiry Conflict
-        # ----------------------------------------------------
+        # ====================================================
+        # Permanent Ban
+        #
+        # Every account ban must be permanent.
+        # ====================================================
+
+        if action == REPORT_ACTION_ACCOUNT_BANNED:
+
+            if not is_permanent:
+
+                raise serializers.ValidationError({
+                    "is_permanent": (
+                        "Account ban must be permanent."
+                    )
+                })
+
+        # ====================================================
+        # Permanent + Expiry Protection
+        # ====================================================
 
         if is_permanent:
 
             if restriction_expires_at is not None:
+
                 raise serializers.ValidationError({
                     "restriction_expires_at": (
                         "A permanent action cannot "
@@ -469,6 +377,7 @@ class ModerationResolveSerializer(
                 })
 
             if suspension_expires_at is not None:
+
                 raise serializers.ValidationError({
                     "suspension_expires_at": (
                         "A permanent action cannot "
@@ -476,39 +385,12 @@ class ModerationResolveSerializer(
                     )
                 })
 
-        # ----------------------------------------------------
-        # Restriction Action
-        # ----------------------------------------------------
-
-        if action == REPORT_ACTION_ACCOUNT_RESTRICTED:
-
-            if (
-                restriction_expires_at is None
-                and not is_permanent
-            ):
-                raise serializers.ValidationError({
-                    "restriction_expires_at": (
-                        "Restriction expiry is required "
-                        "unless the restriction is permanent."
-                    )
-                })
-
-        # ----------------------------------------------------
-        # Suspension Action
-        # ----------------------------------------------------
-
-        if action == REPORT_ACTION_ACCOUNT_SUSPENDED:
-
-            if (
-                suspension_expires_at is None
-                and not is_permanent
-            ):
-                raise serializers.ValidationError({
-                    "suspension_expires_at": (
-                        "Suspension expiry is required "
-                        "unless the suspension is permanent."
-                    )
-                })
+        # ====================================================
+        # Reject / Resolve Consistency
+        #
+        # This serializer is used only by the resolve
+        # endpoint, so a valid action is expected here.
+        # ====================================================
 
         return attrs
 
@@ -528,6 +410,9 @@ class ModerationRejectSerializer(
         max_length=10000,
     )
 
-    def validate_note(self, value):
+    def validate_note(
+        self,
+        value,
+    ):
 
         return value.strip()

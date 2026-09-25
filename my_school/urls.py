@@ -1,15 +1,23 @@
-
 """
 URL configuration for my_school project.
 """
 
-from django.contrib import admin
-from django.urls import path, include
-
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import (
+    include,
+    path,
+)
 
-from core.views import CustomTokenObtainPairView
+from rest_framework_simplejwt.views import (
+    TokenVerifyView,
+)
+
+from core.views import (
+    CustomTokenObtainPairView,
+    CustomTokenRefreshView,
+)
 
 
 urlpatterns = [
@@ -43,12 +51,23 @@ urlpatterns = [
     ),
 
     # ==========================================================
-    # JWT REFRESH / VERIFY
+    # CUSTOM JWT REFRESH
     # ==========================================================
 
     path(
-        "auth/jwt/",
-        include("djoser.urls.jwt"),
+        "auth/jwt/refresh/",
+        CustomTokenRefreshView.as_view(),
+        name="jwt-refresh",
+    ),
+
+    # ==========================================================
+    # JWT VERIFY
+    # ==========================================================
+
+    path(
+        "auth/jwt/verify/",
+        TokenVerifyView.as_view(),
+        name="jwt-verify",
     ),
 
     # ==========================================================
@@ -105,6 +124,10 @@ urlpatterns = [
         include("likes.urls"),
     ),
 
+    # ==========================================================
+    # MODERATION
+    # ==========================================================
+
     path(
         "moderation/",
         include("moderation.urls"),
@@ -147,4 +170,3 @@ urlpatterns += static(
     settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT,
 )
-

@@ -1,0 +1,863 @@
+/* ============================================================
+   MODERATION ACTION MODAL
+   ============================================================ */
+
+.moderation-action-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background: rgba(5, 10, 20, 0.72);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    animation: moderationActionModalOverlayIn 0.2s ease-out;
+}
+
+
+/* ============================================================
+   MODAL CONTAINER
+   ============================================================ */
+
+.moderation-action-modal {
+    position: relative;
+
+    width: min(100%, 620px);
+    max-height: min(90vh, 820px);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 28px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30, 41, 59, 0.94),
+            rgba(15, 23, 42, 0.96)
+        );
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.45),
+        0 8px 30px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    color: #f8fafc;
+
+    animation: moderationActionModalIn 0.25s ease-out;
+}
+
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+
+.moderation-action-modal::-webkit-scrollbar {
+    width: 7px;
+}
+
+.moderation-action-modal::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.moderation-action-modal::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.3);
+}
+
+.moderation-action-modal::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.5);
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.moderation-action-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 22px;
+}
+
+
+.moderation-action-modal__title {
+    margin: 0;
+
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.3;
+
+    letter-spacing: -0.02em;
+
+    color: #f8fafc;
+}
+
+
+.moderation-action-modal__subtitle {
+    margin: 7px 0 0;
+
+    font-size: 0.9rem;
+    line-height: 1.5;
+
+    color: #94a3b8;
+}
+
+
+.moderation-action-modal__close {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: #cbd5e1;
+
+    font-size: 1.6rem;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.moderation-action-modal__close:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.18);
+
+    background: rgba(255, 255, 255, 0.1);
+
+    color: #ffffff;
+
+    transform: rotate(4deg);
+}
+
+
+.moderation-action-modal__close:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   CASE INFORMATION
+   ============================================================ */
+
+.moderation-action-modal__case {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-bottom: 24px;
+    padding: 13px 15px;
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.035);
+}
+
+
+.moderation-action-modal__case-label {
+    font-size: 0.76rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    color: #64748b;
+}
+
+
+.moderation-action-modal__case-id {
+    max-width: 70%;
+
+    overflow: hidden;
+
+    font-family: monospace;
+    font-size: 0.78rem;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #cbd5e1;
+}
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.moderation-action-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.moderation-action-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+.moderation-action-modal__label {
+    font-size: 0.84rem;
+    font-weight: 600;
+
+    color: #cbd5e1;
+}
+
+
+/* ============================================================
+   SELECT
+   ============================================================ */
+
+.moderation-action-modal__select {
+    width: 100%;
+
+    min-height: 48px;
+
+    padding: 0 14px;
+
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 13px;
+
+    outline: none;
+
+    background-color: rgba(15, 23, 42, 0.9);
+
+    color: #f8fafc;
+
+    font: inherit;
+    font-size: 0.9rem;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.moderation-action-modal__select:hover:not(:disabled) {
+    border-color: rgba(148, 163, 184, 0.3);
+}
+
+
+.moderation-action-modal__select:focus {
+    border-color: rgba(96, 165, 250, 0.65);
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+
+.moderation-action-modal__select:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+
+.moderation-action-modal__select option {
+    background: #0f172a;
+    color: #f8fafc;
+}
+
+
+/* ============================================================
+   DESCRIPTION
+   ============================================================ */
+
+.moderation-action-modal__description {
+    margin: 0;
+
+    font-size: 0.8rem;
+    line-height: 1.5;
+
+    color: #64748b;
+}
+
+
+/* ============================================================
+   INPUT
+   ============================================================ */
+
+.moderation-action-modal__input {
+    width: 100%;
+    min-height: 48px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 13px;
+
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: #f8fafc;
+
+    font: inherit;
+    font-size: 0.9rem;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.moderation-action-modal__input:hover:not(:disabled) {
+    border-color: rgba(148, 163, 184, 0.3);
+
+    background: rgba(255, 255, 255, 0.06);
+}
+
+
+.moderation-action-modal__input:focus {
+    border-color: rgba(96, 165, 250, 0.65);
+
+    background: rgba(255, 255, 255, 0.06);
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+
+.moderation-action-modal__input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   DATETIME INPUT
+   ============================================================ */
+
+.moderation-action-modal__input::-webkit-calendar-picker-indicator {
+    opacity: 0.7;
+
+    cursor: pointer;
+
+    filter: invert(1);
+}
+
+
+/* ============================================================
+   TEXTAREA
+   ============================================================ */
+
+.moderation-action-modal__textarea {
+    width: 100%;
+    min-height: 110px;
+
+    box-sizing: border-box;
+
+    padding: 13px 14px;
+
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 13px;
+
+    outline: none;
+
+    resize: vertical;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: #f8fafc;
+
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.55;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.moderation-action-modal__textarea::placeholder {
+    color: #64748b;
+}
+
+
+.moderation-action-modal__textarea:hover:not(:disabled) {
+    border-color: rgba(148, 163, 184, 0.3);
+
+    background: rgba(255, 255, 255, 0.06);
+}
+
+
+.moderation-action-modal__textarea:focus {
+    border-color: rgba(96, 165, 250, 0.65);
+
+    background: rgba(255, 255, 255, 0.06);
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+
+.moderation-action-modal__textarea:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   CHECKBOX
+   ============================================================ */
+
+.moderation-action-modal__checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+
+    padding: 13px 14px;
+
+    border: 1px solid rgba(245, 158, 11, 0.18);
+    border-radius: 13px;
+
+    background: rgba(245, 158, 11, 0.06);
+
+    color: #cbd5e1;
+
+    font-size: 0.84rem;
+    line-height: 1.5;
+
+    cursor: pointer;
+}
+
+
+.moderation-action-modal__checkbox input {
+    flex: 0 0 auto;
+
+    width: 17px;
+    height: 17px;
+
+    margin: 1px 0 0;
+
+    accent-color: #f59e0b;
+
+    cursor: pointer;
+}
+
+
+.moderation-action-modal__checkbox input:disabled {
+    cursor: not-allowed;
+}
+
+
+.moderation-action-modal__checkbox span {
+    user-select: none;
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.moderation-action-modal__error {
+    padding: 12px 14px;
+
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 13px;
+
+    background: rgba(239, 68, 68, 0.08);
+
+    color: #fca5a5;
+
+    font-size: 0.84rem;
+    line-height: 1.5;
+
+    animation: moderationActionModalErrorIn 0.2s ease-out;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.moderation-action-modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+
+    padding-top: 4px;
+}
+
+
+.moderation-action-modal__button {
+    min-height: 44px;
+
+    padding: 0 18px;
+
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    font-family: inherit;
+    font-size: 0.87rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.moderation-action-modal__button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* ============================================================
+   SECONDARY BUTTON
+   ============================================================ */
+
+.moderation-action-modal__button--secondary {
+    border-color: rgba(148, 163, 184, 0.18);
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: #cbd5e1;
+}
+
+
+.moderation-action-modal__button--secondary:hover:not(:disabled) {
+    border-color: rgba(148, 163, 184, 0.3);
+
+    background: rgba(255, 255, 255, 0.08);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   PRIMARY BUTTON
+   ============================================================ */
+
+.moderation-action-modal__button--primary {
+    border-color: rgba(96, 165, 250, 0.3);
+
+    background: rgba(59, 130, 246, 0.18);
+
+    color: #bfdbfe;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.12);
+}
+
+
+.moderation-action-modal__button--primary:hover:not(:disabled) {
+    border-color: rgba(96, 165, 250, 0.5);
+
+    background: rgba(59, 130, 246, 0.28);
+
+    color: #dbeafe;
+
+    box-shadow:
+        0 10px 26px rgba(37, 99, 235, 0.2);
+
+    transform: translateY(-1px);
+}
+
+
+.moderation-action-modal__button--primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes moderationActionModalOverlayIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+@keyframes moderationActionModalIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+@keyframes moderationActionModalErrorIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .moderation-action-modal-overlay {
+        align-items: center;
+
+        padding: 18px;
+    }
+
+
+    .moderation-action-modal {
+        width: 100%;
+
+        max-height: 92vh;
+
+        padding: 23px;
+
+        border-radius: 21px;
+    }
+
+
+    .moderation-action-modal__title {
+        font-size: 1.3rem;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 560px) {
+
+    .moderation-action-modal-overlay {
+        align-items: flex-end;
+
+        padding: 0;
+    }
+
+
+    .moderation-action-modal {
+        width: 100%;
+
+        max-height: 94vh;
+
+        padding: 20px;
+
+        border-radius: 22px 22px 0 0;
+
+        animation-name: moderationActionModalMobileIn;
+    }
+
+
+    .moderation-action-modal__header {
+        gap: 12px;
+
+        margin-bottom: 18px;
+    }
+
+
+    .moderation-action-modal__title {
+        font-size: 1.18rem;
+    }
+
+
+    .moderation-action-modal__subtitle {
+        font-size: 0.82rem;
+    }
+
+
+    .moderation-action-modal__close {
+        width: 35px;
+        height: 35px;
+
+        border-radius: 10px;
+    }
+
+
+    .moderation-action-modal__case {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .moderation-action-modal__case-id {
+        max-width: 100%;
+    }
+
+
+    .moderation-action-modal__form {
+        gap: 17px;
+    }
+
+
+    .moderation-action-modal__footer {
+        flex-direction: column-reverse;
+
+        gap: 9px;
+
+        padding-top: 3px;
+    }
+
+
+    .moderation-action-modal__button {
+        width: 100%;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+    .moderation-action-modal {
+        padding: 17px;
+    }
+
+
+    .moderation-action-modal__title {
+        font-size: 1.08rem;
+    }
+
+
+    .moderation-action-modal__subtitle {
+        font-size: 0.78rem;
+    }
+
+
+    .moderation-action-modal__label {
+        font-size: 0.8rem;
+    }
+
+
+    .moderation-action-modal__select,
+    .moderation-action-modal__input {
+        min-height: 45px;
+
+        font-size: 0.84rem;
+    }
+
+
+    .moderation-action-modal__textarea {
+        font-size: 0.84rem;
+    }
+
+
+    .moderation-action-modal__button {
+        min-height: 42px;
+
+        font-size: 0.83rem;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE ANIMATION
+   ============================================================ */
+
+@keyframes moderationActionModalMobileIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-action-modal-overlay,
+    .moderation-action-modal,
+    .moderation-action-modal__error {
+        animation: none;
+    }
+
+
+    .moderation-action-modal__close,
+    .moderation-action-modal__button,
+    .moderation-action-modal__input,
+    .moderation-action-modal__textarea,
+    .moderation-action-modal__select {
+        transition: none;
+    }
+
+}

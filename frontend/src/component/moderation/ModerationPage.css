@@ -1,0 +1,1250 @@
+/* ============================================================
+   MODERATION PAGE
+   Premium Dark Glassmorphism Theme
+   ============================================================ */
+
+.moderation-page {
+    /* ========================================================
+       COLOR SYSTEM
+       ======================================================== */
+
+    --moderation-bg: #080c18;
+
+    --moderation-surface: rgba(18, 25, 43, 0.72);
+    --moderation-surface-strong: rgba(20, 28, 48, 0.90);
+    --moderation-surface-soft: rgba(255, 255, 255, 0.045);
+
+    --moderation-border: rgba(255, 255, 255, 0.085);
+    --moderation-border-strong: rgba(255, 255, 255, 0.14);
+
+    --moderation-text: #f8fafc;
+    --moderation-text-soft: #b5c0d3;
+    --moderation-text-muted: #77849b;
+
+    --moderation-primary: #6366f1;
+    --moderation-primary-hover: #818cf8;
+    --moderation-primary-soft: rgba(99, 102, 241, 0.14);
+
+    --moderation-success: #34d399;
+    --moderation-success-soft: rgba(52, 211, 153, 0.12);
+
+    --moderation-warning: #fbbf24;
+    --moderation-warning-soft: rgba(251, 191, 36, 0.12);
+
+    --moderation-danger: #f87171;
+    --moderation-danger-soft: rgba(248, 113, 113, 0.12);
+
+    --moderation-info: #60a5fa;
+    --moderation-info-soft: rgba(96, 165, 250, 0.12);
+
+    --moderation-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.30);
+
+    --moderation-shadow-soft:
+        0 12px 35px rgba(0, 0, 0, 0.20);
+
+    --moderation-glow:
+        0 0 40px rgba(99, 102, 241, 0.10);
+
+
+    /* ========================================================
+       PAGE
+       ======================================================== */
+
+    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 32px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 8% 5%,
+            rgba(99, 102, 241, 0.18),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 92% 8%,
+            rgba(14, 165, 233, 0.13),
+            transparent 27%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(139, 92, 246, 0.09),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            #070b16 0%,
+            #0c1221 45%,
+            #10182b 100%
+        );
+
+    color: var(--moderation-text);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    isolation: isolate;
+}
+
+
+/* ============================================================
+   BACKGROUND AMBIENT LIGHT
+   ============================================================ */
+
+.moderation-page::before {
+    content: "";
+
+    position: absolute;
+
+    top: -220px;
+    left: -180px;
+
+    width: 520px;
+    height: 520px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(99, 102, 241, 0.12),
+            transparent 68%
+        );
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+.moderation-page::after {
+    content: "";
+
+    position: absolute;
+
+    right: -220px;
+    bottom: -240px;
+
+    width: 560px;
+    height: 560px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(14, 165, 233, 0.09),
+            transparent 68%
+        );
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* ============================================================
+   CONTENT WIDTH
+   ============================================================ */
+
+.moderation-page > * {
+    width: 100%;
+    max-width: 1500px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   CONTENT HEADER
+   ============================================================ */
+
+.moderation-content-header {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 28px;
+    margin-bottom: 16px;
+
+    padding: 20px 22px;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--moderation-border);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25, 34, 57, 0.84),
+            rgba(16, 23, 40, 0.68)
+        );
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+        var(--moderation-shadow-soft),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045);
+
+    overflow: hidden;
+}
+
+
+.moderation-content-header::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(129, 140, 248, 0.55),
+            transparent
+        );
+
+    opacity: 0.8;
+}
+
+
+.moderation-content-header > div {
+    min-width: 0;
+}
+
+
+.moderation-content-header h2 {
+    margin: 0;
+
+    color: var(--moderation-text);
+
+    font-size: 1.15rem;
+    font-weight: 750;
+
+    line-height: 1.35;
+
+    letter-spacing: -0.02em;
+}
+
+
+.moderation-content-header span {
+    display: inline-flex;
+    align-items: center;
+
+    margin-top: 5px;
+
+    color: var(--moderation-text-muted);
+
+    font-size: 0.82rem;
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+/* ============================================================
+   CASE TABS
+   ============================================================ */
+
+.moderation-case-tabs {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 22px;
+
+    padding: 6px;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--moderation-border);
+
+    border-radius: 15px;
+
+    background:
+        rgba(15, 22, 38, 0.76);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+        var(--moderation-shadow-soft),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+}
+
+
+.moderation-case-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* ============================================================
+   CASE TAB BUTTON
+   ============================================================ */
+
+.moderation-case-tabs button {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 40px;
+
+    padding: 0 17px;
+
+    border: 1px solid transparent;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--moderation-text-soft);
+
+    font: inherit;
+
+    font-size: 0.84rem;
+    font-weight: 650;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        color 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        transform 0.22s ease;
+}
+
+
+/* ============================================================
+   TAB HOVER
+   ============================================================ */
+
+.moderation-case-tabs button:hover:not(:disabled):not(.active) {
+    background:
+        rgba(255, 255, 255, 0.055);
+
+    color:
+        var(--moderation-text);
+
+    border-color:
+        rgba(255, 255, 255, 0.075);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* ============================================================
+   ACTIVE TAB
+   ============================================================ */
+
+.moderation-case-tabs button.active {
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #4f46e5
+        );
+
+    color:
+        #ffffff;
+
+    border-color:
+        rgba(129, 140, 248, 0.42);
+
+    box-shadow:
+        0 8px 24px rgba(79, 70, 229, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+
+/* ============================================================
+   ACTIVE TAB HOVER
+   ============================================================ */
+
+.moderation-case-tabs button.active:hover:not(:disabled) {
+    background:
+        linear-gradient(
+            135deg,
+            #818cf8,
+            #6366f1
+        );
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 10px 28px rgba(79, 70, 229, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+
+/* ============================================================
+   TAB ACTIVE PRESS
+   ============================================================ */
+
+.moderation-case-tabs button:active:not(:disabled) {
+    transform:
+        translateY(0);
+}
+
+
+/* ============================================================
+   TAB DISABLED
+   ============================================================ */
+
+.moderation-case-tabs button:disabled {
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.45;
+}
+
+
+/* ============================================================
+   TAB KEYBOARD ACCESSIBILITY
+   ============================================================ */
+
+.moderation-case-tabs button:focus-visible {
+    outline:
+        2px solid
+        rgba(129, 140, 248, 0.75);
+
+    outline-offset:
+        2px;
+}
+
+
+/* ============================================================
+   GLOBAL CHILD GLASS LAYER
+   ============================================================ */
+
+.moderation-page
+    > .moderation-header,
+.moderation-page
+    > .moderation-stats,
+.moderation-page
+    > .moderation-filters,
+.moderation-page
+    > .moderation-case-tabs,
+.moderation-page
+    > .moderation-case-list,
+.moderation-page
+    > .moderation-pagination {
+    position: relative;
+
+    z-index: 1;
+}
+
+
+/* ============================================================
+   STATES
+   ============================================================ */
+
+.moderation-state {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 280px;
+
+    box-sizing: border-box;
+
+    margin-top: 18px;
+
+    padding: 40px 24px;
+
+    border: 1px solid var(--moderation-border);
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(22, 31, 52, 0.84),
+            rgba(13, 20, 36, 0.70)
+        );
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+        var(--moderation-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+
+.moderation-state::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 10%;
+    right: 10%;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(129, 140, 248, 0.45),
+            transparent
+        );
+}
+
+
+.moderation-state h2 {
+    position: relative;
+
+    margin: 0;
+
+    color: var(--moderation-text);
+
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+
+.moderation-state p {
+    position: relative;
+
+    max-width: 520px;
+
+    margin: 8px 0 0;
+
+    color: var(--moderation-text-soft);
+
+    font-size: 0.9rem;
+    font-weight: 400;
+
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   LOADER
+   ============================================================ */
+
+.moderation-loader {
+    width: 42px;
+    height: 42px;
+
+    margin-bottom: 18px;
+
+    border:
+        3px solid
+        rgba(129, 140, 248, 0.12);
+
+    border-top-color:
+        var(--moderation-primary);
+
+    border-right-color:
+        rgba(129, 140, 248, 0.55);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 24px rgba(99, 102, 241, 0.16);
+
+    animation:
+        moderation-spin 0.8s linear infinite;
+}
+
+
+@keyframes moderation-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ============================================================
+   ERROR STATE
+   ============================================================ */
+
+.moderation-error {
+    border-color:
+        rgba(248, 113, 113, 0.20);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(60, 25, 34, 0.72),
+            rgba(35, 18, 27, 0.76)
+        );
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.28),
+        0 0 35px rgba(248, 113, 113, 0.05);
+}
+
+
+.moderation-error::before {
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(248, 113, 113, 0.55),
+            transparent
+        );
+}
+
+
+.moderation-error h2 {
+    color:
+        #fca5a5;
+}
+
+
+.moderation-error p {
+    color:
+        #c99199;
+}
+
+
+/* ============================================================
+   ERROR BUTTON
+   ============================================================ */
+
+.moderation-error button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 42px;
+
+    margin-top: 20px;
+
+    padding: 0 20px;
+
+    border:
+        1px solid
+        rgba(248, 113, 113, 0.20);
+
+    border-radius: 12px;
+
+    background:
+        rgba(248, 113, 113, 0.08);
+
+    color:
+        #fca5a5;
+
+    font: inherit;
+
+    font-size: 0.88rem;
+    font-weight: 650;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.moderation-error button:hover:not(:disabled) {
+    transform:
+        translateY(-1px);
+
+    background:
+        rgba(248, 113, 113, 0.14);
+
+    border-color:
+        rgba(248, 113, 113, 0.34);
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.24),
+        0 0 20px rgba(248, 113, 113, 0.07);
+}
+
+
+.moderation-error button:active:not(:disabled) {
+    transform:
+        translateY(0);
+}
+
+
+.moderation-error button:focus-visible {
+    outline:
+        none;
+
+    box-shadow:
+        0 0 0 3px
+            rgba(248, 113, 113, 0.12),
+        0 8px 20px
+            rgba(0, 0, 0, 0.20);
+}
+
+
+.moderation-error button:disabled {
+    opacity:
+        0.45;
+
+    cursor:
+        not-allowed;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.moderation-page
+    .moderation-state:not(.moderation-error) {
+    position:
+        relative;
+
+    overflow:
+        hidden;
+}
+
+
+.moderation-page
+    .moderation-state:not(.moderation-error)::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        220px;
+
+    height:
+        220px;
+
+    top:
+        -120px;
+
+    right:
+        -80px;
+
+    border-radius:
+        50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(99, 102, 241, 0.14),
+            transparent 68%
+        );
+
+    pointer-events:
+        none;
+}
+
+
+.moderation-page
+    .moderation-state:not(.moderation-error)::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        180px;
+
+    height:
+        180px;
+
+    bottom:
+        -110px;
+
+    left:
+        -70px;
+
+    border-radius:
+        50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(14, 165, 233, 0.10),
+            transparent 68%
+        );
+
+    pointer-events:
+        none;
+}
+
+
+/* ============================================================
+   CASE LIST SPACING
+   ============================================================ */
+
+.moderation-page
+    > .moderation-case-list {
+    margin-top:
+        18px;
+}
+
+
+/* ============================================================
+   PAGINATION SPACING
+   ============================================================ */
+
+.moderation-page
+    > .moderation-pagination {
+    margin-top:
+        22px;
+
+    margin-bottom:
+        12px;
+}
+
+
+/* ============================================================
+   SMOOTH INTERACTION
+   ============================================================ */
+
+.moderation-page button,
+.moderation-page input,
+.moderation-page select {
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .moderation-loader {
+        animation:
+            none;
+    }
+
+
+    .moderation-error button,
+    .moderation-case-tabs button {
+        transition:
+            none;
+    }
+
+
+    .moderation-case-tabs button:hover:not(:disabled),
+    .moderation-case-tabs button.active:hover:not(:disabled),
+    .moderation-error button:hover:not(:disabled) {
+        transform:
+            none;
+    }
+
+}
+
+
+/* ============================================================
+   LARGE SCREENS
+   ============================================================ */
+
+@media (min-width: 1440px) {
+
+    .moderation-page {
+        padding:
+            36px 44px;
+    }
+
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+    .moderation-page {
+        padding:
+            26px 22px;
+    }
+
+
+    .moderation-content-header {
+        margin-top:
+            22px;
+
+        padding:
+            18px 20px;
+    }
+
+
+    .moderation-case-tabs {
+        margin-top:
+            18px;
+    }
+
+
+    .moderation-case-tabs button {
+        min-height:
+            38px;
+
+        padding:
+            0 15px;
+
+        font-size:
+            0.82rem;
+    }
+
+
+    .moderation-state {
+        min-height:
+            250px;
+
+        padding:
+            34px 22px;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .moderation-page {
+        min-height:
+            100vh;
+
+        padding:
+            20px 15px;
+
+        background:
+            radial-gradient(
+                circle at 0% 0%,
+                rgba(99, 102, 241, 0.16),
+                transparent 38%
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                rgba(14, 165, 233, 0.08),
+                transparent 34%
+            ),
+            linear-gradient(
+                145deg,
+                #070b16,
+                #0d1424
+            );
+    }
+
+
+    .moderation-content-header {
+        margin-top:
+            18px;
+
+        margin-bottom:
+            12px;
+
+        padding:
+            16px;
+
+        border-radius:
+            16px;
+    }
+
+
+    .moderation-content-header h2 {
+        font-size:
+            1.02rem;
+    }
+
+
+    .moderation-content-header span {
+        font-size:
+            0.78rem;
+    }
+
+
+    .moderation-case-tabs {
+        margin-top:
+            16px;
+
+        padding:
+            5px;
+
+        gap:
+            6px;
+
+        border-radius:
+            13px;
+    }
+
+
+    .moderation-case-tabs button {
+        min-height:
+            38px;
+
+        padding:
+            0 14px;
+
+        border-radius:
+            9px;
+
+        font-size:
+            0.8rem;
+    }
+
+
+    .moderation-state {
+        min-height:
+            230px;
+
+        margin-top:
+            14px;
+
+        padding:
+            30px 18px;
+
+        border-radius:
+            18px;
+    }
+
+
+    .moderation-state h2 {
+        font-size:
+            1rem;
+    }
+
+
+    .moderation-state p {
+        font-size:
+            0.84rem;
+    }
+
+
+    .moderation-loader {
+        width:
+            36px;
+
+        height:
+            36px;
+
+        margin-bottom:
+            16px;
+
+        border-width:
+            2.5px;
+    }
+
+
+    .moderation-error button {
+        width:
+            100%;
+
+        max-width:
+            220px;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .moderation-page {
+        padding:
+            15px 10px;
+    }
+
+
+    .moderation-content-header {
+        padding:
+            14px;
+
+        border-radius:
+            14px;
+    }
+
+
+    .moderation-content-header h2 {
+        font-size:
+            0.96rem;
+    }
+
+
+    .moderation-content-header span {
+        margin-top:
+            3px;
+
+        font-size:
+            0.74rem;
+    }
+
+
+    .moderation-case-tabs {
+        margin-top:
+            14px;
+
+        padding:
+            4px;
+
+        border-radius:
+            12px;
+    }
+
+
+    .moderation-case-tabs button {
+        min-height:
+            36px;
+
+        padding:
+            0 12px;
+
+        font-size:
+            0.76rem;
+    }
+
+
+    .moderation-state {
+        min-height:
+            210px;
+
+        padding:
+            26px 15px;
+
+        border-radius:
+            16px;
+    }
+
+
+    .moderation-state h2 {
+        font-size:
+            0.95rem;
+    }
+
+
+    .moderation-state p {
+        font-size:
+            0.8rem;
+
+        line-height:
+            1.55;
+    }
+
+
+    .moderation-error button {
+        min-height:
+            40px;
+
+        padding:
+            0 16px;
+
+        font-size:
+            0.82rem;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+    .moderation-page {
+        padding:
+            12px 8px;
+    }
+
+
+    .moderation-content-header {
+        padding:
+            12px;
+    }
+
+
+    .moderation-case-tabs {
+        margin-top:
+            12px;
+    }
+
+
+    .moderation-case-tabs button {
+        min-height:
+            34px;
+
+        padding:
+            0 10px;
+
+        font-size:
+            0.72rem;
+    }
+
+
+    .moderation-state {
+        padding:
+            22px 12px;
+    }
+
+}

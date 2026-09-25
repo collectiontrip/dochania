@@ -1,4 +1,3 @@
-
 import uuid
 
 from django.conf import settings
@@ -10,7 +9,11 @@ from reports.constants import (
 )
 from reports.models import Report
 
-from .constants import MODERATION_DECISION_CHOICES
+from .constants import (
+    MODERATION_DECISION_CHOICES,
+    MODERATION_PRIORITY_CHOICES,
+    MODERATION_PRIORITY_MEDIUM,
+)
 
 
 class ModerationCase(models.Model):
@@ -33,6 +36,12 @@ class ModerationCase(models.Model):
         null=True,
         blank=True,
         related_name="assigned_moderation_cases",
+    )
+
+    priority = models.CharField(
+        max_length=20,
+        choices=MODERATION_PRIORITY_CHOICES,
+        default=MODERATION_PRIORITY_MEDIUM,
     )
 
     decision = models.CharField(
@@ -204,4 +213,3 @@ class UserModeration(models.Model):
 
     def __str__(self):
         return f"Moderation - {self.user}"
-

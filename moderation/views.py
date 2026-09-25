@@ -1,7 +1,10 @@
+from uuid import UUID
+
 from django.db.models import Q
 
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import (
     ListModelMixin,
     RetrieveModelMixin,
@@ -12,12 +15,22 @@ from rest_framework.viewsets import GenericViewSet
 
 from reports.constants import (
     REPORT_ACTION_NONE,
+    REPORT_REASON_CHOICES,
+    REPORT_STATUS_CHOICES,
+)
+
+from .constants import (
+    MODERATION_PRIORITY_CHOICES,
 )
 
 from .models import (
     ModerationActionLog,
     ModerationCase,
     UserModeration,
+)
+
+from .pagination import (
+    ModerationCasePagination,
 )
 
 from .permissions import (
@@ -47,7 +60,39 @@ from .services import (
 
 
 # ============================================================
-# Moderation Case ViewSet
+# VALID FILTER VALUES
+# ============================================================
+
+
+VALID_REPORT_STATUSES = frozenset(
+    value
+    for value, label in REPORT_STATUS_CHOICES
+)
+
+
+VALID_REPORT_REASONS = frozenset(
+    value
+    for value, label in REPORT_REASON_CHOICES
+)
+
+
+VALID_MODERATION_PRIORITIES = frozenset(
+    value
+    for value, label in MODERATION_PRIORITY_CHOICES
+)
+
+
+VALID_ASSIGNMENTS = frozenset(
+    {
+        "all",
+        "assigned",
+        "unassigned",
+    }
+)
+
+
+# ============================================================
+# MODERATION CASE VIEWSET
 # ============================================================
 
 
@@ -64,6 +109,8 @@ class ModerationCaseViewSet(
     ]
 
     serializer_class = UserModerationCaseSerializer
+
+    pagination_class = ModerationCasePagination
 
     lookup_field = "pk"
 
@@ -93,7 +140,7 @@ class ModerationCaseViewSet(
     )
 
     # ========================================================
-    # Queryset
+    # QUERYSET
     # ========================================================
 
     def get_queryset(self):
@@ -103,46 +150,236 @@ class ModerationCaseViewSet(
         user = self.request.user
 
         # ----------------------------------------------------
-        # Superuser
+        # Visibility
         # ----------------------------------------------------
 
         if user.is_superuser:
-            return queryset
+
+            visible_queryset = queryset
+
+        else:
+
+            visible_queryset = queryset.filter(
+                Q(
+                    assigned_to__isnull=True,
+                )
+                |
+                Q(
+                    assigned_to=user,
+                )
+            )
 
         # ----------------------------------------------------
-        # Moderator
+        # Filters only apply to list-style endpoints.
         #
-        # Can see:
-        # 1. Unassigned cases
-        # 2. Cases assigned to himself
+        # They must NOT affect:
+        #
+        # - retrieve
+        # - assign
+        # - start
+        # - resolve
+        # - reject
         # ----------------------------------------------------
 
-        return queryset.filter(
-            Q(
-                assigned_to__isnull=True,
-            )
-            |
-            Q(
-                assigned_to=user,
-            )
+        if self.action not in {
+            "list",
+            "assigned",
+            "unassigned",
+        }:
+
+            return visible_queryset
+
+        return self._apply_case_filters(
+            visible_queryset,
         )
 
     # ========================================================
-    # Serializer
+    # CASE FILTERS
+    # ========================================================
+
+    def _apply_case_filters(
+        self,
+        queryset,
+    ):
+
+        params = self.request.query_params
+
+        # ----------------------------------------------------
+        # Search
+        #
+        # Supports:
+        #
+        # - Case ID
+        # - Report ID
+        # - Reporter username
+        # - Reporter email
+        # ----------------------------------------------------
+
+        search = params.get(
+            "search",
+        )
+
+        if search:
+
+            search = search.strip()
+
+            if search:
+
+                queryset = queryset.filter(
+                    Q(
+                        id__icontains=search,
+                    )
+                    |
+                    Q(
+                        report__id__icontains=search,
+                    )
+                    |
+                    Q(
+                        report__reporter__username__icontains=search,
+                    )
+                    |
+                    Q(
+                        report__reporter__email__icontains=search,
+                    )
+                )
+
+        # ----------------------------------------------------
+        # Status
+        # ----------------------------------------------------
+
+        status_value = params.get(
+            "status",
+        )
+
+        if (
+            status_value
+            and status_value != "all"
+        ):
+
+            if status_value not in VALID_REPORT_STATUSES:
+
+                raise ValidationError(
+                    {
+                        "status": (
+                            "Invalid moderation "
+                            "status filter."
+                        )
+                    }
+                )
+
+            queryset = queryset.filter(
+                report__status=status_value,
+            )
+
+        # ----------------------------------------------------
+        # Assignment
+        # ----------------------------------------------------
+
+        assignment = params.get(
+            "assignment",
+        )
+
+        if (
+            assignment
+            and assignment not in VALID_ASSIGNMENTS
+        ):
+
+            raise ValidationError(
+                {
+                    "assignment": (
+                        "Invalid assignment filter."
+                    )
+                }
+            )
+
+        if assignment == "assigned":
+
+            queryset = queryset.filter(
+                assigned_to__isnull=False,
+            )
+
+        elif assignment == "unassigned":
+
+            queryset = queryset.filter(
+                assigned_to__isnull=True,
+            )
+
+        # ----------------------------------------------------
+        # Report Reason
+        # ----------------------------------------------------
+
+        reason = params.get(
+            "reason",
+        )
+
+        if (
+            reason
+            and reason != "all"
+        ):
+
+            if reason not in VALID_REPORT_REASONS:
+
+                raise ValidationError(
+                    {
+                        "reason": (
+                            "Invalid report "
+                            "reason filter."
+                        )
+                    }
+                )
+
+            queryset = queryset.filter(
+                report__reason=reason,
+            )
+
+        # ----------------------------------------------------
+        # Priority
+        # ----------------------------------------------------
+
+        priority = params.get(
+            "priority",
+        )
+
+        if (
+            priority
+            and priority != "all"
+        ):
+
+            if priority not in VALID_MODERATION_PRIORITIES:
+
+                raise ValidationError(
+                    {
+                        "priority": (
+                            "Invalid moderation "
+                            "priority filter."
+                        )
+                    }
+                )
+
+            queryset = queryset.filter(
+                priority=priority,
+            )
+
+        return queryset
+
+    # ========================================================
+    # SERIALIZER
     # ========================================================
 
     def get_serializer_class(self):
 
         if self.action == "resolve":
+
             return ModerationResolveSerializer
 
         if self.action == "reject":
+
             return ModerationRejectSerializer
 
         return UserModerationCaseSerializer
 
     # ========================================================
-    # Service Error Handler
+    # SERVICE ERROR HANDLER
     # ========================================================
 
     def _service_error_response(
@@ -201,7 +438,141 @@ class ModerationCaseViewSet(
         )
 
     # ========================================================
-    # Assigned Cases
+    # MODERATION STATS
+    # ========================================================
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="stats",
+    )
+    def stats(
+        self,
+        request,
+        *args,
+        **kwargs,
+    ):
+
+        # ----------------------------------------------------
+        # Stats use visibility rules only.
+        #
+        # Search/filter parameters intentionally do not
+        # affect global moderation statistics.
+        # ----------------------------------------------------
+
+        queryset = self.queryset
+
+        user = request.user
+
+        if not user.is_superuser:
+
+            queryset = queryset.filter(
+                Q(
+                    assigned_to__isnull=True,
+                )
+                |
+                Q(
+                    assigned_to=user,
+                )
+            )
+
+        # ----------------------------------------------------
+        # Total
+        # ----------------------------------------------------
+
+        total = queryset.count()
+
+        # ----------------------------------------------------
+        # Pending
+        # ----------------------------------------------------
+
+        pending = queryset.filter(
+            started_at__isnull=True,
+            resolved_at__isnull=True,
+        ).count()
+
+        # ----------------------------------------------------
+        # In Progress
+        # ----------------------------------------------------
+
+        in_progress = queryset.filter(
+            started_at__isnull=False,
+            resolved_at__isnull=True,
+        ).count()
+
+        # ----------------------------------------------------
+        # Completed
+        #
+        # Both resolve and reject populate resolved_at.
+        #
+        # "resolved" is kept for frontend compatibility.
+        # ----------------------------------------------------
+
+        resolved = queryset.filter(
+            resolved_at__isnull=False,
+        ).count()
+
+        # ----------------------------------------------------
+        # Assignment
+        # ----------------------------------------------------
+
+        unassigned = queryset.filter(
+            assigned_to__isnull=True,
+        ).count()
+
+        assigned = queryset.filter(
+            assigned_to__isnull=False,
+        ).count()
+
+        # ----------------------------------------------------
+        # Decision Statistics
+        # ----------------------------------------------------
+
+        decision_stats = {}
+
+        decision_choices = (
+            ModerationCase._meta
+            .get_field("decision")
+            .choices
+        )
+
+        for decision_value, decision_label in decision_choices:
+
+            decision_stats[decision_value] = (
+                queryset
+                .filter(
+                    decision=decision_value,
+                )
+                .count()
+            )
+
+        # ----------------------------------------------------
+        # Cases Without Decision
+        # ----------------------------------------------------
+
+        decision_stats["none"] = queryset.filter(
+            decision__isnull=True,
+        ).count()
+
+        # ----------------------------------------------------
+        # Response
+        # ----------------------------------------------------
+
+        return Response(
+            {
+                "total": total,
+                "pending": pending,
+                "in_progress": in_progress,
+                "resolved": resolved,
+                "assigned": assigned,
+                "unassigned": unassigned,
+                "decisions": decision_stats,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    # ========================================================
+    # ASSIGNED CASES
     # ========================================================
 
     @action(
@@ -216,10 +587,14 @@ class ModerationCaseViewSet(
         **kwargs,
     ):
 
+        queryset = self.get_queryset()
+
+        queryset = queryset.filter(
+            assigned_to=request.user,
+        )
+
         queryset = self.filter_queryset(
-            self.get_queryset().filter(
-                assigned_to=request.user,
-            )
+            queryset,
         )
 
         page = self.paginate_queryset(
@@ -248,7 +623,7 @@ class ModerationCaseViewSet(
         )
 
     # ========================================================
-    # Unassigned Cases
+    # UNASSIGNED CASES
     # ========================================================
 
     @action(
@@ -263,10 +638,14 @@ class ModerationCaseViewSet(
         **kwargs,
     ):
 
+        queryset = self.get_queryset()
+
+        queryset = queryset.filter(
+            assigned_to__isnull=True,
+        )
+
         queryset = self.filter_queryset(
-            self.get_queryset().filter(
-                assigned_to__isnull=True,
-            )
+            queryset,
         )
 
         page = self.paginate_queryset(
@@ -295,7 +674,7 @@ class ModerationCaseViewSet(
         )
 
     # ========================================================
-    # Assign Case
+    # ASSIGN CASE
     # ========================================================
 
     @action(
@@ -336,7 +715,7 @@ class ModerationCaseViewSet(
         )
 
     # ========================================================
-    # Start Case
+    # START CASE
     # ========================================================
 
     @action(
@@ -357,7 +736,7 @@ class ModerationCaseViewSet(
 
             case = start_case(
                 moderation_case=case,
-                moderation=request.user,
+                moderator=request.user,
             )
 
         except ModerationServiceError as exc:
@@ -377,7 +756,7 @@ class ModerationCaseViewSet(
         )
 
     # ========================================================
-    # Resolve Case
+    # RESOLVE CASE
     # ========================================================
 
     @action(
@@ -446,18 +825,18 @@ class ModerationCaseViewSet(
                 exc,
             )
 
-        output_serializer = UserModerationCaseSerializer(
+        serializer = UserModerationCaseSerializer(
             case,
             context=self.get_serializer_context(),
         )
 
         return Response(
-            output_serializer.data,
+            serializer.data,
             status=status.HTTP_200_OK,
         )
 
     # ========================================================
-    # Reject Case
+    # REJECT CASE
     # ========================================================
 
     @action(
@@ -502,19 +881,19 @@ class ModerationCaseViewSet(
                 exc,
             )
 
-        output_serializer = UserModerationCaseSerializer(
+        serializer = UserModerationCaseSerializer(
             case,
             context=self.get_serializer_context(),
         )
 
         return Response(
-            output_serializer.data,
+            serializer.data,
             status=status.HTTP_200_OK,
         )
 
 
 # ============================================================
-# Moderation Action Log ViewSet
+# MODERATION ACTION LOG VIEWSET
 # ============================================================
 
 
@@ -552,7 +931,7 @@ class ModerationActionLogViewSet(
     )
 
     # ========================================================
-    # Queryset
+    # QUERYSET
     # ========================================================
 
     def get_queryset(self):
@@ -562,25 +941,21 @@ class ModerationActionLogViewSet(
         user = self.request.user
 
         # ----------------------------------------------------
-        # Superuser
+        # Visibility
         # ----------------------------------------------------
 
         if user.is_superuser:
-            return queryset
+
+            visible_queryset = queryset
+
+        else:
+
+            visible_queryset = queryset.filter(
+                moderation_case__assigned_to=user,
+            )
 
         # ----------------------------------------------------
-        # Moderator
-        #
-        # Can only see logs belonging to cases
-        # assigned to himself.
-        # ----------------------------------------------------
-
-        queryset = queryset.filter(
-            moderation_case__assigned_to=user,
-        )
-
-        # ----------------------------------------------------
-        # Filter by moderation case
+        # Moderation Case Filter
         # ----------------------------------------------------
 
         moderation_case_id = (
@@ -591,15 +966,33 @@ class ModerationActionLogViewSet(
 
         if moderation_case_id:
 
-            queryset = queryset.filter(
+            moderation_case_id = moderation_case_id.strip()
+
+            try:
+
+                UUID(
+                    moderation_case_id,
+                )
+
+            except (ValueError, AttributeError):
+
+                raise ValidationError(
+                    {
+                        "moderation_case": (
+                            "Invalid moderation case ID."
+                        )
+                    }
+                )
+
+            visible_queryset = visible_queryset.filter(
                 moderation_case_id=moderation_case_id,
             )
 
-        return queryset
+        return visible_queryset
 
 
 # ============================================================
-# User Moderation ViewSet
+# USER MODERATION VIEWSET
 # ============================================================
 
 
@@ -635,7 +1028,7 @@ class UserModerationViewSet(
     )
 
     # ========================================================
-    # Queryset
+    # QUERYSET
     # ========================================================
 
     def get_queryset(self):
@@ -652,15 +1045,19 @@ class UserModerationViewSet(
 
         if search:
 
-            queryset = queryset.filter(
-                Q(
-                    user__username__icontains=search,
+            search = search.strip()
+
+            if search:
+
+                queryset = queryset.filter(
+                    Q(
+                        user__username__icontains=search,
+                    )
+                    |
+                    Q(
+                        user__email__icontains=search,
+                    )
                 )
-                |
-                Q(
-                    user__email__icontains=search,
-                )
-            )
 
         # ----------------------------------------------------
         # Restricted

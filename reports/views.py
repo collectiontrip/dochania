@@ -2,14 +2,20 @@ from django.db import transaction
 from django.db.models import Prefetch
 from django.utils import timezone
 
+
 from rest_framework import (
     mixins,
     status,
 )
+
 from rest_framework.decorators import action
+
 from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.response import Response
+
 from rest_framework.viewsets import GenericViewSet
+
 
 from .constants import (
     REPORT_REASON_CHOICES,
@@ -59,6 +65,20 @@ class ReportViewSet(
         - Update report status/action
         - Upload evidence where permitted
         - Get available report reasons
+
+    IMPORTANT:
+
+    The moderation system has a dedicated moderation workflow.
+
+    Therefore direct report updates are restricted to the
+    report-level status/action workflow and must not be used
+    for account moderation state changes such as:
+
+        - account restriction
+        - account suspension
+        - account ban
+
+    Those actions must go through moderation/services.py.
     """
 
     lookup_field = "id"
@@ -126,12 +146,14 @@ class ReportViewSet(
         user = self.request.user
 
         if not user.is_authenticated:
+
             return queryset.none()
 
         if IsModerator().has_permission(
             self.request,
             self,
         ):
+
             return queryset
 
         return queryset.filter(
@@ -154,18 +176,21 @@ class ReportViewSet(
             "partial_update",
             "moderation",
         ):
+
             permission_classes = (
                 IsAuthenticated,
                 IsModerator,
             )
 
         elif self.action == "upload_evidence":
+
             permission_classes = (
                 IsAuthenticated,
                 IsReportOwnerOrModerator,
             )
 
         else:
+
             permission_classes = (
                 IsAuthenticated,
             )
@@ -203,15 +228,18 @@ class ReportViewSet(
         self,
     ):
         if self.action == "create":
+
             return ReportCreateSerializer
 
         if self.action == "upload_evidence":
+
             return ReportEvidenceCreateSerializer
 
         if self.action in (
             "update",
             "partial_update",
         ):
+
             return ReportUpdateSerializer
 
         return ReportSerializer
@@ -245,8 +273,16 @@ class ReportViewSet(
         """
         Moderator-only report update.
 
-        Tracks previous moderation state and creates
-        an audit entry when status/action changes.
+        This endpoint handles report-level status/action
+        updates and creates a ReportAction audit entry.
+
+        IMPORTANT:
+
+        Account-level moderation actions must still be
+        performed through moderation/services.py.
+
+        This prevents direct Report updates from becoming
+        the source of truth for UserModeration.
         """
 
         partial = kwargs.pop(
@@ -257,6 +293,7 @@ class ReportViewSet(
         report = self.get_object()
 
         old_status = report.status
+
         old_action = report.action_taken
 
         serializer = self.get_serializer(
@@ -268,6 +305,49 @@ class ReportViewSet(
         serializer.is_valid(
             raise_exception=True,
         )
+
+        requested_action = serializer.validated_data.get(
+            "action_taken",
+            report.action_taken,
+        )
+
+        # --------------------------------------------------------
+        # ACCOUNT MODERATION PROTECTION
+        # --------------------------------------------------------
+        #
+        # These actions require the centralized moderation
+        # service because they modify UserModeration and
+        # ModerationCase state.
+        #
+        # Therefore they cannot be applied through:
+        #
+        #     PATCH /reports/<id>/
+        #
+        # --------------------------------------------------------
+
+        account_moderation_actions = {
+            "account_restricted",
+            "account_suspended",
+            "account_banned",
+        }
+
+        if requested_action in account_moderation_actions:
+
+            return Response(
+                {
+                    "detail": (
+                        "Account moderation actions must be "
+                        "performed through the moderation case "
+                        "workflow."
+                    ),
+                    "code": "use_moderation_workflow",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # --------------------------------------------------------
+        # TRANSACTION
+        # --------------------------------------------------------
 
         with transaction.atomic():
 
@@ -286,6 +366,10 @@ class ReportViewSet(
                     "",
                 ),
             )
+
+        # --------------------------------------------------------
+        # RESPONSE
+        # --------------------------------------------------------
 
         response_serializer = ReportSerializer(
             report,
@@ -309,6 +393,9 @@ class ReportViewSet(
     ):
         """
         Moderator-only partial update.
+
+        Account-level moderation actions are rejected by
+        update() and must use moderation/services.py.
         """
 
         kwargs["partial"] = True
@@ -348,6 +435,7 @@ class ReportViewSet(
             status_changed
             or action_changed
         ):
+
             return None
 
         return ReportAction.objects.create(
@@ -470,6 +558,11 @@ class ReportViewSet(
     ):
         """
         Moderator-only moderation queue.
+
+        This endpoint is read-only.
+
+        Actual account moderation actions are handled by
+        the dedicated moderation case workflow.
         """
 
         queryset = self.filter_queryset(
@@ -535,7 +628,7 @@ class ReportViewSet(
         with transaction.atomic():
 
             # ----------------------------------------------------
-            # Lock report row
+            # LOCK REPORT ROW
             # ----------------------------------------------------
 
             report = (
@@ -547,7 +640,7 @@ class ReportViewSet(
             )
 
             # ----------------------------------------------------
-            # Status check
+            # STATUS CHECK
             # ----------------------------------------------------
 
             if (
@@ -566,7 +659,7 @@ class ReportViewSet(
                 )
 
             # ----------------------------------------------------
-            # Evidence limit
+            # EVIDENCE LIMIT
             # ----------------------------------------------------
 
             evidence_count = (
@@ -590,7 +683,7 @@ class ReportViewSet(
                 )
 
             # ----------------------------------------------------
-            # Validate evidence
+            # VALIDATE EVIDENCE
             # ----------------------------------------------------
 
             serializer = self.get_serializer(
@@ -602,12 +695,16 @@ class ReportViewSet(
                 raise_exception=True,
             )
 
+            # ----------------------------------------------------
+            # SAVE EVIDENCE
+            # ----------------------------------------------------
+
             evidence = serializer.save(
                 report=report,
             )
 
         # --------------------------------------------------------
-        # Response
+        # RESPONSE
         # --------------------------------------------------------
 
         response_serializer = (
