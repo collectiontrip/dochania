@@ -1,0 +1,335 @@
+/* ============================================================
+   LIVE VIDEO
+   Premium Glassmorphism Video Player
+   ============================================================ */
+
+.live-video-container {
+    position: relative;
+
+    width: 100%;
+    min-height: 420px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(99, 102, 241, 0.12),
+            transparent 42%
+        ),
+        rgba(8, 10, 18, 0.92);
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    isolation: isolate;
+}
+
+
+/* ============================================================
+   VIDEO BACKGROUND GLOW
+   ============================================================ */
+
+.live-video-container::before {
+    content: "";
+
+    position: absolute;
+    inset: -30%;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(99, 102, 241, 0.08),
+            transparent 45%
+        );
+
+    filter: blur(45px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* ============================================================
+   LIVE VIDEO
+   ============================================================ */
+
+.live-video {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    min-height: 420px;
+
+    object-fit: cover;
+
+    background: #050609;
+
+    border-radius: inherit;
+
+    outline: none;
+
+    position: relative;
+    z-index: 1;
+}
+
+
+/* ============================================================
+   VIDEO PLACEHOLDER
+   ============================================================ */
+
+.live-video-placeholder {
+    position: absolute;
+    inset: 0;
+
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.015)
+        );
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   PLACEHOLDER ICON
+   ============================================================ */
+
+.live-video-placeholder span {
+    width: 68px;
+    height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.065);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    font-size: 1.8rem;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    animation: live-video-pulse 2.2s ease-in-out infinite;
+}
+
+
+/* ============================================================
+   PLACEHOLDER TEXT
+   ============================================================ */
+
+.live-video-placeholder p {
+    margin: 0;
+
+    max-width: 360px;
+
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 0.92rem;
+    font-weight: 500;
+
+    line-height: 1.5;
+
+    letter-spacing: 0.01em;
+}
+
+
+/* ============================================================
+   VIDEO LOADING STATE
+   ============================================================ */
+
+.live-video-container:has(.live-video-placeholder) {
+    background-color: #080a11;
+}
+
+
+/* ============================================================
+   PLACEHOLDER ANIMATION
+   ============================================================ */
+
+@keyframes live-video-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
+
+    50% {
+        transform: scale(1.06);
+        opacity: 1;
+    }
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+    .live-video-container {
+        min-height: 360px;
+
+        border-radius: 20px;
+    }
+
+    .live-video {
+        min-height: 360px;
+    }
+
+    .live-video-placeholder {
+        padding: 24px;
+    }
+
+    .live-video-placeholder span {
+        width: 62px;
+        height: 62px;
+
+        font-size: 1.6rem;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .live-video-container {
+        min-height: 280px;
+
+        border-radius: 17px;
+    }
+
+    .live-video {
+        min-height: 280px;
+    }
+
+    .live-video-placeholder {
+        padding: 20px;
+        gap: 10px;
+    }
+
+    .live-video-placeholder span {
+        width: 56px;
+        height: 56px;
+
+        font-size: 1.45rem;
+    }
+
+    .live-video-placeholder p {
+        font-size: 0.84rem;
+    }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .live-video-container {
+        min-height: 220px;
+
+        border-radius: 15px;
+    }
+
+    .live-video {
+        min-height: 220px;
+    }
+
+    .live-video-placeholder {
+        padding: 16px;
+    }
+
+    .live-video-placeholder span {
+        width: 50px;
+        height: 50px;
+
+        font-size: 1.3rem;
+    }
+
+    .live-video-placeholder p {
+        max-width: 260px;
+
+        font-size: 0.78rem;
+    }
+}
+
+
+/* ============================================================
+   EXTRA SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 340px) {
+
+    .live-video-container {
+        min-height: 190px;
+    }
+
+    .live-video {
+        min-height: 190px;
+    }
+
+    .live-video-placeholder span {
+        width: 44px;
+        height: 44px;
+
+        font-size: 1.1rem;
+    }
+
+    .live-video-placeholder p {
+        font-size: 0.72rem;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .live-video-placeholder span {
+        animation: none;
+    }
+}

@@ -1,0 +1,804 @@
+/* ============================================================
+   LIVE VIEWER LIST
+   Premium Glassmorphism Viewer Management
+   ============================================================ */
+
+.live-viewer-list {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.065),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 20px;
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 16px 42px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    color: #ffffff;
+
+    overflow: hidden;
+
+    position: relative;
+    isolation: isolate;
+}
+
+
+/* ============================================================
+   LIST GLOW
+   ============================================================ */
+
+.live-viewer-list::before {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 140px;
+
+    top: -80px;
+    right: -45px;
+
+    background: rgba(99, 102, 241, 0.12);
+
+    filter: blur(55px);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* ============================================================
+   VIEWER HEADER
+   ============================================================ */
+
+.live-viewer-header {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 17px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+
+/* ============================================================
+   HEADER TITLE
+   ============================================================ */
+
+.live-viewer-header h3 {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.92);
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    letter-spacing: -0.01em;
+}
+
+
+/* ============================================================
+   VIEWER COUNT BADGE
+   ============================================================ */
+
+.live-viewer-header > span {
+    min-width: 28px;
+    height: 25px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 8px;
+
+    border-radius: 999px;
+
+    background: rgba(99, 102, 241, 0.14);
+
+    border: 1px solid rgba(129, 140, 248, 0.22);
+
+    color: rgba(199, 210, 254, 0.92);
+
+    font-size: 0.70rem;
+    font-weight: 800;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+
+/* ============================================================
+   VIEWER ITEMS CONTAINER
+   ============================================================ */
+
+.live-viewer-items {
+    width: 100%;
+
+    max-height: 390px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 8px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(255, 255, 255, 0.16)
+        transparent;
+}
+
+
+/* ============================================================
+   WEBKIT SCROLLBAR
+   ============================================================ */
+
+.live-viewer-items::-webkit-scrollbar {
+    width: 5px;
+}
+
+.live-viewer-items::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.live-viewer-items::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.16);
+
+    border-radius: 999px;
+}
+
+.live-viewer-items::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+
+/* ============================================================
+   VIEWER ITEM
+   ============================================================ */
+
+.live-viewer-item {
+    width: 100%;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    border-radius: 14px;
+
+    margin-bottom: 4px;
+}
+
+
+/* ============================================================
+   VIEWER PROFILE BUTTON
+   ============================================================ */
+
+.live-viewer-profile {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 10px;
+
+    border: 1px solid transparent;
+    border-radius: 14px;
+
+    background: transparent;
+
+    color: inherit;
+
+    text-align: left;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* ============================================================
+   PROFILE HOVER
+   ============================================================ */
+
+.live-viewer-profile:hover {
+    background: rgba(255, 255, 255, 0.055);
+
+    border-color: rgba(255, 255, 255, 0.075);
+
+    transform: translateX(2px);
+}
+
+
+/* ============================================================
+   VIEWER AVATAR
+   ============================================================ */
+
+.live-viewer-avatar {
+    position: relative;
+
+    flex-shrink: 0;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(129, 140, 248, 0.30),
+            rgba(99, 102, 241, 0.10)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+
+/* ============================================================
+   AVATAR IMAGE
+   ============================================================ */
+
+.live-viewer-avatar img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* ============================================================
+   AVATAR FALLBACK
+   ============================================================ */
+
+.live-viewer-avatar span {
+    color: rgba(255, 255, 255, 0.92);
+
+    font-size: 0.88rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   VIEWER INFO
+   ============================================================ */
+
+.live-viewer-info {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+/* ============================================================
+   VIEWER NAME
+   ============================================================ */
+
+.live-viewer-info strong {
+    display: block;
+
+    max-width: 100%;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: rgba(255, 255, 255, 0.91);
+
+    font-size: 0.80rem;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   VIEWER USERNAME
+   ============================================================ */
+
+.live-viewer-info span {
+    display: block;
+
+    max-width: 100%;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: rgba(255, 255, 255, 0.38);
+
+    font-size: 0.68rem;
+    font-weight: 500;
+}
+
+
+/* ============================================================
+   MODERATION MENU
+   ============================================================ */
+
+.live-viewer-menu {
+    position: absolute;
+
+    top: calc(100% - 2px);
+    right: 8px;
+
+    min-width: 145px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    padding: 7px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(25, 28, 42, 0.96),
+            rgba(13, 15, 24, 0.97)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 13px;
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.40),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+
+    z-index: 20;
+
+    animation: live-viewer-menu-in 0.16s ease-out;
+}
+
+
+/* ============================================================
+   MENU BUTTON
+   ============================================================ */
+
+.live-viewer-menu button {
+    width: 100%;
+
+    min-height: 36px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 10px;
+
+    border: 1px solid transparent;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-family: inherit;
+    font-size: 0.74rem;
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+}
+
+
+/* ============================================================
+   MENU BUTTON HOVER
+   ============================================================ */
+
+.live-viewer-menu button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.075);
+
+    border-color: rgba(255, 255, 255, 0.075);
+
+    color: #ffffff;
+
+    transform: translateX(2px);
+}
+
+
+/* ============================================================
+   MENU DISABLED
+   ============================================================ */
+
+.live-viewer-menu button:disabled {
+    opacity: 0.35;
+
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   MUTE / UNMUTE BUTTON
+   ============================================================ */
+
+.live-viewer-menu button:first-child:hover:not(:disabled) {
+    background: rgba(245, 158, 11, 0.10);
+
+    border-color: rgba(245, 158, 11, 0.18);
+}
+
+
+/* ============================================================
+   KICK BUTTON
+   ============================================================ */
+
+.live-viewer-menu button:nth-child(2):hover:not(:disabled) {
+    background: rgba(249, 115, 22, 0.10);
+
+    border-color: rgba(249, 115, 22, 0.18);
+}
+
+
+/* ============================================================
+   BLOCK BUTTON
+   ============================================================ */
+
+.live-viewer-menu button:nth-child(3):hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.11);
+
+    border-color: rgba(239, 68, 68, 0.20);
+}
+
+
+/* ============================================================
+   BUTTON FOCUS
+   ============================================================ */
+
+.live-viewer-menu button:focus-visible,
+.live-viewer-profile:focus-visible {
+    outline: none;
+
+    border-color: rgba(129, 140, 248, 0.50);
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+
+/* ============================================================
+   EMPTY VIEWER STATE
+   ============================================================ */
+
+.live-viewer-empty {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   EMPTY ICON
+   ============================================================ */
+
+.live-viewer-empty span {
+    width: 56px;
+    height: 56px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 11px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    font-size: 1.45rem;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+
+/* ============================================================
+   EMPTY TITLE
+   ============================================================ */
+
+.live-viewer-empty p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   MENU ANIMATION
+   ============================================================ */
+
+@keyframes live-viewer-menu-in {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+    .live-viewer-list {
+        border-radius: 18px;
+    }
+
+    .live-viewer-items {
+        max-height: 340px;
+    }
+
+    .live-viewer-profile {
+        padding: 9px;
+    }
+
+    .live-viewer-avatar {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .live-viewer-list {
+        border-radius: 17px;
+    }
+
+    .live-viewer-header {
+        padding: 14px 15px;
+    }
+
+    .live-viewer-items {
+        max-height: 330px;
+
+        padding: 7px;
+    }
+
+    .live-viewer-profile {
+        gap: 10px;
+
+        padding: 9px;
+    }
+
+    .live-viewer-avatar {
+        width: 37px;
+        height: 37px;
+    }
+
+    .live-viewer-info strong {
+        font-size: 0.77rem;
+    }
+
+    .live-viewer-info span {
+        font-size: 0.65rem;
+    }
+
+    .live-viewer-menu {
+        right: 7px;
+
+        min-width: 140px;
+    }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .live-viewer-list {
+        border-radius: 15px;
+    }
+
+    .live-viewer-header {
+        padding: 12px 13px;
+    }
+
+    .live-viewer-header h3 {
+        font-size: 0.88rem;
+    }
+
+    .live-viewer-header > span {
+        min-width: 25px;
+        height: 23px;
+
+        padding: 0 7px;
+
+        font-size: 0.65rem;
+    }
+
+    .live-viewer-items {
+        max-height: 300px;
+
+        padding: 6px;
+    }
+
+    .live-viewer-profile {
+        gap: 9px;
+
+        padding: 8px;
+
+        border-radius: 12px;
+    }
+
+    .live-viewer-avatar {
+        width: 34px;
+        height: 34px;
+    }
+
+    .live-viewer-avatar span {
+        font-size: 0.76rem;
+    }
+
+    .live-viewer-info strong {
+        font-size: 0.74rem;
+    }
+
+    .live-viewer-info span {
+        font-size: 0.62rem;
+    }
+
+    .live-viewer-menu {
+        right: 5px;
+
+        min-width: 135px;
+
+        padding: 6px;
+    }
+
+    .live-viewer-menu button {
+        min-height: 34px;
+
+        padding: 7px 9px;
+
+        font-size: 0.70rem;
+    }
+}
+
+
+/* ============================================================
+   EXTRA SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 340px) {
+
+    .live-viewer-items {
+        max-height: 270px;
+    }
+
+    .live-viewer-profile {
+        padding: 7px;
+    }
+
+    .live-viewer-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .live-viewer-info strong {
+        font-size: 0.70rem;
+    }
+
+    .live-viewer-info span {
+        font-size: 0.59rem;
+    }
+
+    .live-viewer-menu {
+        right: 3px;
+
+        min-width: 128px;
+    }
+
+    .live-viewer-empty {
+        min-height: 190px;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .live-viewer-menu {
+        animation: none;
+    }
+
+    .live-viewer-profile,
+    .live-viewer-menu button {
+        transition: none;
+    }
+
+    .live-viewer-profile:hover,
+    .live-viewer-menu button:hover:not(:disabled) {
+        transform: none;
+    }
+}

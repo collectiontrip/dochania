@@ -1,0 +1,1253 @@
+/* ============================================================
+   LIVE PAGE
+   PREMIUM GLASSMORPHISM
+   ============================================================ */
+
+.live-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 28px;
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(99, 102, 241, 0.20),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(236, 72, 153, 0.16),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(14, 165, 233, 0.12),
+            transparent 35%
+        ),
+        #070b14;
+    color: #f8fafc;
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   LIVE CONTAINER
+   ============================================================ */
+
+.live-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+
+    background: rgba(15, 23, 42, 0.58);
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    border-radius: 28px;
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   LIVE HEADER
+   ============================================================ */
+
+.live-header {
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 18px 22px;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    border-radius: 20px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+.live-header h2 {
+    margin: 0;
+
+    font-size: 1.45rem;
+    font-weight: 750;
+
+    letter-spacing: -0.02em;
+
+    color: #f8fafc;
+}
+
+
+.live-header span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    background: rgba(239, 68, 68, 0.13);
+
+    border: 1px solid rgba(248, 113, 113, 0.28);
+
+    color: #fca5a5;
+
+    font-size: 0.82rem;
+    font-weight: 800;
+
+    letter-spacing: 0.06em;
+
+    box-shadow:
+        0 0 22px rgba(239, 68, 68, 0.10);
+}
+
+
+/* ============================================================
+   LIVE VIDEO AREA
+   ============================================================ */
+
+.live-video-container,
+.live-video-wrapper {
+    position: relative;
+
+    width: 100%;
+    min-height: 420px;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(30, 41, 59, 0.65),
+            rgba(2, 6, 23, 0.95)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+.live-video {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+
+    object-fit: cover;
+
+    background: #020617;
+
+    border-radius: 24px;
+}
+
+
+/* ============================================================
+   BROADCASTER / VIEWER
+   ============================================================ */
+
+.live-broadcaster,
+.live-viewer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 24px;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+
+.live-broadcaster .live-video,
+.live-viewer .live-video {
+    width: 100%;
+    min-height: 430px;
+    max-height: 720px;
+
+    object-fit: cover;
+
+    border-radius: 20px;
+}
+
+
+/* ============================================================
+   LIVE INFO
+   ============================================================ */
+
+.live-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+}
+
+
+.live-info span {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 10px 14px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: #cbd5e1;
+
+    font-size: 0.9rem;
+    font-weight: 650;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.live-container button {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 13px;
+
+    padding: 11px 17px;
+
+    background: rgba(255, 255, 255, 0.075);
+
+    color: #f8fafc;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.live-container button:hover {
+    transform: translateY(-2px);
+
+    background: rgba(255, 255, 255, 0.12);
+
+    border-color: rgba(255, 255, 255, 0.20);
+
+    box-shadow:
+        0 10px 26px rgba(0, 0, 0, 0.25);
+}
+
+
+.live-container button:active {
+    transform: translateY(0);
+}
+
+
+.live-container button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* ============================================================
+   LIVE CONTROLS
+   ============================================================ */
+
+.live-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+    padding: 18px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 20px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+.live-controls button {
+    min-width: 145px;
+}
+
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+
+.live-chat,
+.live-messages {
+    width: 100%;
+
+    padding: 20px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 22px;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+
+.live-chat h3,
+.live-messages h3 {
+    margin: 0 0 16px;
+
+    color: #f8fafc;
+
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+
+.live-messages {
+    max-height: 360px;
+
+    overflow-y: auto;
+}
+
+
+.live-messages > div {
+    padding: 10px 12px;
+
+    margin-bottom: 7px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.055);
+
+    color: #cbd5e1;
+
+    font-size: 0.9rem;
+
+    word-break: break-word;
+}
+
+
+.live-messages > div:last-child {
+    margin-bottom: 0;
+}
+
+
+.live-messages strong {
+    color: #f8fafc;
+}
+
+
+.live-messages p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 0.9rem;
+}
+
+
+/* ============================================================
+   CHAT INPUT
+   ============================================================ */
+
+.live-chat form {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.live-chat input,
+.live-chat textarea {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border-radius: 13px;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    outline: none;
+
+    background: rgba(2, 6, 23, 0.48);
+
+    color: #f8fafc;
+
+    font-size: 0.9rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+
+.live-chat input::placeholder,
+.live-chat textarea::placeholder {
+    color: #64748b;
+}
+
+
+.live-chat input:focus,
+.live-chat textarea:focus {
+    background: rgba(2, 6, 23, 0.65);
+
+    border-color: rgba(129, 140, 248, 0.55);
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.10);
+}
+
+
+.live-chat textarea {
+    min-height: 44px;
+
+    resize: vertical;
+}
+
+
+/* ============================================================
+   VIEWER LIST
+   ============================================================ */
+
+.live-viewers,
+.live-viewer-list {
+    width: 100%;
+
+    padding: 20px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 22px;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+.live-viewers h3,
+.live-viewer-list h3 {
+    margin: 0 0 16px;
+
+    color: #f8fafc;
+
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+
+.live-viewers-list,
+.live-viewer-items {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+.live-viewer-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    border-radius: 16px;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.live-viewer-item:hover {
+    transform: translateY(-2px);
+
+    background: rgba(255, 255, 255, 0.07);
+
+    border-color: rgba(255, 255, 255, 0.13);
+}
+
+
+/* ============================================================
+   VIEWER AVATAR
+   ============================================================ */
+
+.live-viewer-item img,
+.live-viewer-avatar {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(255, 255, 255, 0.10);
+
+    background: #1e293b;
+}
+
+
+.live-viewer-info {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.live-viewer-info strong {
+    display: block;
+
+    color: #f8fafc;
+
+    font-size: 0.9rem;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.live-viewer-info span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #64748b;
+
+    font-size: 0.78rem;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   VIEWER ACTIONS
+   ============================================================ */
+
+.live-viewer-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    flex-wrap: wrap;
+}
+
+
+.live-viewer-actions button {
+    padding: 8px 10px;
+
+    border-radius: 10px;
+
+    font-size: 0.76rem;
+}
+
+
+/* ============================================================
+   MODERATOR LIST
+   ============================================================ */
+
+.live-moderators,
+.live-moderator-list {
+    width: 100%;
+
+    padding: 20px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 22px;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+.live-moderators h3,
+.live-moderator-list h3 {
+    margin: 0 0 16px;
+
+    color: #f8fafc;
+
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+
+.live-moderator-items {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(230px, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+.live-moderator-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    border-radius: 16px;
+}
+
+
+.live-moderator-item img {
+    width: 44px;
+    height: 44px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    background: #1e293b;
+
+    border: 2px solid rgba(255, 255, 255, 0.10);
+}
+
+
+/* ============================================================
+   PLATFORM MODERATION
+   ============================================================ */
+
+.live-moderation {
+    width: 100%;
+
+    padding: 20px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 22px;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+.live-moderation h3 {
+    margin: 0 0 16px;
+
+    color: #f8fafc;
+
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+
+.live-moderation-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(190px, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.live-modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(2, 6, 23, 0.72);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-sizing: border-box;
+}
+
+
+.live-modal,
+.live-action-modal {
+    width: min(
+        100%,
+        520px
+    );
+
+    padding: 24px;
+
+    background: rgba(15, 23, 42, 0.88);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 35px 100px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    backdrop-filter: blur(26px);
+    -webkit-backdrop-filter: blur(26px);
+
+    box-sizing: border-box;
+}
+
+
+.live-modal h2,
+.live-action-modal h2 {
+    margin: 0 0 18px;
+
+    color: #f8fafc;
+
+    font-size: 1.2rem;
+}
+
+
+.live-modal label,
+.live-action-modal label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #cbd5e1;
+
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+
+.live-modal input,
+.live-modal textarea,
+.live-modal select,
+.live-action-modal input,
+.live-action-modal textarea,
+.live-action-modal select {
+    width: 100%;
+
+    padding: 12px 13px;
+
+    margin-bottom: 14px;
+
+    outline: none;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    background: rgba(2, 6, 23, 0.55);
+
+    color: #f8fafc;
+
+    font-size: 0.9rem;
+
+    box-sizing: border-box;
+}
+
+
+.live-modal textarea,
+.live-action-modal textarea {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+
+.live-modal input:focus,
+.live-modal textarea:focus,
+.live-modal select:focus,
+.live-action-modal input:focus,
+.live-action-modal textarea:focus,
+.live-action-modal select:focus {
+    border-color: rgba(129, 140, 248, 0.55);
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.10);
+}
+
+
+.live-modal-actions,
+.live-action-modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 8px;
+
+    flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+
+.live-container *,
+.live-page * {
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(148, 163, 184, 0.35)
+        transparent;
+}
+
+
+.live-container *::-webkit-scrollbar,
+.live-page *::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+
+.live-container *::-webkit-scrollbar-track,
+.live-page *::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.live-container *::-webkit-scrollbar-thumb,
+.live-page *::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.28);
+
+    border-radius: 999px;
+}
+
+
+.live-container *::-webkit-scrollbar-thumb:hover,
+.live-page *::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.45);
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+    .live-page {
+        padding: 18px;
+    }
+
+
+    .live-container {
+        padding: 18px;
+
+        border-radius: 24px;
+    }
+
+
+    .live-broadcaster .live-video,
+    .live-viewer .live-video,
+    .live-video {
+        min-height: 360px;
+    }
+
+
+    .live-viewers-list,
+    .live-viewer-items,
+    .live-moderator-items {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .live-page {
+        padding: 10px;
+
+        min-height: 100vh;
+    }
+
+
+    .live-container {
+        padding: 12px;
+
+        gap: 14px;
+
+        border-radius: 20px;
+    }
+
+
+    .live-header {
+        min-height: auto;
+
+        padding: 15px;
+
+        border-radius: 17px;
+    }
+
+
+    .live-header h2 {
+        font-size: 1.1rem;
+    }
+
+
+    .live-header span {
+        padding: 7px 10px;
+
+        font-size: 0.72rem;
+    }
+
+
+    .live-broadcaster,
+    .live-viewer {
+        padding: 10px;
+
+        border-radius: 18px;
+    }
+
+
+    .live-broadcaster .live-video,
+    .live-viewer .live-video,
+    .live-video {
+        min-height: 250px;
+
+        max-height: 520px;
+
+        border-radius: 15px;
+    }
+
+
+    .live-info {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    .live-info span,
+    .live-info button {
+        width: 100%;
+
+        justify-content: center;
+
+        box-sizing: border-box;
+    }
+
+
+    .live-controls {
+        padding: 13px;
+
+        border-radius: 17px;
+    }
+
+
+    .live-controls button {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .live-chat,
+    .live-messages,
+    .live-viewers,
+    .live-viewer-list,
+    .live-moderators,
+    .live-moderator-list,
+    .live-moderation {
+        padding: 15px;
+
+        border-radius: 17px;
+    }
+
+
+    .live-viewers-list,
+    .live-viewer-items,
+    .live-moderator-items {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .live-viewer-item,
+    .live-moderator-item {
+        padding: 11px;
+    }
+
+
+    .live-viewer-actions {
+        width: 100%;
+    }
+
+
+    .live-viewer-actions button {
+        flex: 1;
+
+        min-width: 70px;
+    }
+
+
+    .live-chat form {
+        flex-direction: column;
+    }
+
+
+    .live-chat form button {
+        width: 100%;
+    }
+
+
+    .live-messages {
+        max-height: 300px;
+    }
+
+
+    .live-moderation-actions {
+        grid-template-columns: 1fr;
+    }
+
+
+    .live-modal-overlay {
+        padding: 12px;
+    }
+
+
+    .live-modal,
+    .live-action-modal {
+        padding: 18px;
+
+        border-radius: 19px;
+
+        max-height: 90vh;
+
+        overflow-y: auto;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .live-page {
+        padding: 6px;
+    }
+
+
+    .live-container {
+        padding: 9px;
+
+        gap: 11px;
+
+        border-radius: 17px;
+    }
+
+
+    .live-header {
+        padding: 12px;
+
+        gap: 8px;
+    }
+
+
+    .live-header h2 {
+        font-size: 0.98rem;
+    }
+
+
+    .live-header span {
+        padding: 6px 8px;
+
+        font-size: 0.66rem;
+    }
+
+
+    .live-broadcaster .live-video,
+    .live-viewer .live-video,
+    .live-video {
+        min-height: 215px;
+
+        border-radius: 13px;
+    }
+
+
+    .live-container button {
+        padding: 10px 13px;
+
+        font-size: 0.82rem;
+    }
+
+
+    .live-viewer-actions {
+        gap: 5px;
+    }
+
+
+    .live-viewer-actions button {
+        padding: 7px 8px;
+
+        font-size: 0.7rem;
+    }
+
+
+    .live-viewer-item img,
+    .live-viewer-avatar {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .live-moderator-item img {
+        width: 40px;
+        height: 40px;
+    }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .live-container *,
+    .live-page * {
+        scroll-behavior: auto !important;
+
+        transition: none !important;
+
+        animation: none !important;
+    }
+
+}

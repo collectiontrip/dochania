@@ -1,0 +1,287 @@
+/* ============================================================
+   LIVE CONTROLS
+   Premium Glassmorphism Controls
+   ============================================================ */
+
+.live-controls {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    padding: 16px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 18px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   CONTROLS GLOW
+   ============================================================ */
+
+.live-controls::before {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 100px;
+
+    top: -65px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(99, 102, 241, 0.12);
+
+    filter: blur(45px);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   CONTROL BUTTON
+   ============================================================ */
+
+.live-controls button {
+    position: relative;
+    z-index: 1;
+
+    min-width: 150px;
+
+    min-height: 46px;
+
+    padding: 11px 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.075);
+
+    color: rgba(255, 255, 255, 0.94);
+
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+/* ============================================================
+   BUTTON HOVER
+   ============================================================ */
+
+.live-controls button:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    background: rgba(255, 255, 255, 0.11);
+
+    border-color: rgba(255, 255, 255, 0.20);
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+
+/* ============================================================
+   BUTTON ACTIVE
+   ============================================================ */
+
+.live-controls button:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+}
+
+
+/* ============================================================
+   GO LIVE BUTTON
+   ============================================================ */
+
+.live-controls button:first-child {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(239, 68, 68, 0.20),
+            rgba(220, 38, 38, 0.10)
+        );
+
+    border-color: rgba(248, 113, 113, 0.28);
+}
+
+
+/* ============================================================
+   GO LIVE HOVER
+   ============================================================ */
+
+.live-controls button:first-child:hover:not(:disabled) {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(239, 68, 68, 0.30),
+            rgba(220, 38, 38, 0.16)
+        );
+
+    border-color: rgba(248, 113, 113, 0.42);
+
+    box-shadow:
+        0 10px 28px rgba(220, 38, 38, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+
+/* ============================================================
+   DISABLED STATE
+   ============================================================ */
+
+.live-controls button:disabled {
+    opacity: 0.42;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+
+/* ============================================================
+   FOCUS ACCESSIBILITY
+   ============================================================ */
+
+.live-controls button:focus-visible {
+    outline: none;
+
+    border-color: rgba(129, 140, 248, 0.65);
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.18),
+        0 8px 22px rgba(0, 0, 0, 0.20);
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .live-controls {
+        padding: 14px;
+
+        border-radius: 16px;
+    }
+
+    .live-controls button {
+        min-width: 140px;
+
+        min-height: 44px;
+
+        padding: 10px 17px;
+
+        font-size: 0.84rem;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 520px) {
+
+    .live-controls {
+        padding: 12px;
+
+        gap: 9px;
+    }
+
+    .live-controls button {
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 44px;
+    }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+    .live-controls {
+        padding: 10px;
+
+        border-radius: 14px;
+    }
+
+    .live-controls button {
+        min-height: 42px;
+
+        padding: 9px 13px;
+
+        font-size: 0.78rem;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .live-controls button {
+        transition: none;
+    }
+
+    .live-controls button:hover:not(:disabled) {
+        transform: none;
+    }
+
+    .live-controls button:active:not(:disabled) {
+        transform: none;
+    }
+}

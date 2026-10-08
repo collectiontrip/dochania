@@ -20,23 +20,32 @@ import {
 
 import Home from "./component/home";
 
-import MediaAccess from "./component/Media/Media";
+import MediaAccess
+from "./component/Media/Media";
 
-import SignUp from "./component/auth/SignUp";
+import SignUp
+from "./component/auth/SignUp";
 
-import CreatePost from "./component/post/CreatePost";
+import CreatePost
+from "./component/post/CreatePost";
 
-import Activate from "./component/auth/Activate";
+import Activate
+from "./component/auth/Activate";
 
-import Login from "./component/auth/SignIn";
+import Login
+from "./component/auth/SignIn";
 
-import ResetPassword from "./component/auth/ResetPassword";
+import ResetPassword
+from "./component/auth/ResetPassword";
 
-import ForgotPassword from "./component/auth/ForgotPassword";
+import ForgotPassword
+from "./component/auth/ForgotPassword";
 
-import PrivateChat from "./component/chat/PrivateChat";
+import PrivateChat
+from "./component/chat/PrivateChat";
 
-import Users from "./component/Users";
+import Users
+from "./component/Users";
 
 import UserFollowerList
 from "./component/relationships/UserFollowersList";
@@ -44,9 +53,17 @@ from "./component/relationships/UserFollowersList";
 import UserFollowingList
 from "./component/relationships/UserFollowingList";
 
-import Live from "./component/Live";
 
-import Viewer from "./component/Viewer";
+// ============================================================
+// LIVE COMPONENTS
+// ============================================================
+
+import Live
+from "./component/live/Live";
+
+import LiveStreams
+from "./component/live/LiveStreams";
+
 
 import Profile
 from "./component/Profile/Profile";
@@ -107,21 +124,12 @@ const Layout = () => {
     // ============================================================
     // MODERATION ACCESS
     // ============================================================
-    //
-    // Moderation access is granted to:
-    //
-    // 1. Superusers
-    // 2. Users explicitly marked as moderators
-    //
-    // Normal users do not get moderation access.
-    // Backend permissions remain the final security layer.
-    // ============================================================
 
     const canAccessModeration =
         isAuthenticated &&
         Boolean(
             user?.is_superuser ||
-            user?.is_moderator
+            user?.is_moderator,
         );
 
 
@@ -138,43 +146,57 @@ const Layout = () => {
     // REALTIME SOCKET
     // ============================================================
 
-    useEffect(() => {
+    useEffect(
+        () => {
 
-        if (loading) {
-            return;
-        }
+            if (
+                loading
+            ) {
 
-
-        if (isAuthenticated) {
-
-            getRealtimeSocket();
-
-        } else {
-
-            resetRealtimeSocket();
-
-        }
-
-
-        return () => {
-
-            if (!isAuthenticated) {
-                resetRealtimeSocket();
+                return;
             }
 
-        };
 
-    }, [
-        isAuthenticated,
-        loading,
-    ]);
+            if (
+                isAuthenticated
+            ) {
+
+                getRealtimeSocket();
+
+            } else {
+
+                resetRealtimeSocket();
+
+            }
+
+
+            return () => {
+
+                if (
+                    !isAuthenticated
+                ) {
+
+                    resetRealtimeSocket();
+
+                }
+
+            };
+
+        },
+        [
+            isAuthenticated,
+            loading,
+        ],
+    );
 
 
     // ============================================================
     // LOADING
     // ============================================================
 
-    if (loading) {
+    if (
+        loading
+    ) {
 
         return (
 
@@ -467,55 +489,73 @@ const Layout = () => {
 
                     <Route
                         path="/home"
-                        element={<Home />}
+                        element={
+                            <Home />
+                        }
                     />
 
 
                     <Route
                         path="/media"
-                        element={<MediaAccess />}
+                        element={
+                            <MediaAccess />
+                        }
                     />
 
 
                     <Route
                         path="/users"
-                        element={<Users />}
+                        element={
+                            <Users />
+                        }
                     />
 
 
                     <Route
                         path="/posts/:id"
-                        element={<PostDetail />}
+                        element={
+                            <PostDetail />
+                        }
                     />
 
 
                     <Route
                         path="/signup"
-                        element={<SignUp />}
+                        element={
+                            <SignUp />
+                        }
                     />
 
 
                     <Route
                         path="/login"
-                        element={<Login />}
+                        element={
+                            <Login />
+                        }
                     />
 
 
                     <Route
                         path="/forgot-password"
-                        element={<ForgotPassword />}
+                        element={
+                            <ForgotPassword />
+                        }
                     />
 
 
                     <Route
                         path="/password/reset/confirm/:uid/:token"
-                        element={<ResetPassword />}
+                        element={
+                            <ResetPassword />
+                        }
                     />
 
 
                     <Route
                         path="/activate/:uid/:token"
-                        element={<Activate />}
+                        element={
+                            <Activate />
+                        }
                     />
 
 
@@ -532,7 +572,9 @@ const Layout = () => {
                         path="/users/:id"
                         element={
                             isAuthenticated
-                                ? <UserProfile />
+                                ? (
+                                    <UserProfile />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -551,7 +593,9 @@ const Layout = () => {
                         path="/profile"
                         element={
                             isAuthenticated
-                                ? <Profile />
+                                ? (
+                                    <Profile />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -570,7 +614,9 @@ const Layout = () => {
                         path="/profile/followers"
                         element={
                             isAuthenticated
-                                ? <FollowerList />
+                                ? (
+                                    <FollowerList />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -589,7 +635,9 @@ const Layout = () => {
                         path="/profile/following"
                         element={
                             isAuthenticated
-                                ? <FollowingList />
+                                ? (
+                                    <FollowingList />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -608,7 +656,9 @@ const Layout = () => {
                         path="/profile/:userId/followers"
                         element={
                             isAuthenticated
-                                ? <UserFollowerList />
+                                ? (
+                                    <UserFollowerList />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -627,7 +677,9 @@ const Layout = () => {
                         path="/profile/:userId/following"
                         element={
                             isAuthenticated
-                                ? <UserFollowingList />
+                                ? (
+                                    <UserFollowingList />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -646,7 +698,9 @@ const Layout = () => {
                         path="/profile/:userId/posts"
                         element={
                             isAuthenticated
-                                ? <UserPostList />
+                                ? (
+                                    <UserPostList />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -665,7 +719,9 @@ const Layout = () => {
                         path="/create-post"
                         element={
                             isAuthenticated
-                                ? <CreatePost />
+                                ? (
+                                    <CreatePost />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -684,7 +740,9 @@ const Layout = () => {
                         path="/my-posts"
                         element={
                             isAuthenticated
-                                ? <SelfPostList />
+                                ? (
+                                    <SelfPostList />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -703,7 +761,9 @@ const Layout = () => {
                         path="/chat/:userId"
                         element={
                             isAuthenticated
-                                ? <PrivateChat />
+                                ? (
+                                    <PrivateChat />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -722,7 +782,9 @@ const Layout = () => {
                         path="/reports"
                         element={
                             isAuthenticated
-                                ? <MyReports />
+                                ? (
+                                    <MyReports />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -741,7 +803,9 @@ const Layout = () => {
                         path="/edit-profile"
                         element={
                             isAuthenticated
-                                ? <UpdateProfile />
+                                ? (
+                                    <UpdateProfile />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -760,7 +824,9 @@ const Layout = () => {
                         path="/live"
                         element={
                             isAuthenticated
-                                ? <Live />
+                                ? (
+                                    <Live />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
@@ -779,7 +845,30 @@ const Layout = () => {
                         path="/watch"
                         element={
                             isAuthenticated
-                                ? <Viewer />
+                                ? (
+                                    <LiveStreams />
+                                )
+                                : (
+                                    <Navigate
+                                        to="/login"
+                                        replace
+                                    />
+                                )
+                        }
+                    />
+
+
+                    {/* ==================================================
+                        LIVE SESSION VIEWER
+                    ================================================== */}
+
+                    <Route
+                        path="/live/:sessionId"
+                        element={
+                            isAuthenticated
+                                ? (
+                                    <Live />
+                                )
                                 : (
                                     <Navigate
                                         to="/login"
