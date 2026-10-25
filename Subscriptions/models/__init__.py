@@ -16,3 +16,4 @@ from .payments import (
     PaymentTransaction,
 )
 
+from .content_purchases import ContentPurchase

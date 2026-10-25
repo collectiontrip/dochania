@@ -1,10 +1,11 @@
+
 import uuid
 from pathlib import Path
-
-from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+
 from common.models import (
     SoftDeleteModel,
     TimeStampedModel,
@@ -106,8 +107,6 @@ class Post(
         null=True,
     )
 
-    
-
     is_archived = models.BooleanField(
         default=False,
         db_index=True,
@@ -117,8 +116,6 @@ class Post(
         default=False,
         db_index=True,
     )
-
-    
 
     class Meta:
 
@@ -166,13 +163,11 @@ class Post(
     def likes_count(self):
         return self.likes.count()
 
-
     @property
     def comments_count(self):
         return self.comments.filter(
             is_deleted=False,
         ).count()
-
 
     @property
     def top_level_comments_count(self):
@@ -192,6 +187,20 @@ class PostMedia(TimeStampedModel):
         (MEDIA_VIDEO, "Video"),
     ]
 
+    PREVIEW_PENDING = "pending"
+    PREVIEW_PROCESSING = "processing"
+    PREVIEW_READY = "ready"
+    PREVIEW_FAILED = "failed"
+    PREVIEW_NOT_REQUIRED = "not_required"
+
+    PREVIEW_STATUS_CHOICES = [
+        (PREVIEW_PENDING, "Pending"),
+        (PREVIEW_PROCESSING, "Processing"),
+        (PREVIEW_READY, "Ready"),
+        (PREVIEW_FAILED, "Failed"),
+        (PREVIEW_NOT_REQUIRED, "Not required"),
+    ]
+
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -204,8 +213,24 @@ class PostMedia(TimeStampedModel):
         related_name="media",
     )
 
+    # Original uploaded image or video.
+    # This field name is preserved for existing services.
     file = models.FileField(
         upload_to="posts/",
+    )
+
+    # Generated preview, separate from the original file.
+    preview_file = models.FileField(
+        upload_to="post_previews/",
+        blank=True,
+        null=True,
+    )
+
+    preview_status = models.CharField(
+        max_length=20,
+        choices=PREVIEW_STATUS_CHOICES,
+        default=PREVIEW_PENDING,
+        db_index=True,
     )
 
     media_type = models.CharField(
@@ -217,8 +242,6 @@ class PostMedia(TimeStampedModel):
     order = models.PositiveIntegerField(
         default=0,
     )
-
-    
 
     class Meta:
 

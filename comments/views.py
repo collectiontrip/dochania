@@ -2,10 +2,16 @@ from django_filters.rest_framework import (
     DjangoFilterBackend,
 )
 
-from rest_framework import generics
+from rest_framework import (
+    generics,
+    status,
+)
+
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
+
+from rest_framework.response import Response
 
 from .models import Comment
 
@@ -35,7 +41,6 @@ from .services import delete_comment
 from .utils import get_content_type
 
 
-
 class CommentListCreateView(
     generics.ListCreateAPIView,
 ):
@@ -52,7 +57,6 @@ class CommentListCreateView(
         IsAuthenticatedOrReadOnly,
     ]
 
-
     def get_queryset(self):
 
         content_type = self.request.query_params.get(
@@ -63,10 +67,8 @@ class CommentListCreateView(
             "object_id",
         )
 
-
         if not content_type or not object_id:
             return Comment.objects.none()
-
 
         return get_comments(
             content_type=get_content_type(
@@ -76,7 +78,6 @@ class CommentListCreateView(
             user=self.request.user,
         )
 
-
     def get_serializer_class(self):
 
         if self.request.method == "POST":
@@ -84,7 +85,39 @@ class CommentListCreateView(
 
         return CommentSerializer
 
+    def create(
+        self,
+        request,
+        *args,
+        **kwargs,
+    ):
 
+        serializer = self.get_serializer(
+            data=request.data,
+        )
+
+        serializer.is_valid(
+            raise_exception=True,
+        )
+
+        self.perform_create(
+            serializer,
+        )
+
+        headers = self.get_success_headers(
+            serializer.data,
+        )
+
+        response_serializer = CommentSerializer(
+            serializer.instance,
+            context=self.get_serializer_context(),
+        )
+
+        return Response(
+            response_serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
 
 
 class CommentDetailView(
@@ -96,18 +129,15 @@ class CommentDetailView(
         IsCommentOwnerOrReadOnly,
     ]
 
-
     def get_queryset(self):
 
         return Comment.objects.filter(
             is_deleted=False,
         )
 
-
     def get_object(self):
 
         return super().get_object()
-
 
     def get_serializer_class(self):
 
@@ -119,7 +149,6 @@ class CommentDetailView(
 
         return CommentSerializer
 
-
     def perform_destroy(
         self,
         instance,
@@ -130,8 +159,6 @@ class CommentDetailView(
         )
 
 
-
-
 class CommentReplyListView(
     generics.ListAPIView,
 ):
@@ -140,11 +167,9 @@ class CommentReplyListView(
 
     pagination_class = CommentPagination
 
-
     permission_classes = [
         IsAuthenticatedOrReadOnly,
     ]
-
 
     def get_queryset(self):
 
@@ -152,7 +177,6 @@ class CommentReplyListView(
             comment_id=self.kwargs["comment_id"],
             user=self.request.user,
         )
-
 
         return get_replies(
             parent=parent,

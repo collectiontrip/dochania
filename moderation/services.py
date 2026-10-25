@@ -451,6 +451,62 @@ def _normalize_moderation_state(
         )
 
 
+
+
+@transaction.atomic
+def validate_user_can_create_content(*, user):
+    """
+    Validate whether a user is allowed to create content.
+    """
+
+    if user is None or not getattr(user, "is_authenticated", False):
+        raise ModerationPermissionError(
+            "Authentication is required."
+        )
+
+    locked_user = (
+        User.objects
+        .select_for_update()
+        .filter(pk=user.pk)
+        .first()
+    )
+
+    if locked_user is None or not locked_user.is_active:
+        raise ModerationPermissionError(
+            "Your account is inactive."
+        )
+
+    moderation = (
+        UserModeration.objects
+        .select_for_update()
+        .filter(user=locked_user)
+        .first()
+    )
+
+    if moderation is None:
+        return
+
+    _normalize_moderation_state(
+        moderation,
+        timezone.now(),
+    )
+
+    if moderation.is_banned:
+        raise ModerationPermissionError(
+            "Your account is permanently banned."
+        )
+
+    if moderation.is_suspended:
+        raise ModerationPermissionError(
+            "Your account is suspended."
+        )
+
+    if moderation.is_restricted:
+        raise ModerationPermissionError(
+            "Your account is restricted."
+        )
+
+
 # ============================================================
 # Content Moderation
 # ============================================================

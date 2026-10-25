@@ -1,10 +1,10 @@
+
 from django.conf import settings
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
 
 
 class SubscriptionPlan(models.Model):
-
 
     BILLING_MONTHLY = "monthly"
     BILLING_QUARTERLY = "quarterly"
@@ -19,40 +19,49 @@ class SubscriptionPlan(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name= "subscription_plans"
+        related_name="subscription_plans",
     )
 
     name = models.CharField(
-        max_length=100
+        max_length=100,
     )
 
     description = models.TextField(
-        blank=True
+        blank=True,
     )
 
     price_coins = models.PositiveBigIntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)],
     )
 
     billing_period = models.CharField(
         max_length=20,
-        choices=BILLING_CHOICES
+        choices=BILLING_CHOICES,
     )
 
     duration_days = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)],
+    )
+
+    tier_level = models.PositiveSmallIntegerField(
+        default=1,
+        validators=[MinValueValidator(1)],
+        help_text=(
+            "Plan tier: 1 is the lowest tier; "
+            "higher numbers represent higher tiers."
+        ),
     )
 
     is_active = models.BooleanField(
-        default=True
+        default=True,
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     updated_at = models.DateTimeField(
-        auto_now=True
+        auto_now=True,
     )
 
     class Meta:
@@ -62,6 +71,7 @@ class SubscriptionPlan(models.Model):
         indexes = [
             models.Index(fields=["creator"]),
             models.Index(fields=["is_active"]),
+            models.Index(fields=["creator", "tier_level"]),
         ]
 
     def __str__(self):
@@ -69,7 +79,6 @@ class SubscriptionPlan(models.Model):
 
 
 class UserSubscription(models.Model):
-
 
     STATUS_ACTIVE = "active"
     STATUS_EXPIRED = "expired"
@@ -81,23 +90,22 @@ class UserSubscription(models.Model):
         (STATUS_CANCELLED, "Cancelled"),
     ]
 
-    
     subscriber = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="subscriptions"
+        related_name="subscriptions",
     )
 
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name = "subscriber_relationships"
+        related_name="subscriber_relationships",
     )
 
     plan = models.ForeignKey(
         SubscriptionPlan,
         on_delete=models.PROTECT,
-        related_name="subscriptions"
+        related_name="subscriptions",
     )
 
     start_date = models.DateTimeField()
@@ -105,28 +113,27 @@ class UserSubscription(models.Model):
     end_date = models.DateTimeField()
 
     auto_renew = models.BooleanField(
-        default=False
+        default=False,
     )
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default=STATUS_ACTIVE
+        default=STATUS_ACTIVE,
     )
 
     cancelled_at = models.DateTimeField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     updated_at = models.DateTimeField(
-        auto_now=True
+        auto_now=True,
     )
-
 
     class Meta:
         db_table = "user_subscriptions"
@@ -139,11 +146,8 @@ class UserSubscription(models.Model):
             models.Index(fields=["end_date"]),
         ]
 
-        
-
     def __str__(self):
-        return(
+        return (
             f"{self.subscriber_id} -> "
             f"{self.creator_id} ({self.status})"
         )
-

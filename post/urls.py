@@ -1,4 +1,6 @@
+
 from django.urls import path
+
 from .views import (
     PostCreateView,
     PostListView,
@@ -6,15 +8,26 @@ from .views import (
     PostDetailView,
     PostUpdateView,
     PostDeleteView,
-    SelfPostListView
+    SelfPostListView,
+    PostOriginalMediaView,
+    PostPreviewMediaView,
 )
 
+
 urlpatterns = [
+    # ========================================================
+    # CREATE POST
+    # ========================================================
+
     path(
         "create/",
         PostCreateView.as_view(),
         name="post-create",
     ),
+
+    # ========================================================
+    # POST LISTS
+    # ========================================================
 
     path(
         "",
@@ -34,6 +47,30 @@ urlpatterns = [
         name="user-post-list",
     ),
 
+    # ========================================================
+    # ORIGINAL MEDIA ACCESS
+    # ========================================================
+
+    path(
+        "<uuid:post_id>/media/<uuid:media_id>/original/",
+        PostOriginalMediaView.as_view(),
+        name="post-original-media",
+    ),
+
+    # ========================================================
+    # PROTECTED PREVIEW MEDIA ACCESS
+    # ========================================================
+
+    path(
+        "<uuid:post_id>/media/<uuid:media_id>/preview/",
+        PostPreviewMediaView.as_view(),
+        name="post-preview-media",
+    ),
+
+    # ========================================================
+    # POST DETAILS AND MANAGEMENT
+    # ========================================================
+
     path(
         "<uuid:pk>/",
         PostDetailView.as_view(),
@@ -51,6 +88,4 @@ urlpatterns = [
         PostDeleteView.as_view(),
         name="post-delete",
     ),
-
-
 ]

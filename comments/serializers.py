@@ -13,12 +13,7 @@ from .services import (
 class BaseCommentSerializer(
     serializers.ModelSerializer,
 ):
-
-    def validate_content(
-        self,
-        value,
-    ):
-
+    def validate_content(self, value):
         value = value.strip()
 
         if not value:
@@ -32,7 +27,6 @@ class BaseCommentSerializer(
 class CommentSerializer(
     serializers.ModelSerializer,
 ):
-
     user = UserMiniSerializer(
         read_only=True,
     )
@@ -50,7 +44,6 @@ class CommentSerializer(
     )
 
     class Meta:
-
         model = Comment
 
         fields = (
@@ -72,7 +65,6 @@ class CommentSerializer(
 class CommentCreateSerializer(
     BaseCommentSerializer,
 ):
-
     ALLOWED_MODELS = (
         "post",
         "comment",
@@ -84,7 +76,6 @@ class CommentCreateSerializer(
     )
 
     class Meta:
-
         model = Comment
 
         fields = (
@@ -94,52 +85,75 @@ class CommentCreateSerializer(
             "content",
         )
 
-    def validate(
-        self,
-        attrs,
-    ):
-
+    def validate(self, attrs):
         content_type = attrs["content_type"]
         object_id = attrs["object_id"]
+        parent = attrs.get("parent")
 
         if content_type.model not in self.ALLOWED_MODELS:
-            raise serializers.ValidationError(
-                {
-                    "content_type": (
-                        "This content type cannot be commented."
-                    )
-                }
-            )
+            raise serializers.ValidationError({
+                "content_type": (
+                    "This content type cannot be commented."
+                )
+            })
 
         model = content_type.model_class()
 
         if model is None:
-            raise serializers.ValidationError(
-                {
-                    "content_type": (
-                        "Invalid content type."
-                    )
-                }
-            )
+            raise serializers.ValidationError({
+                "content_type": "Invalid content type."
+            })
 
-        if not model.objects.filter(
-            id=object_id,
-        ).exists():
-            raise serializers.ValidationError(
-                {
-                    "object_id": (
-                        "Object does not exist."
+        if content_type.model == "post":
+            if parent is not None:
+                raise serializers.ValidationError({
+                    "parent": (
+                        "A post comment cannot have a parent comment."
                     )
-                }
-            )
+                })
+
+            if not model.objects.filter(
+                id=object_id,
+            ).exists():
+                raise serializers.ValidationError({
+                    "object_id": "Post does not exist."
+                })
+
+        elif content_type.model == "comment":
+            if parent is None:
+                raise serializers.ValidationError({
+                    "parent": (
+                        "A reply must have a parent comment."
+                    )
+                })
+
+            if str(parent.id) != str(object_id):
+                raise serializers.ValidationError({
+                    "object_id": (
+                        "Must match the parent comment ID."
+                    )
+                })
+
+            if parent.is_deleted:
+                raise serializers.ValidationError({
+                    "parent": (
+                        "Cannot reply to a deleted comment."
+                    )
+                })
+
+            if not Comment.objects.filter(
+                id=object_id,
+                is_deleted=False,
+            ).exists():
+                raise serializers.ValidationError({
+                    "object_id": (
+                        "Parent comment does not exist."
+                    )
+                })
 
         return attrs
 
-    def create(
-        self,
-        validated_data,
-    ):
-
+    def create(self, validated_data):
         return create_comment(
             user=self.context["request"].user,
             validated_data=validated_data,
@@ -149,21 +163,14 @@ class CommentCreateSerializer(
 class CommentUpdateSerializer(
     BaseCommentSerializer,
 ):
-
     class Meta:
-
         model = Comment
 
         fields = (
             "content",
         )
 
-    def update(
-        self,
-        instance,
-        validated_data,
-    ):
-
+    def update(self, instance, validated_data):
         return update_comment(
             comment=instance,
             validated_data=validated_data,
@@ -173,9 +180,5 @@ class CommentUpdateSerializer(
 class ReplySerializer(
     CommentSerializer,
 ):
-
-    class Meta(
-        CommentSerializer.Meta,
-    ):
-
+    class Meta(CommentSerializer.Meta):
         fields = CommentSerializer.Meta.fields

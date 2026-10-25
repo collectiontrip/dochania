@@ -12,10 +12,16 @@ CONTENT_TYPE_MODELS = {
 def get_content_type(
     content_type,
 ):
+    normalized_type = content_type.lower()
 
-    model = CONTENT_TYPE_MODELS.get(
-        content_type.lower(),
-    )
+    if normalized_type == "comment":
+        from .models import Comment
+
+        model = Comment
+    else:
+        model = CONTENT_TYPE_MODELS.get(
+            normalized_type,
+        )
 
     if model is None:
         raise ValidationError(

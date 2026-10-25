@@ -1,20 +1,15 @@
 import AxiosInstance from "../component/auth/axiosInstance";
 
-
 const postService = {
-
+    // Create a new post
     createPost(formData) {
         return AxiosInstance.post(
             "/post/create/",
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
+            formData
         );
     },
 
+    // Get all posts
     getPosts(params = {}) {
         return AxiosInstance.get(
             "/post/",
@@ -24,12 +19,14 @@ const postService = {
         );
     },
 
+    // Get a single post by UUID
     getPost(postId) {
         return AxiosInstance.get(
             `/post/${postId}/`
         );
     },
 
+    // Get logged-in user's posts
     getSelfPosts(params = {}) {
         return AxiosInstance.get(
             "/post/my-posts/",
@@ -39,6 +36,7 @@ const postService = {
         );
     },
 
+    // Get posts belonging to a specific user
     getUserPosts(userId, params = {}) {
         return AxiosInstance.get(
             `/post/users/${userId}/posts/`,
@@ -48,20 +46,15 @@ const postService = {
         );
     },
 
+    // Update post fields and media
     updatePost(postId, formData) {
         return AxiosInstance.put(
             `/post/${postId}/update/`,
-            formData,
-
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-
+            formData
         );
     },
 
+    // Delete a post
     deletePost(postId) {
         return AxiosInstance.delete(
             `/post/${postId}/delete/`

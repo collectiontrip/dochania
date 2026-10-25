@@ -17,3 +17,10 @@ media/
 *.jpg
 *.jpeg
 *.png
+# Python virtual environment
+dochaniaenv/
+my_school_venv/
+
+# Python cache
+__pycache__/
+*.py[cod]

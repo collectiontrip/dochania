@@ -21,42 +21,46 @@ class CreatorEarning(models.Model):
     creator = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="earnings"
+        related_name="earnings",
     )
 
     source_type = models.CharField(
         max_length=30,
-        choices=SOURCE_CHOICES
+        choices=SOURCE_CHOICES,
     )
 
     source_id = models.UUIDField(
         null=True,
         blank=True,
-        db_index=True
+        db_index=True,
     )
 
     gross_coins = models.PositiveBigIntegerField()
 
     platform_fee_coins = models.PositiveBigIntegerField(
-        default=0
+        default=0,
     )
 
     net_coins = models.PositiveBigIntegerField()
 
+    description = models.CharField(
+        max_length=500,
+        blank=True,
+        default="",
+    )
+
     is_withdrawn = models.BooleanField(
-        default=False
+        default=False,
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True,
-        db_index=True
+        db_index=True,
     )
 
     class Meta:
         db_table = "creator_earnings"
-
         ordering = ["-created_at"]
-
         indexes = [
             models.Index(fields=["creator"]),
             models.Index(fields=["source_type"]),
@@ -86,37 +90,35 @@ class WithdrawalRequest(models.Model):
     creator = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="withdrawal_requests"
+        related_name="withdrawal_requests",
     )
 
     requested_coins = models.PositiveBigIntegerField()
 
     requested_amount = models.DecimalField(
         max_digits=12,
-        decimal_places=2
+        decimal_places=2,
     )
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default=STATUS_PENDING
+        default=STATUS_PENDING,
     )
 
     rejection_reason = models.TextField(
         blank=True,
-        null=True
+        null=True,
     )
 
     requested_at = models.DateTimeField(
         auto_now_add=True,
-        db_index=True
+        db_index=True,
     )
 
     class Meta:
         db_table = "withdrawal_requests"
-
         ordering = ["-requested_at"]
-
         indexes = [
             models.Index(fields=["creator"]),
             models.Index(fields=["status"]),
@@ -143,50 +145,47 @@ class Payout(models.Model):
     withdrawal_request = models.OneToOneField(
         WithdrawalRequest,
         on_delete=models.PROTECT,
-        related_name="payout"
+        related_name="payout",
     )
 
     payout_reference = models.CharField(
         max_length=255,
         unique=True,
-        db_index=True
+        db_index=True,
     )
 
     amount = models.DecimalField(
         max_digits=12,
-        decimal_places=2
+        decimal_places=2,
     )
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default=STATUS_PENDING
+        default=STATUS_PENDING,
     )
 
     processed_at = models.DateTimeField(
         null=True,
-        blank=True
+        blank=True,
     )
 
     failure_reason = models.TextField(
         blank=True,
-        null=True
+        null=True,
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     class Meta:
         db_table = "payouts"
-
         ordering = ["-created_at"]
-
         indexes = [
             models.Index(fields=["status"]),
             models.Index(fields=["created_at"]),
         ]
 
-    
     def __str__(self):
         return self.payout_reference
